@@ -43,7 +43,9 @@ class UBCMonitor(BaseMonitor):
             
             # Find username field - try multiple selectors for UBC portal
             username_selectors = [
-                "input[name='LoginForm[email]']",  # UBC portal specific
+                "input[name='CredentialForm[email]']",  # UBC portal specific
+                "input[id='inputEmail']",  # UBC portal specific
+                "input[name='LoginForm[email]']",
                 "input[type='email']",
                 "input[name='username']", 
                 "input[name='email']",
@@ -63,11 +65,19 @@ class UBCMonitor(BaseMonitor):
                 raise TimeoutException("Could not find username field")
             
             # Find password field
-            password_field = self.driver.find_element(By.CSS_SELECTOR, "input[type='password']")
+            password_field = self.driver.find_element(By.CSS_SELECTOR, "input[name='CredentialForm[password_curr]'], input[id='inputPassword'], input[type='password']")
+            
+            # Scroll to make sure elements are visible
+            self.driver.execute_script("arguments[0].scrollIntoView(true);", username_field)
+            time.sleep(1)
             
             # Fill credentials
             username_field.clear()
             username_field.send_keys(credentials['username'])
+            
+            # Scroll to password field
+            self.driver.execute_script("arguments[0].scrollIntoView(true);", password_field)
+            time.sleep(1)
             
             password_field.clear()
             password_field.send_keys(credentials['password'])
@@ -93,7 +103,15 @@ class UBCMonitor(BaseMonitor):
             if not login_button:
                 raise NoSuchElementException("Could not find login button")
             
-            login_button.click()
+            # Scroll to login button and click
+            self.driver.execute_script("arguments[0].scrollIntoView(true);", login_button)
+            time.sleep(1)
+            
+            # Try clicking with JavaScript if regular click fails
+            try:
+                login_button.click()
+            except Exception:
+                self.driver.execute_script("arguments[0].click();", login_button)
             
             # Wait for login to complete
             time.sleep(3)
