@@ -12,25 +12,27 @@ def run_tests():
     """Run all tests with coverage"""
     print("🧪 Running BTC Tennis Bot Test Suite")
     print("=" * 50)
-    
+
     # Change to project directory
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    
+
     # Run pytest with coverage
     cmd = [
-        sys.executable, "-m", "pytest",
+        sys.executable,
+        "-m",
+        "pytest",
         "tests/",
         "--cov=core",
         "--cov=btc_tennis_bot",
-        "--cov=daemon_monitoring", 
+        "--cov=daemon_monitoring",
         "--cov=run_background_env",
         "--cov-report=term-missing",
         "--cov-report=html:htmlcov",
         "--cov-report=xml",
         "--cov-fail-under=100",
-        "-v"
+        "-v",
     ]
-    
+
     try:
         result = subprocess.run(cmd, check=True)
         print("\n✅ All tests passed with 100% coverage!")

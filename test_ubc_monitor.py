@@ -19,10 +19,10 @@ from core.ubc_notifications import UBCNotificationManager
 def test_ubc_configuration():
     """Test UBC configuration"""
     print("🧪 Testing UBC Configuration...")
-    
+
     try:
         config = UBCConfig()
-        
+
         # Test credential validation
         if config.validate_credentials():
             print("✅ UBC credentials validation passed")
@@ -30,21 +30,23 @@ def test_ubc_configuration():
             print("❌ UBC credentials validation failed")
             print("   Please set UBC_USERNAME and UBC_PASSWORD environment variables")
             return False
-        
+
         # Test notification config
         notif_config = config.get_notification_config()
-        if notif_config['email'] or notif_config['sms_phone']:
+        if notif_config["email"] or notif_config["sms_phone"]:
             print("✅ UBC notification configuration found")
         else:
             print("❌ No UBC notification method configured")
             return False
-        
+
         # Test monitoring config
         monitoring_config = config.get_monitoring_config()
-        print(f"✅ UBC monitoring config: {monitoring_config['monitoring_interval']} min interval")
-        
+        print(
+            f"✅ UBC monitoring config: {monitoring_config['monitoring_interval']} min interval"
+        )
+
         return True
-        
+
     except Exception as e:
         print(f"❌ UBC configuration test failed: {e}")
         return False
@@ -53,10 +55,10 @@ def test_ubc_configuration():
 def test_ubc_notifications():
     """Test UBC notification system"""
     print("\n🧪 Testing UBC Notifications...")
-    
+
     try:
         notification_manager = UBCNotificationManager()
-        
+
         # Test notification formatting
         test_courts = {
             "2025-10-26": [
@@ -64,17 +66,17 @@ def test_ubc_notifications():
                     "court_name": "Court 1",
                     "time": "10:00 AM",
                     "duration": "1 hour",
-                    "price": "$32.15"
+                    "price": "$32.15",
                 },
                 {
-                    "court_name": "Court 2", 
+                    "court_name": "Court 2",
                     "time": "2:00 PM",
                     "duration": "1 hour",
-                    "price": "$28.05"
-                }
+                    "price": "$28.05",
+                },
             ]
         }
-        
+
         # Test email formatting
         email_body = notification_manager._format_email_message(test_courts)
         if "UBC Tennis Courts Available" in email_body:
@@ -82,7 +84,7 @@ def test_ubc_notifications():
         else:
             print("❌ UBC email formatting failed")
             return False
-        
+
         # Test SMS formatting
         sms_body = notification_manager._format_sms_message(test_courts)
         if "UBC Tennis" in sms_body and "Court 1" in sms_body:
@@ -90,10 +92,10 @@ def test_ubc_notifications():
         else:
             print("❌ UBC SMS formatting failed")
             return False
-        
+
         print("✅ UBC notification system test passed")
         return True
-        
+
     except Exception as e:
         print(f"❌ UBC notification test failed: {e}")
         return False
@@ -102,27 +104,27 @@ def test_ubc_notifications():
 def test_ubc_monitor():
     """Test UBC monitor (without actual web scraping)"""
     print("\n🧪 Testing UBC Monitor...")
-    
+
     try:
         monitor = UBCCourtMonitor()
-        
+
         # Test logger setup
         if monitor.logger:
             print("✅ UBC monitor logger initialized")
         else:
             print("❌ UBC monitor logger failed")
             return False
-        
+
         # Test configuration access
         if monitor.config:
             print("✅ UBC monitor configuration loaded")
         else:
             print("❌ UBC monitor configuration failed")
             return False
-        
+
         print("✅ UBC monitor test passed")
         return True
-        
+
     except Exception as e:
         print(f"❌ UBC monitor test failed: {e}")
         return False
@@ -134,24 +136,24 @@ def main():
     print("=" * 50)
     print(f"Test started at: {datetime.now()}")
     print()
-    
+
     tests_passed = 0
     total_tests = 3
-    
+
     # Run tests
     if test_ubc_configuration():
         tests_passed += 1
-    
+
     if test_ubc_notifications():
         tests_passed += 1
-    
+
     if test_ubc_monitor():
         tests_passed += 1
-    
+
     # Results
     print("\n" + "=" * 50)
     print(f"Test Results: {tests_passed}/{total_tests} tests passed")
-    
+
     if tests_passed == total_tests:
         print("🎉 All UBC tests passed! Ready for monitoring.")
         print("\nTo start UBC monitoring:")

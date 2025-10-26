@@ -9,7 +9,9 @@ import sys
 from typing import Dict, List
 
 # Add project root to path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+sys.path.insert(
+    0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+)
 
 from common.notifications.base_notifications import BaseNotificationManager
 from ubc.config.ubc_config import UBCConfig
@@ -17,11 +19,11 @@ from ubc.config.ubc_config import UBCConfig
 
 class UBCNotificationManager(BaseNotificationManager):
     """Notification manager for UBC Tennis Centre court availability"""
-    
+
     def __init__(self):
         config = UBCConfig()
         super().__init__(config)
-    
+
     def _format_email_message(self, available_courts: Dict[str, List[Dict]]) -> str:
         """Format email message for UBC courts"""
         html = """
@@ -47,13 +49,13 @@ class UBCNotificationManager(BaseNotificationManager):
             
             <div class="content">
         """
-        
+
         total_courts = sum(len(courts) for courts in available_courts.values())
         html += f"<h2>Found {total_courts} available court(s):</h2>"
-        
+
         for date, courts in available_courts.items():
             html += f"<h3>📅 {date}</h3>"
-            
+
             for court in courts:
                 html += f"""
                 <div class="court-item">
@@ -63,7 +65,7 @@ class UBCNotificationManager(BaseNotificationManager):
                     <div class="court-details price">💰 Price: {court.get('price', 'Unknown')}</div>
                 </div>
                 """
-        
+
         html += """
                 <div style="text-align: center; margin: 30px 0;">
                     <a href="https://recreation.ubc.ca/tennis/court-booking/" class="book-link">
@@ -79,23 +81,23 @@ class UBCNotificationManager(BaseNotificationManager):
         </body>
         </html>
         """
-        
+
         return html
-    
+
     def _format_sms_message(self, available_courts: Dict[str, List[Dict]]) -> str:
         """Format SMS message for UBC courts"""
         total_courts = sum(len(courts) for courts in available_courts.values())
-        
+
         message = f"🎾 UBC Tennis: {total_courts} court(s) available!\n"
-        
+
         for date, courts in available_courts.items():
             message += f"\n📅 {date}:\n"
             for court in courts:
-                court_name = court.get('court_name', 'Unknown')
-                time_slot = court.get('time', 'Unknown')
-                price = court.get('price', 'Unknown')
+                court_name = court.get("court_name", "Unknown")
+                time_slot = court.get("time", "Unknown")
+                price = court.get("price", "Unknown")
                 message += f"• {court_name} at {time_slot} ({price})\n"
-        
+
         message += "\nBook now: https://recreation.ubc.ca/tennis/court-booking/"
-        
+
         return message
