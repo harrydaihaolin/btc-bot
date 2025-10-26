@@ -46,49 +46,49 @@ start_bots() {
     print_status "Starting Tennis Bot containers..."
     
     # Start both services
-    docker-compose up -d
+    docker compose up -d
     
     print_success "Tennis Bot containers started!"
-    print_status "BTC Bot: docker-compose logs -f btc-tennis-bot"
-    print_status "UBC Bot: docker-compose logs -f ubc-tennis-bot"
-    print_status "Both Bots: docker-compose logs -f"
+    print_status "BTC Bot: docker compose logs -f btc-tennis-bot"
+    print_status "UBC Bot: docker compose logs -f ubc-tennis-bot"
+    print_status "Both Bots: docker compose logs -f"
 }
 
 # Function to stop bots
 stop_bots() {
     print_status "Stopping Tennis Bot containers..."
-    docker-compose down
+    docker compose down
     print_success "Tennis Bot containers stopped!"
 }
 
 # Function to restart bots
 restart_bots() {
     print_status "Restarting Tennis Bot containers..."
-    docker-compose restart
+    docker compose restart
     print_success "Tennis Bot containers restarted!"
 }
 
 # Function to show logs
 show_logs() {
     if [ "$1" = "btc" ]; then
-        docker-compose logs -f btc-tennis-bot
+        docker compose logs -f btc-tennis-bot
     elif [ "$1" = "ubc" ]; then
-        docker-compose logs -f ubc-tennis-bot
+        docker compose logs -f ubc-tennis-bot
     else
-        docker-compose logs -f
+        docker compose logs -f
     fi
 }
 
 # Function to show status
 show_status() {
     print_status "Tennis Bot Container Status:"
-    docker-compose ps
+    docker compose ps
 }
 
 # Function to build containers
 build_containers() {
     print_status "Building Tennis Bot containers..."
-    docker-compose build --no-cache
+    docker compose build --no-cache
     print_success "Tennis Bot containers built!"
 }
 
