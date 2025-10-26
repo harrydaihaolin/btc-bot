@@ -58,6 +58,13 @@ nohup python3 run_background_env.py > btc_background.log 2>&1 &
 - **Process Management**: PID files and graceful shutdown handling
 - **Resource Efficient**: Minimal CPU and memory usage
 
+### 🏗️ **Modular Architecture (v1.2)**
+- **Core Modules**: Separated into `core/config.py`, `core/monitor.py`, `core/notifications.py`
+- **Clean Integration**: Daemon and interactive modes share the same core components
+- **Easy Extension**: Add new features by extending core modules
+- **Better Testing**: Individual components can be tested independently
+- **Maintainable Code**: Clear separation of concerns and responsibilities
+
 ## 📱 Usage Modes
 
 ### 🚀 **Daemon Mode (RECOMMENDED)**
@@ -296,6 +303,14 @@ Monitoring options:
 
 ## 📋 Version History
 
+### v1.2.0 - Modular Architecture & Enhanced Integration
+- **Modular Design**: Completely refactored into reusable core modules
+- **Core Components**: Separate modules for configuration, monitoring, and notifications
+- **Better Integration**: Clean separation between daemon and interactive modes
+- **Improved Maintainability**: Easier to extend and modify individual components
+- **Enhanced Error Handling**: Better error management across all modules
+- **Code Reusability**: Shared components between different execution modes
+
 ### v1.1.0 - Interactive Background Monitoring Mode
 - **Multi-Date Scanning**: Automatically checks today, tomorrow, and day after tomorrow
 - **Background Monitoring**: Run as detached processes for 24/7 monitoring
@@ -308,6 +323,30 @@ Monitoring options:
 - Single-date scanning (tomorrow only)
 - Email and SMS notifications
 - Interactive setup and credential management
+
+## 🏗️ Project Structure
+
+```
+btc-bot/
+├── core/                           # 🏗️ Core modular components
+│   ├── __init__.py                 # Core module initialization
+│   ├── config.py                   # Configuration management
+│   ├── monitor.py                  # Court monitoring functionality
+│   └── notifications.py            # Email and SMS notifications
+├── btc_tennis_bot.py              # 🎮 Interactive mode (main bot)
+├── daemon_monitoring.py           # 🚀 Daemon mode (recommended)
+├── run_background_env.py          # 🖥️ Simple background mode
+├── start_background_monitoring.sh # 🚀 Interactive startup script
+├── setup_credentials.sh           # 🔧 Credential setup helper
+├── requirements.txt               # 📦 Python dependencies
+├── .gitignore                     # 🚫 Git ignore rules
+└── README.md                      # 📚 This file
+```
+
+### Core Modules
+- **`core/config.py`**: Handles environment variables and configuration
+- **`core/monitor.py`**: WebDriver management, login, and court detection
+- **`core/notifications.py`**: Email and SMS notification system
 
 ## 🤝 Contributing
 

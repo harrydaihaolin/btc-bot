@@ -12,7 +12,9 @@ import logging
 import daemon
 import daemon.pidfile
 from datetime import datetime
-from btc_tennis_bot import BTCCourtBookingBot, setup_credentials
+from core.config import BTCConfig
+from core.monitor import CourtMonitor
+from core.notifications import NotificationManager
 
 # Configure logging for daemon process
 def setup_logging():
@@ -32,11 +34,12 @@ class DaemonMonitor:
     
     def __init__(self):
         self.running = True
-        self.bot = None
-        self.monitoring_interval = 5  # minutes
-        self.max_attempts = 0  # 0 = unlimited for daemon mode
         self.logger = setup_logging()
-        self.previous_courts = set()  # Track previous court availability
+        self.config_manager = BTCConfig()
+        self.monitor = None
+        self.notification_manager = None
+        self.credentials = None
+        self.config = None
         
     def signal_handler(self, signum, frame):
         """Handle shutdown signals gracefully"""
@@ -48,63 +51,30 @@ class DaemonMonitor:
         signal.signal(signal.SIGINT, self.signal_handler)
         signal.signal(signal.SIGTERM, self.signal_handler)
         
-    def check_environment_variables(self):
-        """Check if required environment variables are set"""
-        required_vars = [
-            'BTC_USERNAME',
-            'BTC_PASSWORD', 
-            'BTC_NOTIFICATION_EMAIL',
-            'BTC_PHONE_NUMBER',
-            'BTC_GMAIL_APP_EMAIL',
-            'BTC_GMAIL_APP_PASSWORD'
-        ]
-        
-        missing_vars = []
-        for var in required_vars:
-            if not os.getenv(var):
-                missing_vars.append(var)
-        
-        if missing_vars:
-            self.logger.error(f"Missing required environment variables: {', '.join(missing_vars)}")
-            self.logger.error("Please set the following environment variables:")
-            for var in missing_vars:
-                self.logger.error(f"   export {var}='your_value'")
-            return False
-        
-        self.logger.info("All required environment variables are set")
-        return True
-    
-    def initialize_bot(self):
-        """Initialize the BTC booking bot with environment variables"""
+    def initialize_components(self):
+        """Initialize all components"""
         try:
-            self.logger.info("Initializing BTC Tennis Bot for daemon monitoring...")
+            # Get configuration
+            self.credentials = self.config_manager.get_credentials()
+            self.config = self.config_manager.get_bot_config()
+            monitoring_config = self.config_manager.get_monitoring_config()
             
-            # Get credentials from environment variables
-            username = os.getenv('BTC_USERNAME')
-            password = os.getenv('BTC_PASSWORD')
-            notification_email = os.getenv('BTC_NOTIFICATION_EMAIL')
-            phone_number = os.getenv('BTC_PHONE_NUMBER')
-            gmail_app_email = os.getenv('BTC_GMAIL_APP_EMAIL')
-            gmail_app_password = os.getenv('BTC_GMAIL_APP_PASSWORD')
+            # Validate credentials
+            if not self.config_manager.validate_credentials(self.credentials):
+                self.logger.error("Invalid credentials configuration")
+                return False
             
-            # Initialize bot
-            self.bot = BTCCourtBookingBot(
-                headless=True,  # Run headless for daemon operation
-                wait_timeout=15,  # Longer timeout for daemon operation
-                username=username,
-                password=password,
-                notification_email=notification_email,
-                phone_number=phone_number,
-                gmail_app_email=gmail_app_email
-            )
+            # Initialize monitor
+            self.monitor = CourtMonitor(self.config, self.credentials)
             
-            self.logger.info("Bot initialized successfully for daemon monitoring")
-            self.logger.info(f"Monitoring interval: {self.monitoring_interval} minutes")
-            self.logger.info(f"Max attempts: {'Unlimited' if self.max_attempts == 0 else self.max_attempts}")
+            # Initialize notification manager
+            self.notification_manager = NotificationManager(self.credentials)
+            
+            self.logger.info("All components initialized successfully")
             return True
             
         except Exception as e:
-            self.logger.error(f"Failed to initialize bot: {e}")
+            self.logger.error(f"Failed to initialize components: {e}")
             return False
     
     def run_monitoring_cycle(self):
@@ -112,32 +82,37 @@ class DaemonMonitor:
         try:
             self.logger.info("Running daemon monitoring cycle...")
             
-            # Run booking scan
-            available_courts = self.bot.run_booking_scan()
+            # Setup driver if not already done
+            if not self.monitor.driver:
+                self.monitor.setup_driver()
             
-            # Flatten all courts for comparison
-            current_courts = set()
-            for date, courts in available_courts.items():
-                for court in courts:
-                    court_key = f"{date}_{court.get('time', '')}_{court.get('text', '')}"
-                    current_courts.add(court_key)
+            # Login
+            if not self.monitor.login():
+                self.logger.warning("Login failed, continuing anyway...")
             
-            total_courts = sum(len(courts) for courts in available_courts.values())
+            # Navigate to booking page
+            if not self.monitor.navigate_to_booking_page():
+                self.logger.error("Failed to navigate to booking page")
+                return False
+            
+            # Scan all dates
+            all_courts = self.monitor.scan_all_dates()
+            
+            total_courts = sum(len(courts) for courts in all_courts.values())
             
             if total_courts > 0:
-                # Check for new courts
-                new_courts = current_courts - self.previous_courts
+                # Detect new courts
+                new_courts = self.monitor.detect_new_courts(all_courts)
                 
                 if new_courts:
-                    self.logger.info(f"🎾 NEW COURTS DETECTED! {len(new_courts)} new slots found!")
-                    self.logger.info("Sending immediate notifications...")
+                    self.logger.info("Sending immediate notifications for new courts...")
                     
                     # Send notifications for new courts
-                    self.bot.send_email_notification(available_courts)
-                    self.bot.send_sms_notification(available_courts)
+                    self.notification_manager.send_email_notification(new_courts)
+                    self.notification_manager.send_sms_notification(new_courts)
                     
                     # Log new court details
-                    for date, courts in available_courts.items():
+                    for date, courts in new_courts.items():
                         if courts:
                             date_obj = datetime.strptime(date, "%Y-%m-%d")
                             date_label = date_obj.strftime("%A, %B %d, %Y")
@@ -146,12 +121,8 @@ class DaemonMonitor:
                                 self.logger.info(f"      {i}. {court.get('text', 'N/A')} - {court.get('time', 'N/A')}")
                 else:
                     self.logger.info(f"Found {total_courts} courts but no new ones since last check")
-                
-                # Update previous courts set
-                self.previous_courts = current_courts
             else:
                 self.logger.info("No available courts found")
-                self.previous_courts = set()
             
             return True
             
@@ -162,25 +133,25 @@ class DaemonMonitor:
     def run_daemon(self):
         """Main daemon run method"""
         try:
-            # Check environment variables
-            if not self.check_environment_variables():
-                self.logger.error("Environment variables not properly configured, exiting")
-                return False
-            
             # Setup signal handlers
             self.setup_signal_handlers()
             
-            # Initialize bot
-            if not self.initialize_bot():
-                self.logger.error("Failed to initialize bot, exiting")
+            # Initialize components
+            if not self.initialize_components():
+                self.logger.error("Failed to initialize components, exiting")
                 return False
+            
+            # Get monitoring configuration
+            monitoring_config = self.config_manager.get_monitoring_config()
+            monitoring_interval = monitoring_config['monitoring_interval']
+            max_attempts = monitoring_config['max_attempts']
             
             # Run initial scan
             self.logger.info("Running initial court availability scan...")
             self.run_monitoring_cycle()
             
             # Start continuous monitoring
-            self.logger.info(f"Starting daemon monitoring (every {self.monitoring_interval} minutes)")
+            self.logger.info(f"Starting daemon monitoring (every {monitoring_interval} minutes)")
             self.logger.info("🎾 Daemon will notify you immediately when new courts become available!")
             
             attempt = 0
@@ -193,14 +164,14 @@ class DaemonMonitor:
                     self.run_monitoring_cycle()
                     
                     # Check if we should continue
-                    if self.max_attempts > 0 and attempt >= self.max_attempts:
-                        self.logger.info(f"Reached maximum attempts ({self.max_attempts}), stopping daemon")
+                    if max_attempts > 0 and attempt >= max_attempts:
+                        self.logger.info(f"Reached maximum attempts ({max_attempts}), stopping daemon")
                         break
                     
-                    if self.running and (attempt < self.max_attempts or self.max_attempts == 0):
-                        self.logger.info(f"Waiting {self.monitoring_interval} minutes before next check...")
+                    if self.running and (attempt < max_attempts or max_attempts == 0):
+                        self.logger.info(f"Waiting {monitoring_interval} minutes before next check...")
                         # Sleep in smaller intervals to allow for graceful shutdown
-                        for _ in range(self.monitoring_interval * 60):
+                        for _ in range(monitoring_interval * 60):
                             if not self.running:
                                 break
                             time.sleep(1)
@@ -224,9 +195,8 @@ class DaemonMonitor:
             self.logger.error(f"Fatal error in daemon monitoring: {e}")
             return False
         finally:
-            if self.bot and self.bot.driver:
-                self.bot.driver.quit()
-                self.logger.info("WebDriver closed")
+            if self.monitor:
+                self.monitor.cleanup()
 
 def main():
     """Main function for daemon monitoring"""
@@ -249,6 +219,10 @@ def main():
         max_attempts_input = input("Enter maximum number of scans (0 for unlimited, default 0): ").strip()
         max_attempts = int(max_attempts_input) if max_attempts_input else 0
         
+        # Set environment variables for this session
+        os.environ['BTC_MONITORING_INTERVAL'] = str(monitoring_interval)
+        os.environ['BTC_MAX_ATTEMPTS'] = str(max_attempts)
+        
     except (EOFError, KeyboardInterrupt):
         print("\nUsing default settings: 5 minutes interval, unlimited scans")
         monitoring_interval = 5
@@ -256,8 +230,6 @@ def main():
     
     # Create daemon monitor
     monitor = DaemonMonitor()
-    monitor.monitoring_interval = monitoring_interval
-    monitor.max_attempts = max_attempts
     
     # Setup daemon context
     pidfile_path = f"btc_daemon_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pid"
