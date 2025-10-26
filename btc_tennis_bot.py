@@ -13,7 +13,7 @@ and notifying users when courts become available for booking.
    export BTC_PHONE_NUMBER="1234567890"
    export BTC_GMAIL_APP_EMAIL="your_gmail@gmail.com"
    export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
-   export BTC_BOOKING_DATE="tomorrow"  # or specific date like "2025-10-27"
+   export BTC_BOOKING_DATE="1"  # days ahead: "1" (tomorrow), "2" (day after), or specific date like "2025-10-27"
 
 2. For Gmail App Password:
    - Go to Google Account > Security > 2-Step Verification > App passwords
@@ -562,12 +562,20 @@ BTC Booking Bot 🤖
             # Calculate target date
             if self.booking_date.lower() == "tomorrow":
                 target_date = datetime.now() + timedelta(days=1)
+            elif self.booking_date.isdigit():
+                # Parse day offset (1 or 2)
+                days_ahead = int(self.booking_date)
+                if days_ahead < 1 or days_ahead > 2:
+                    logger.error(f"Invalid day offset: {days_ahead}. Use '1' (tomorrow), '2' (day after), or specific date 'YYYY-MM-DD'")
+                    return False
+                target_date = datetime.now() + timedelta(days=days_ahead)
+                logger.info(f"Booking for {days_ahead} day(s) ahead: {target_date.strftime('%A, %B %d, %Y')}")
             else:
                 try:
                     # Parse specific date format (YYYY-MM-DD)
                     target_date = datetime.strptime(self.booking_date, "%Y-%m-%d")
                 except ValueError:
-                    logger.error(f"Invalid date format: {self.booking_date}. Use 'tomorrow' or 'YYYY-MM-DD'")
+                    logger.error(f"Invalid date format: {self.booking_date}. Use '1' (tomorrow), '2' (day after), or 'YYYY-MM-DD'")
                     return False
             
             # Format date strings for searching
@@ -1215,7 +1223,7 @@ def setup_credentials():
     phone_number = os.getenv('BTC_PHONE_NUMBER')
     gmail_app_email = os.getenv('BTC_GMAIL_APP_EMAIL')
     gmail_app_password = os.getenv('BTC_GMAIL_APP_PASSWORD')
-    booking_date = os.getenv('BTC_BOOKING_DATE', 'tomorrow')
+    booking_date = os.getenv('BTC_BOOKING_DATE', '1')
     
     if username and password and notification_email and phone_number and gmail_app_password:
         print("✅ All credentials found in environment variables!")
@@ -1259,10 +1267,10 @@ def setup_credentials():
             print()
             gmail_app_password = getpass.getpass("Enter your Gmail App Password: ")
         
-        if not booking_date or booking_date == 'tomorrow':
-            booking_date = input("Enter booking date (default: tomorrow, or use YYYY-MM-DD format): ").strip()
+        if not booking_date or booking_date == '1':
+            booking_date = input("Enter booking date (default: 1 for tomorrow, 2 for day after, or YYYY-MM-DD format): ").strip()
             if not booking_date:
-                booking_date = 'tomorrow'
+                booking_date = '1'
         
         print("\n✅ Credentials configured!")
         print("💡 Tip: Set these as environment variables for future runs:")

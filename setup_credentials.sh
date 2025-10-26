@@ -28,7 +28,7 @@ BTC_PASSWORD=$(read_password "BTC Login Password: ")
 read -p "Notification Email (default: same as login): " BTC_NOTIFICATION_EMAIL
 read -p "Phone Number (e.g., 6479370971): " BTC_PHONE_NUMBER
 read -p "Gmail App Email (default: same as notification email): " BTC_GMAIL_APP_EMAIL
-read -p "Booking Date (default: tomorrow, or use YYYY-MM-DD): " BTC_BOOKING_DATE
+read -p "Booking Date (default: 1 for tomorrow, 2 for day after, or YYYY-MM-DD): " BTC_BOOKING_DATE
 
 # Use login email as default for notification email
 if [ -z "$BTC_NOTIFICATION_EMAIL" ]; then
@@ -40,9 +40,9 @@ if [ -z "$BTC_GMAIL_APP_EMAIL" ]; then
     BTC_GMAIL_APP_EMAIL="$BTC_NOTIFICATION_EMAIL"
 fi
 
-# Use tomorrow as default for booking date
+# Use 1 (tomorrow) as default for booking date
 if [ -z "$BTC_BOOKING_DATE" ]; then
-    BTC_BOOKING_DATE="tomorrow"
+    BTC_BOOKING_DATE="1"
 fi
 
 echo ""
