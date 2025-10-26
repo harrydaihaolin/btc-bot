@@ -23,38 +23,58 @@ export BTC_GMAIL_APP_EMAIL="your_gmail@gmail.com"
 export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
 ```
 
-### 3. Run the Bot
+### 3. Start Daemon Monitoring (RECOMMENDED)
 ```bash
-# Interactive mode
+# Daemon mode - 24/7 background monitoring with instant notifications
+python3 daemon_monitoring.py
+```
+
+### 4. Alternative Modes
+```bash
+# Interactive mode (for testing)
 python3 btc_tennis_bot.py
 
-# Background monitoring (production)
+# Simple background monitoring
 nohup python3 run_background_env.py > btc_background.log 2>&1 &
 ```
 
-## 🎯 Features
+## 🎯 Key Features
 
+### 🚨 **Instant Notifications**
+- **Immediate Email Alerts**: Get notified the moment new courts become available
+- **SMS Notifications**: Urgent alerts sent to your phone
+- **New Booking Detection**: Monitors for court releases and cancellations
+- **24/7 Monitoring**: Continuous background monitoring without interruption
+
+### 🎾 **Smart Court Detection**
 - **Multi-Date Scanning**: Automatically checks today, tomorrow, and day after tomorrow
 - **Smart Detection**: Finds "Book" buttons and filters out false positives
-- **Background Monitoring**: Run as detached processes for 24/7 monitoring
-- **Multi-channel Notifications**: 
-  - Email notifications via Gmail SMTP
-  - SMS notifications via email-to-SMS gateways
-- **Production Ready**: Perfect for cron jobs and automated deployments
+- **Real-time Updates**: Detects new court availability as it happens
+- **Comprehensive Coverage**: Monitors all available time slots
+
+### 🖥️ **Background Processing**
+- **Daemon Mode**: Runs completely detached from terminal
+- **Production Ready**: Perfect for servers and automated deployments
+- **Process Management**: PID files and graceful shutdown handling
+- **Resource Efficient**: Minimal CPU and memory usage
 
 ## 📱 Usage Modes
 
-### Interactive Mode
-Perfect for manual use and testing:
+### 🚀 **Daemon Mode (RECOMMENDED)**
+Perfect for continuous monitoring and instant notifications:
 ```bash
-python3 btc_tennis_bot.py
+# Start daemon monitoring
+python3 daemon_monitoring.py
 ```
-- Prompts for credentials if not set
-- Shows real-time progress
-- Offers monitoring options after initial scan
+**Features:**
+- ✅ **Instant Notifications**: Immediate email/SMS when new courts appear
+- ✅ **24/7 Monitoring**: Runs completely detached from terminal
+- ✅ **New Booking Detection**: Monitors for court releases and cancellations
+- ✅ **Process Management**: PID files and graceful shutdown
+- ✅ **Comprehensive Logging**: Detailed logs for debugging
 
-### Background Mode
-Perfect for production and automation:
+### 🖥️ **Background Mode**
+Simple background monitoring for basic use:
 ```bash
 # Set environment variables first
 export BTC_USERNAME="your_email@example.com"
@@ -68,15 +88,33 @@ export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
 nohup python3 run_background_env.py > btc_background.log 2>&1 &
 ```
 
+### 🎮 **Interactive Mode**
+Perfect for testing and manual use:
+```bash
+python3 btc_tennis_bot.py
+```
+- Prompts for credentials if not set
+- Shows real-time progress
+- Offers monitoring options after initial scan
+
 ### Process Management
 ```bash
-# Check if running
+# Check daemon status
+ps aux | grep daemon_monitoring
+
+# View daemon logs
+tail -f btc_daemon_monitoring.log
+
+# Stop daemon
+kill $(cat btc_daemon_*.pid)
+
+# Check background process
 ps aux | grep run_background_env
 
-# View logs
+# View background logs
 tail -f btc_background.log
 
-# Stop process
+# Stop background process
 pkill -f run_background_env
 ```
 
@@ -123,31 +161,44 @@ BTC_GMAIL_APP_PASSWORD="your_gmail_app_password" # Gmail app password
 - Concise format optimized for SMS
 - Fallback to console output if SMS fails
 
-## 🖥️ Background Monitoring
+## 🖥️ Daemon Monitoring (DEFAULT)
+
+### Why Daemon Mode?
+The daemon mode is the **recommended default** because it provides:
+- **🚨 Instant Notifications**: Get notified immediately when new courts become available
+- **📧 Email Alerts**: Receive detailed email notifications with court information
+- **📱 SMS Alerts**: Get urgent SMS notifications for time-sensitive bookings
+- **🔄 Continuous Monitoring**: 24/7 background monitoring without interruption
+- **🎯 New Booking Detection**: Monitors for court releases and cancellations in real-time
 
 ### Available Scripts
-- **`run_background_env.py`** - Production mode with environment variables
+- **`daemon_monitoring.py`** - **RECOMMENDED**: Full daemon mode with instant notifications
+- **`run_background_env.py`** - Simple background mode for basic monitoring
 - **`start_background_monitoring.sh`** - Interactive startup script
 
-### Configuration
+### Daemon Configuration
 - **Monitoring Interval**: 5 minutes (configurable)
-- **Max Attempts**: 10 cycles (50 minutes total)
+- **Max Attempts**: Unlimited (runs continuously)
 - **Headless Mode**: Always enabled for background operation
-- **Logging**: Comprehensive logs for debugging
+- **New Court Detection**: Compares with previous scans to detect new availability
+- **Instant Notifications**: Sends alerts immediately when new courts are found
 
-### Monitoring Commands
+### Daemon Commands
 ```bash
-# Start background monitoring
+# Start daemon monitoring (RECOMMENDED)
+python3 daemon_monitoring.py
+
+# Check daemon status
+ps aux | grep daemon_monitoring
+
+# View daemon logs
+tail -f btc_daemon_monitoring.log
+
+# Stop daemon
+kill $(cat btc_daemon_*.pid)
+
+# Alternative: Simple background monitoring
 nohup python3 run_background_env.py > btc_background.log 2>&1 &
-
-# Check process status
-ps aux | grep run_background_env
-
-# View real-time logs
-tail -f btc_background.log
-
-# Stop monitoring
-pkill -f run_background_env
 ```
 
 ## 🐛 Troubleshooting
@@ -179,6 +230,42 @@ The bot creates several debug files:
 
 ## 📝 Example Output
 
+### Daemon Mode (RECOMMENDED)
+```
+🎾 BTC Tennis Bot - Daemon Monitoring Mode (DEFAULT)
+======================================================================
+This is the RECOMMENDED mode for continuous court monitoring
+Features:
+  ✅ Immediate email notifications when new courts become available
+  ✅ SMS alerts for urgent court releases
+  ✅ 24/7 background monitoring
+  ✅ Detects new bookings as they're released
+  ✅ Runs completely detached from terminal
+======================================================================
+
+🚀 Starting daemon process...
+   PID file: btc_daemon_20251025_220000.pid
+   Log file: btc_daemon_monitoring.log
+   Monitoring interval: 5 minutes
+   Max attempts: Unlimited
+
+💡 To stop the daemon: kill $(cat btc_daemon_20251025_220000.pid)
+💡 To view logs: tail -f btc_daemon_monitoring.log
+
+🎾 Daemon is now monitoring for new court availability!
+
+[Background monitoring starts...]
+
+🎾 NEW COURTS DETECTED! 3 new slots found!
+Sending immediate notifications...
+   📅 Tomorrow, October 26, 2025: 2 courts
+      1. Book 4:00 pm as 48hr
+      2. Book 6:00 pm as 48hr
+   📅 Day after tomorrow, October 27, 2025: 1 court
+      1. Book 2:00 pm as 48hr
+```
+
+### Interactive Mode
 ```
 🎾 Burnaby Tennis Club Court Booking Bot
 ==================================================
