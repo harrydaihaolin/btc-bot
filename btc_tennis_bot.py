@@ -98,7 +98,32 @@ class BTCCourtBookingBot:
         self.phone_number = phone_number
         self.gmail_app_email = gmail_app_email
         self.booking_date = booking_date or "tomorrow"
+        self.sent_notifications = set()  # Track sent notifications for idempotency
+    
+    def create_notification_id(self, courts):
+        """Create a unique notification ID based on court details"""
+        if not courts:
+            return None
         
+        # Create a unique identifier based on court details
+        court_signatures = []
+        for court in courts:
+            signature = f"{court.get('time', '')}_{court.get('court_number', '')}_{court.get('text', '')}"
+            court_signatures.append(signature)
+        
+        # Sort to ensure consistent ordering
+        court_signatures.sort()
+        notification_id = f"{self.booking_date}_{'_'.join(court_signatures)}"
+        return notification_id
+    
+    def clear_old_notifications(self):
+        """Clear old notifications to prevent memory buildup"""
+        if len(self.sent_notifications) > 100:  # Keep only last 100 notifications
+            # Keep only the most recent 50 notifications
+            notifications_list = list(self.sent_notifications)
+            self.sent_notifications = set(notifications_list[-50:])
+            logger.info("Cleared old notifications to prevent memory buildup")
+    
     def setup_driver(self):
         """Setup Chrome WebDriver with appropriate options"""
         try:
@@ -339,6 +364,12 @@ class BTCCourtBookingBot:
             bool: True if notification sent successfully
         """
         try:
+            # Check for idempotency
+            notification_id = self.create_notification_id(available_courts)
+            if notification_id in self.sent_notifications:
+                logger.info(f"Email notification already sent for this court combination: {notification_id}")
+                return True
+            
             logger.info(f"Sending notification for {len(available_courts)} available courts")
             
             # Create notification message
@@ -392,6 +423,9 @@ BTC Booking Bot 🤖
                 server.quit()
                 
                 logger.info("Email notification sent successfully!")
+                # Mark notification as sent for idempotency
+                if notification_id:
+                    self.sent_notifications.add(notification_id)
                 success = True
                 
             except Exception as e:
@@ -426,6 +460,9 @@ BTC Booking Bot 🤖
             print(message)
             print("="*50)
             logger.info("Notification printed to console")
+            # Mark notification as sent for idempotency
+            if notification_id:
+                self.sent_notifications.add(notification_id)
             success = True
             
             return success
@@ -447,6 +484,12 @@ BTC Booking Bot 🤖
         if not self.phone_number:
             logger.warning("No phone number provided for SMS notifications")
             return False
+        
+        # Check for idempotency
+        notification_id = self.create_notification_id(available_courts)
+        if notification_id in self.sent_notifications:
+            logger.info(f"SMS notification already sent for this court combination: {notification_id}")
+            return True
             
         try:
             logger.info(f"Sending SMS notification for {len(available_courts)} available courts")
@@ -498,6 +541,9 @@ BTC Booking Bot 🤖
                     server.quit()
                     
                     logger.info(f"SMS sent successfully via {carrier} gateway!")
+                    # Mark notification as sent for idempotency
+                    if notification_id:
+                        self.sent_notifications.add(notification_id)
                     success = True
                     break
                     
@@ -1046,6 +1092,9 @@ BTC Booking Bot 🤖
         """
         try:
             logger.info("Starting BTC court booking scan...")
+            
+            # Clear old notifications to prevent memory buildup
+            self.clear_old_notifications()
             
             # Setup driver
             self.setup_driver()
