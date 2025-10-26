@@ -5,14 +5,16 @@ An automated bot that monitors Burnaby Tennis Club's booking system and sends no
 ## 🚀 Features
 
 - **Automatic Login**: Logs into the BTC website using your credentials
-- **Real-time Monitoring**: Scans for available courts on tomorrow's bookings
+- **Multi-Date Scanning**: Automatically checks today, tomorrow, and day after tomorrow
 - **Smart Detection**: Finds "Book" buttons and filters out false positives
+- **Interactive Background Monitoring**: Works in both interactive and automated environments
 - **Multi-channel Notifications**: 
   - Email notifications via Gmail SMTP
   - SMS notifications via email-to-SMS gateways
 - **Continuous Monitoring**: Options for 5-minute or 30-second monitoring
 - **Environment Variable Support**: Secure credential management
 - **Interactive Setup**: Easy credential configuration
+- **Production Ready**: Perfect for cron jobs and automated deployments
 
 ## 📋 Prerequisites
 
@@ -94,19 +96,25 @@ python3 btc_tennis_bot.py
 ## 🔍 How It Works
 
 1. **Login**: Automatically logs into BTC website
-2. **Navigate**: Goes to tomorrow's booking page
-3. **Scan**: Finds all "Book" buttons on the page
+2. **Multi-Date Scan**: Checks today, tomorrow, and day after tomorrow
+3. **Smart Detection**: Finds all "Book" buttons across all dates
 4. **Filter**: Removes false positives like "Booking Grid - None"
-5. **Notify**: Sends email and SMS when courts are found
-6. **Monitor**: Optional continuous monitoring
+5. **Organize**: Groups courts by date for clear notifications
+6. **Notify**: Sends email and SMS when courts are found
+7. **Monitor**: Optional continuous monitoring with configurable intervals
 
 ## 📊 Monitoring Options
 
 After the initial scan, you can choose:
 
-1. **Continuous Monitoring** (every 5 minutes)
-2. **Timeslot Monitoring** (every 30 seconds)
-3. **Exit**
+1. **Continuous Monitoring** (every 5 minutes) - Perfect for background monitoring
+2. **Timeslot Monitoring** (every 30 seconds) - For rapid availability changes
+3. **Exit** - Single scan mode
+
+### Interactive vs Non-Interactive Mode
+- **Interactive Mode**: Full user prompts and monitoring options
+- **Non-Interactive Mode**: Perfect for cron jobs and automated deployments
+- **Automatic Detection**: Bot automatically adapts to your environment
 
 ## 🛡️ Security
 
@@ -156,13 +164,41 @@ The bot creates several debug files:
 
 Running court availability scan...
 
-Found 3 available courts!
-1. Book 6:00 am as 48hr
-2. Book 8:00 am as 48hr  
-3. Book 4:00 pm as 48hr
+Found 5 available courts across all dates!
+
+📅 Today, October 25, 2025: 2 courts
+   1. Book 6:00 am as 48hr
+   2. Book 8:00 am as 48hr
+
+📅 Tomorrow, October 26, 2025: 2 courts
+   1. Book 4:00 pm as 48hr
+   2. Book 6:00 pm as 48hr
+
+📅 Day after tomorrow, October 27, 2025: 1 court
+   1. Book 2:00 pm as 48hr
 
 ✅ Notifications sent! Check your email and phone.
+
+Monitoring options:
+1. Run continuous monitoring (every 5 minutes)
+2. Run timeslot monitoring (every 30 seconds)
+3. Exit
 ```
+
+## 📋 Version History
+
+### v1.1.0 - Interactive Background Monitoring Mode
+- **Multi-Date Scanning**: Automatically checks today, tomorrow, and day after tomorrow
+- **Interactive Background Monitoring**: Works in both interactive and automated environments
+- **Enhanced Notifications**: Date-organized email and SMS notifications
+- **Production Ready**: Perfect for cron jobs and automated deployments
+- **Robust Error Handling**: Graceful handling of EOF errors and network issues
+
+### v1.0.0 - Initial Release
+- Basic court monitoring and notification system
+- Single-date scanning (tomorrow only)
+- Email and SMS notifications
+- Interactive setup and credential management
 
 ## 🤝 Contributing
 
