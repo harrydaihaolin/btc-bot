@@ -1,0 +1,272 @@
+2025-10-25 22:10:59,719 - INFO - All components initialized successfully
+2025-10-25 22:10:59,720 - INFO - Running initial court availability scan...
+2025-10-25 22:10:59,720 - INFO - ====== WebDriver manager ======
+2025-10-25 22:11:00,191 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:11:00,345 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:11:00,472 - INFO - Driver [/Users/haolin.dai/.wdm/drivers/chromedriver/mac64/141.0.7390.122/chromedriver-mac-arm64/chromedriver] found in cache
+2025-10-25 22:11:01,446 - INFO - Chrome WebDriver initialized successfully
+2025-10-25 22:11:01,446 - INFO - Attempting to login...
+2025-10-25 22:11:01,447 - INFO - Trying login URL: https://www.burnabytennis.ca/login
+2025-10-25 22:11:04,102 - INFO - Login form found, attempting to fill credentials
+2025-10-25 22:11:08,416 - INFO - Login successful!
+2025-10-25 22:11:08,416 - INFO - Navigating to https://www.burnabytennis.ca/app/bookings/grid
+2025-10-25 22:11:08,540 - INFO - Successfully navigated to BTC booking page
+2025-10-25 22:11:08,541 - INFO - Checking today (offset: 0 days)
+2025-10-25 22:11:08,541 - INFO - Navigating to date: Saturday, October 25, 2025
+2025-10-25 22:11:08,556 - WARNING - Could not find date toggle
+2025-10-25 22:11:08,556 - WARNING - Failed to navigate to today
+2025-10-25 22:11:08,556 - INFO - Checking tomorrow (offset: 1 days)
+2025-10-25 22:11:08,556 - INFO - Navigating to date: Sunday, October 26, 2025
+2025-10-25 22:11:08,571 - WARNING - Could not find date toggle
+2025-10-25 22:11:08,571 - WARNING - Failed to navigate to tomorrow
+2025-10-25 22:11:08,571 - INFO - Checking day after tomorrow (offset: 2 days)
+2025-10-25 22:11:08,571 - INFO - Navigating to date: Monday, October 27, 2025
+2025-10-25 22:11:08,585 - WARNING - Could not find date toggle
+2025-10-25 22:11:08,585 - WARNING - Failed to navigate to day after tomorrow
+2025-10-25 22:11:08,586 - INFO - No available courts found in initial scan
+2025-10-25 22:11:08,586 - INFO - Starting continuous background monitoring (every 5 minutes)
+2025-10-25 22:11:08,586 - INFO - Press Ctrl+C to stop monitoring
+2025-10-25 22:11:08,586 - INFO - Background monitoring attempt 1
+2025-10-25 22:11:08,586 - INFO - Running initial court availability scan...
+2025-10-25 22:11:08,586 - INFO - ====== WebDriver manager ======
+2025-10-25 22:11:09,083 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:11:09,299 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:11:09,429 - INFO - Driver [/Users/haolin.dai/.wdm/drivers/chromedriver/mac64/141.0.7390.122/chromedriver-mac-arm64/chromedriver] found in cache
+2025-10-25 22:11:10,127 - INFO - Chrome WebDriver initialized successfully
+2025-10-25 22:11:10,127 - INFO - Attempting to login...
+2025-10-25 22:11:10,127 - INFO - Trying login URL: https://www.burnabytennis.ca/login
+2025-10-25 22:11:12,615 - INFO - Login form found, attempting to fill credentials
+2025-10-25 22:11:16,935 - INFO - Login successful!
+2025-10-25 22:11:16,935 - INFO - Navigating to https://www.burnabytennis.ca/app/bookings/grid
+2025-10-25 22:11:17,067 - INFO - Successfully navigated to BTC booking page
+2025-10-25 22:11:17,067 - INFO - Checking today (offset: 0 days)
+2025-10-25 22:11:17,067 - INFO - Navigating to date: Saturday, October 25, 2025
+2025-10-25 22:11:17,085 - WARNING - Could not find date toggle
+2025-10-25 22:11:17,085 - WARNING - Failed to navigate to today
+2025-10-25 22:11:17,085 - INFO - Checking tomorrow (offset: 1 days)
+2025-10-25 22:11:17,085 - INFO - Navigating to date: Sunday, October 26, 2025
+2025-10-25 22:11:17,101 - WARNING - Could not find date toggle
+2025-10-25 22:11:17,101 - WARNING - Failed to navigate to tomorrow
+2025-10-25 22:11:17,101 - INFO - Checking day after tomorrow (offset: 2 days)
+2025-10-25 22:11:17,101 - INFO - Navigating to date: Monday, October 27, 2025
+2025-10-25 22:11:17,115 - WARNING - Could not find date toggle
+2025-10-25 22:11:17,115 - WARNING - Failed to navigate to day after tomorrow
+2025-10-25 22:11:17,116 - INFO - No available courts found in initial scan
+2025-10-25 22:11:17,116 - INFO - No available courts found
+2025-10-25 22:11:17,116 - INFO - Waiting 5 minutes before next scan...
+2025-10-25 22:11:24,702 - INFO - Received signal 15, shutting down gracefully...
+2025-10-25 22:11:25,143 - INFO - Background monitoring completed
+2025-10-25 22:11:25,285 - INFO - WebDriver closed
+2025-10-25 22:14:51,156 - INFO - All components initialized successfully
+2025-10-25 22:14:51,156 - INFO - Running initial court availability scan...
+2025-10-25 22:14:51,157 - INFO - ====== WebDriver manager ======
+2025-10-25 22:14:51,724 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:14:51,862 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:14:52,010 - INFO - Driver [/Users/haolin.dai/.wdm/drivers/chromedriver/mac64/141.0.7390.122/chromedriver-mac-arm64/chromedriver] found in cache
+2025-10-25 22:14:52,918 - INFO - Chrome WebDriver initialized successfully
+2025-10-25 22:14:52,918 - INFO - Attempting to login...
+2025-10-25 22:14:52,918 - INFO - Trying login URL: https://www.burnabytennis.ca/login
+2025-10-25 22:14:55,567 - INFO - Login form found, attempting to fill credentials
+2025-10-25 22:14:59,876 - INFO - Login successful!
+2025-10-25 22:14:59,876 - INFO - Navigating to https://www.burnabytennis.ca/app/bookings/grid
+2025-10-25 22:14:59,994 - INFO - Successfully navigated to BTC booking page
+2025-10-25 22:14:59,994 - INFO - Checking today (offset: 0 days)
+2025-10-25 22:14:59,994 - INFO - Navigating to date: Saturday, October 25, 2025
+2025-10-25 22:15:00,010 - WARNING - Could not find date toggle
+2025-10-25 22:15:00,010 - WARNING - Failed to navigate to today
+2025-10-25 22:15:00,010 - INFO - Checking tomorrow (offset: 1 days)
+2025-10-25 22:15:00,010 - INFO - Navigating to date: Sunday, October 26, 2025
+2025-10-25 22:15:00,025 - WARNING - Could not find date toggle
+2025-10-25 22:15:00,025 - WARNING - Failed to navigate to tomorrow
+2025-10-25 22:15:00,025 - INFO - Checking day after tomorrow (offset: 2 days)
+2025-10-25 22:15:00,025 - INFO - Navigating to date: Monday, October 27, 2025
+2025-10-25 22:15:00,039 - WARNING - Could not find date toggle
+2025-10-25 22:15:00,039 - WARNING - Failed to navigate to day after tomorrow
+2025-10-25 22:15:00,040 - INFO - No available courts found in initial scan
+2025-10-25 22:15:00,040 - INFO - Starting continuous background monitoring (every 5 minutes)
+2025-10-25 22:15:00,040 - INFO - Press Ctrl+C to stop monitoring
+2025-10-25 22:15:00,040 - INFO - Background monitoring attempt 1
+2025-10-25 22:15:00,040 - INFO - Running initial court availability scan...
+2025-10-25 22:15:00,040 - INFO - ====== WebDriver manager ======
+2025-10-25 22:15:00,559 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:15:00,703 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:15:00,829 - INFO - Driver [/Users/haolin.dai/.wdm/drivers/chromedriver/mac64/141.0.7390.122/chromedriver-mac-arm64/chromedriver] found in cache
+2025-10-25 22:15:01,478 - INFO - Chrome WebDriver initialized successfully
+2025-10-25 22:15:01,478 - INFO - Attempting to login...
+2025-10-25 22:15:01,478 - INFO - Trying login URL: https://www.burnabytennis.ca/login
+2025-10-25 22:15:04,021 - INFO - Login form found, attempting to fill credentials
+2025-10-25 22:15:08,341 - INFO - Login successful!
+2025-10-25 22:15:08,342 - INFO - Navigating to https://www.burnabytennis.ca/app/bookings/grid
+2025-10-25 22:15:08,457 - INFO - Successfully navigated to BTC booking page
+2025-10-25 22:15:08,457 - INFO - Checking today (offset: 0 days)
+2025-10-25 22:15:08,457 - INFO - Navigating to date: Saturday, October 25, 2025
+2025-10-25 22:15:08,472 - WARNING - Could not find date toggle
+2025-10-25 22:15:08,472 - WARNING - Failed to navigate to today
+2025-10-25 22:15:08,472 - INFO - Checking tomorrow (offset: 1 days)
+2025-10-25 22:15:08,472 - INFO - Navigating to date: Sunday, October 26, 2025
+2025-10-25 22:15:08,486 - WARNING - Could not find date toggle
+2025-10-25 22:15:08,486 - WARNING - Failed to navigate to tomorrow
+2025-10-25 22:15:08,486 - INFO - Checking day after tomorrow (offset: 2 days)
+2025-10-25 22:15:08,486 - INFO - Navigating to date: Monday, October 27, 2025
+2025-10-25 22:15:08,500 - WARNING - Could not find date toggle
+2025-10-25 22:15:08,500 - WARNING - Failed to navigate to day after tomorrow
+2025-10-25 22:15:08,501 - INFO - No available courts found in initial scan
+2025-10-25 22:15:08,501 - INFO - No available courts found
+2025-10-25 22:15:08,501 - INFO - Waiting 5 minutes before next scan...
+2025-10-25 22:15:19,680 - INFO - Received signal 15, shutting down gracefully...
+2025-10-25 22:15:20,543 - INFO - Background monitoring completed
+2025-10-25 22:15:20,678 - INFO - WebDriver closed
+2025-10-25 22:18:31,778 - INFO - All components initialized successfully
+2025-10-25 22:18:31,778 - INFO - Running initial court availability scan...
+2025-10-25 22:18:31,778 - INFO - ====== WebDriver manager ======
+2025-10-25 22:18:32,285 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:18:32,431 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:18:32,563 - INFO - Driver [/Users/haolin.dai/.wdm/drivers/chromedriver/mac64/141.0.7390.122/chromedriver-mac-arm64/chromedriver] found in cache
+2025-10-25 22:18:33,183 - INFO - Chrome WebDriver initialized successfully
+2025-10-25 22:18:33,192 - INFO - Attempting to login...
+2025-10-25 22:18:33,193 - INFO - Trying login URL: https://www.burnabytennis.ca/login
+2025-10-25 22:18:35,809 - INFO - Login form found, attempting to fill credentials
+2025-10-25 22:18:40,143 - INFO - Login successful!
+2025-10-25 22:18:40,143 - INFO - Navigating to https://www.burnabytennis.ca/app/bookings/grid
+2025-10-25 22:18:40,256 - INFO - Successfully navigated to BTC booking page
+2025-10-25 22:18:40,256 - INFO - Checking today (offset: 0 days)
+2025-10-25 22:18:40,257 - INFO - Navigating to date: Saturday, October 25, 2025
+2025-10-25 22:18:40,273 - WARNING - Could not find date toggle
+2025-10-25 22:18:40,273 - WARNING - Failed to navigate to today
+2025-10-25 22:18:40,273 - INFO - Checking tomorrow (offset: 1 days)
+2025-10-25 22:18:40,273 - INFO - Navigating to date: Sunday, October 26, 2025
+2025-10-25 22:18:40,289 - WARNING - Could not find date toggle
+2025-10-25 22:18:40,289 - WARNING - Failed to navigate to tomorrow
+2025-10-25 22:18:40,289 - INFO - Checking day after tomorrow (offset: 2 days)
+2025-10-25 22:18:40,289 - INFO - Navigating to date: Monday, October 27, 2025
+2025-10-25 22:18:40,304 - WARNING - Could not find date toggle
+2025-10-25 22:18:40,304 - WARNING - Failed to navigate to day after tomorrow
+2025-10-25 22:18:40,304 - WARNING - Date navigation failed for all dates, falling back to current page scan
+2025-10-25 22:18:40,304 - INFO - Scanning for available courts...
+2025-10-25 22:18:43,319 - INFO - Found 114 button elements on page
+2025-10-25 22:18:43,340 - INFO - Found Book button: Booking Grid
+2025-10-25 22:18:43,673 - INFO - Found Book button: Book 11:00 pm
+as 20hr
+2025-10-25 22:18:43,680 - INFO - Found Book button: Book 11:30 pm
+as 20hr
+2025-10-25 22:18:43,784 - INFO - Found Book button: Book 10:30 pm
+as 20hr
+2025-10-25 22:18:43,792 - INFO - Found Book button: Book 11:00 pm
+as 20hr
+2025-10-25 22:18:43,798 - INFO - Found Book button: Book 11:30 pm
+as 20hr
+2025-10-25 22:18:44,056 - INFO - Found Book button: Book 11:00 pm
+as 20hr
+2025-10-25 22:18:44,063 - INFO - Found Book button: Book 11:30 pm
+as 20hr
+2025-10-25 22:18:44,063 - INFO - Found 8 buttons with 'Book' text
+2025-10-25 22:18:44,084 - INFO - Added court from button: {'element': <selenium.webdriver.remote.webelement.WebElement (session="5e7c1043acf0d24f3e32da701ad5abc3", element="f.884CE1FD5A81B8F11159184BA8589F19.d.052BE5D6672BEC1925FCC266705A3216.e.164")>, 'text': 'Book 11:00 pm\nas 20hr', 'class': 'MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth css-2hzlsa', 'id': '', 'time': '11:00 pm', 'court_number': None, 'date': None, 'clickable': True}
+2025-10-25 22:18:44,094 - INFO - Added court from button: {'element': <selenium.webdriver.remote.webelement.WebElement (session="5e7c1043acf0d24f3e32da701ad5abc3", element="f.884CE1FD5A81B8F11159184BA8589F19.d.052BE5D6672BEC1925FCC266705A3216.e.165")>, 'text': 'Book 11:30 pm\nas 20hr', 'class': 'MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth css-2hzlsa', 'id': '', 'time': '11:30 pm', 'court_number': None, 'date': None, 'clickable': True}
+2025-10-25 22:18:44,108 - INFO - Added court from button: {'element': <selenium.webdriver.remote.webelement.WebElement (session="5e7c1043acf0d24f3e32da701ad5abc3", element="f.884CE1FD5A81B8F11159184BA8589F19.d.052BE5D6672BEC1925FCC266705A3216.e.182")>, 'text': 'Book 10:30 pm\nas 20hr', 'class': 'MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth css-2hzlsa', 'id': '', 'time': '10:30 pm', 'court_number': None, 'date': None, 'clickable': True}
+2025-10-25 22:18:44,118 - INFO - Added court from button: {'element': <selenium.webdriver.remote.webelement.WebElement (session="5e7c1043acf0d24f3e32da701ad5abc3", element="f.884CE1FD5A81B8F11159184BA8589F19.d.052BE5D6672BEC1925FCC266705A3216.e.183")>, 'text': 'Book 11:00 pm\nas 20hr', 'class': 'MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth css-2hzlsa', 'id': '', 'time': '11:00 pm', 'court_number': None, 'date': None, 'clickable': True}
+2025-10-25 22:18:44,130 - INFO - Added court from button: {'element': <selenium.webdriver.remote.webelement.WebElement (session="5e7c1043acf0d24f3e32da701ad5abc3", element="f.884CE1FD5A81B8F11159184BA8589F19.d.052BE5D6672BEC1925FCC266705A3216.e.184")>, 'text': 'Book 11:30 pm\nas 20hr', 'class': 'MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth css-2hzlsa', 'id': '', 'time': '11:30 pm', 'court_number': None, 'date': None, 'clickable': True}
+2025-10-25 22:18:44,143 - INFO - Added court from button: {'element': <selenium.webdriver.remote.webelement.WebElement (session="5e7c1043acf0d24f3e32da701ad5abc3", element="f.884CE1FD5A81B8F11159184BA8589F19.d.052BE5D6672BEC1925FCC266705A3216.e.224")>, 'text': 'Book 11:00 pm\nas 20hr', 'class': 'MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth css-2hzlsa', 'id': '', 'time': '11:00 pm', 'court_number': None, 'date': None, 'clickable': True}
+2025-10-25 22:18:44,154 - INFO - Added court from button: {'element': <selenium.webdriver.remote.webelement.WebElement (session="5e7c1043acf0d24f3e32da701ad5abc3", element="f.884CE1FD5A81B8F11159184BA8589F19.d.052BE5D6672BEC1925FCC266705A3216.e.225")>, 'text': 'Book 11:30 pm\nas 20hr', 'class': 'MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth css-2hzlsa', 'id': '', 'time': '11:30 pm', 'court_number': None, 'date': None, 'clickable': True}
+2025-10-25 22:18:44,154 - INFO - Found 7 courts on current page (fallback mode)
+2025-10-25 22:18:44,154 - INFO - Found 7 available courts in initial scan!
+2025-10-25 22:18:44,155 - INFO -    Saturday, October 25, 2025: 7 courts
+2025-10-25 22:18:44,155 - INFO -       1. Book 11:00 pm
+as 20hr - 11:00 pm
+2025-10-25 22:18:44,155 - INFO -       2. Book 11:30 pm
+as 20hr - 11:30 pm
+2025-10-25 22:18:44,155 - INFO -       3. Book 10:30 pm
+as 20hr - 10:30 pm
+2025-10-25 22:18:44,155 - INFO -       4. Book 11:00 pm
+as 20hr - 11:00 pm
+2025-10-25 22:18:44,155 - INFO -       5. Book 11:30 pm
+as 20hr - 11:30 pm
+2025-10-25 22:18:44,155 - INFO -       6. Book 11:00 pm
+as 20hr - 11:00 pm
+2025-10-25 22:18:44,155 - INFO -       7. Book 11:30 pm
+as 20hr - 11:30 pm
+2025-10-25 22:18:44,155 - INFO - Starting continuous background monitoring (every 5 minutes)
+2025-10-25 22:18:44,155 - INFO - Press Ctrl+C to stop monitoring
+2025-10-25 22:18:44,155 - INFO - Background monitoring attempt 1
+2025-10-25 22:18:44,155 - INFO - Running initial court availability scan...
+2025-10-25 22:18:44,155 - INFO - ====== WebDriver manager ======
+2025-10-25 22:18:44,639 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:18:44,768 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:18:44,900 - INFO - Driver [/Users/haolin.dai/.wdm/drivers/chromedriver/mac64/141.0.7390.122/chromedriver-mac-arm64/chromedriver] found in cache
+2025-10-25 22:18:45,582 - INFO - Chrome WebDriver initialized successfully
+2025-10-25 22:18:45,583 - INFO - Attempting to login...
+2025-10-25 22:18:45,583 - INFO - Trying login URL: https://www.burnabytennis.ca/login
+2025-10-25 22:18:47,744 - INFO - Received signal 15, shutting down gracefully...
+2025-10-25 22:18:48,130 - INFO - Login form found, attempting to fill credentials
+2025-10-25 22:18:52,443 - INFO - Login successful!
+2025-10-25 22:18:52,443 - INFO - Navigating to https://www.burnabytennis.ca/app/bookings/grid
+2025-10-25 22:18:52,558 - INFO - Successfully navigated to BTC booking page
+2025-10-25 22:18:52,558 - INFO - Checking today (offset: 0 days)
+2025-10-25 22:18:52,558 - INFO - Navigating to date: Saturday, October 25, 2025
+2025-10-25 22:18:52,575 - WARNING - Could not find date toggle
+2025-10-25 22:18:52,575 - WARNING - Failed to navigate to today
+2025-10-25 22:18:52,575 - INFO - Checking tomorrow (offset: 1 days)
+2025-10-25 22:18:52,575 - INFO - Navigating to date: Sunday, October 26, 2025
+2025-10-25 22:18:52,613 - WARNING - Could not find date toggle
+2025-10-25 22:18:52,613 - WARNING - Failed to navigate to tomorrow
+2025-10-25 22:18:52,613 - INFO - Checking day after tomorrow (offset: 2 days)
+2025-10-25 22:18:52,613 - INFO - Navigating to date: Monday, October 27, 2025
+2025-10-25 22:18:52,642 - WARNING - Could not find date toggle
+2025-10-25 22:18:52,642 - WARNING - Failed to navigate to day after tomorrow
+2025-10-25 22:18:52,643 - WARNING - Date navigation failed for all dates, falling back to current page scan
+2025-10-25 22:18:52,643 - INFO - Scanning for available courts...
+2025-10-25 22:18:55,653 - INFO - Found 114 button elements on page
+2025-10-25 22:18:55,672 - INFO - Found Book button: Booking Grid
+2025-10-25 22:18:56,033 - INFO - Found Book button: Book 11:00 pm
+as 20hr
+2025-10-25 22:18:56,041 - INFO - Found Book button: Book 11:30 pm
+as 20hr
+2025-10-25 22:18:56,157 - INFO - Found Book button: Book 10:30 pm
+as 20hr
+2025-10-25 22:18:56,165 - INFO - Found Book button: Book 11:00 pm
+as 20hr
+2025-10-25 22:18:56,172 - INFO - Found Book button: Book 11:30 pm
+as 20hr
+2025-10-25 22:18:56,448 - INFO - Found Book button: Book 11:00 pm
+as 20hr
+2025-10-25 22:18:56,456 - INFO - Found Book button: Book 11:30 pm
+as 20hr
+2025-10-25 22:18:56,459 - INFO - Found 8 buttons with 'Book' text
+2025-10-25 22:18:56,481 - INFO - Added court from button: {'element': <selenium.webdriver.remote.webelement.WebElement (session="0130e5c8f70426c99bf5b9d11d303b60", element="f.EA292855C2C97059490649634AAC02F1.d.C84D3E0378BDD4071C070AE122C3823C.e.166")>, 'text': 'Book 11:00 pm\nas 20hr', 'class': 'MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth css-2hzlsa', 'id': '', 'time': '11:00 pm', 'court_number': None, 'date': None, 'clickable': True}
+2025-10-25 22:18:56,495 - INFO - Added court from button: {'element': <selenium.webdriver.remote.webelement.WebElement (session="0130e5c8f70426c99bf5b9d11d303b60", element="f.EA292855C2C97059490649634AAC02F1.d.C84D3E0378BDD4071C070AE122C3823C.e.167")>, 'text': 'Book 11:30 pm\nas 20hr', 'class': 'MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth css-2hzlsa', 'id': '', 'time': '11:30 pm', 'court_number': None, 'date': None, 'clickable': True}
+2025-10-25 22:18:56,508 - INFO - Added court from button: {'element': <selenium.webdriver.remote.webelement.WebElement (session="0130e5c8f70426c99bf5b9d11d303b60", element="f.EA292855C2C97059490649634AAC02F1.d.C84D3E0378BDD4071C070AE122C3823C.e.184")>, 'text': 'Book 10:30 pm\nas 20hr', 'class': 'MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth css-2hzlsa', 'id': '', 'time': '10:30 pm', 'court_number': None, 'date': None, 'clickable': True}
+2025-10-25 22:18:56,520 - INFO - Added court from button: {'element': <selenium.webdriver.remote.webelement.WebElement (session="0130e5c8f70426c99bf5b9d11d303b60", element="f.EA292855C2C97059490649634AAC02F1.d.C84D3E0378BDD4071C070AE122C3823C.e.185")>, 'text': 'Book 11:00 pm\nas 20hr', 'class': 'MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth css-2hzlsa', 'id': '', 'time': '11:00 pm', 'court_number': None, 'date': None, 'clickable': True}
+2025-10-25 22:18:56,555 - INFO - Added court from button: {'element': <selenium.webdriver.remote.webelement.WebElement (session="0130e5c8f70426c99bf5b9d11d303b60", element="f.EA292855C2C97059490649634AAC02F1.d.C84D3E0378BDD4071C070AE122C3823C.e.186")>, 'text': 'Book 11:30 pm\nas 20hr', 'class': 'MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth css-2hzlsa', 'id': '', 'time': '11:30 pm', 'court_number': None, 'date': None, 'clickable': True}
+2025-10-25 22:18:56,586 - INFO - Added court from button: {'element': <selenium.webdriver.remote.webelement.WebElement (session="0130e5c8f70426c99bf5b9d11d303b60", element="f.EA292855C2C97059490649634AAC02F1.d.C84D3E0378BDD4071C070AE122C3823C.e.226")>, 'text': 'Book 11:00 pm\nas 20hr', 'class': 'MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth css-2hzlsa', 'id': '', 'time': '11:00 pm', 'court_number': None, 'date': None, 'clickable': True}
+2025-10-25 22:18:56,618 - INFO - Added court from button: {'element': <selenium.webdriver.remote.webelement.WebElement (session="0130e5c8f70426c99bf5b9d11d303b60", element="f.EA292855C2C97059490649634AAC02F1.d.C84D3E0378BDD4071C070AE122C3823C.e.227")>, 'text': 'Book 11:30 pm\nas 20hr', 'class': 'MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiButton-outlined MuiButton-outlinedInfo MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInfo MuiButton-disableElevation MuiButton-fullWidth css-2hzlsa', 'id': '', 'time': '11:30 pm', 'court_number': None, 'date': None, 'clickable': True}
+2025-10-25 22:18:56,619 - INFO - Found 7 courts on current page (fallback mode)
+2025-10-25 22:18:56,619 - INFO - Found 7 available courts in initial scan!
+2025-10-25 22:18:56,620 - INFO -    Saturday, October 25, 2025: 7 courts
+2025-10-25 22:18:56,620 - INFO -       1. Book 11:00 pm
+as 20hr - 11:00 pm
+2025-10-25 22:18:56,620 - INFO -       2. Book 11:30 pm
+as 20hr - 11:30 pm
+2025-10-25 22:18:56,620 - INFO -       3. Book 10:30 pm
+as 20hr - 10:30 pm
+2025-10-25 22:18:56,621 - INFO -       4. Book 11:00 pm
+as 20hr - 11:00 pm
+2025-10-25 22:18:56,621 - INFO -       5. Book 11:30 pm
+as 20hr - 11:30 pm
+2025-10-25 22:18:56,621 - INFO -       6. Book 11:00 pm
+as 20hr - 11:00 pm
+2025-10-25 22:18:56,621 - INFO -       7. Book 11:30 pm
+as 20hr - 11:30 pm
+2025-10-25 22:18:56,621 - INFO - Found 7 available courts!
+2025-10-25 22:18:56,621 - INFO - 🎾 NEW COURTS DETECTED! 3 new slots found!
+2025-10-25 22:18:56,622 - INFO - Sending notifications for new courts...
+2025-10-25 22:18:56,622 - INFO - Sending notification for 7 available courts across all dates
+2025-10-25 22:18:59,739 - INFO - Email notification sent successfully!
+2025-10-25 22:18:59,739 - INFO - SMS notification already sent for this court combination: multi_date_10:30 pm_None_Book 10:30 pm
+as 20hr_11:00 pm_None_Book 11:00 pm
+as 20hr_11:00 pm_None_Book 11:00 pm
+as 20hr_11:00 pm_None_Book 11:00 pm
+as 20hr_11:30 pm_None_Book 11:30 pm
+as 20hr_11:30 pm_None_Book 11:30 pm
+as 20hr_11:30 pm_None_Book 11:30 pm
+as 20hr
+2025-10-25 22:18:59,739 - INFO - Background monitoring completed
+2025-10-25 22:18:59,871 - INFO - WebDriver closed

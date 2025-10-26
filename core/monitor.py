@@ -216,6 +216,7 @@ class CourtMonitor:
     def scan_all_dates(self) -> Dict[str, List[Dict]]:
         """Scan all three dates (today, tomorrow, day after tomorrow) for available courts"""
         all_courts = {}
+        date_navigation_successful = False
         
         # Check today, tomorrow, and day after tomorrow
         dates_to_check = [
@@ -234,6 +235,7 @@ class CourtMonitor:
                 
                 # Navigate to specific date
                 if self._navigate_to_specific_date(target_date):
+                    date_navigation_successful = True
                     # Detect available courts for this date
                     courts = self._detect_available_courts()
                     if courts:
@@ -254,6 +256,28 @@ class CourtMonitor:
             except Exception as e:
                 self.logger.error(f"Error checking {date_label}: {e}")
                 all_courts[date_str] = []
+        
+        # If date navigation failed completely, fall back to scanning current page
+        if not date_navigation_successful:
+            self.logger.warning("Date navigation failed for all dates, falling back to current page scan")
+            try:
+                courts = self._detect_available_courts()
+                if courts:
+                    # Use today's date for current page courts
+                    today = datetime.now()
+                    date_str = today.strftime("%Y-%m-%d")
+                    
+                    # Add date information to each court
+                    for court in courts:
+                        court['date'] = date_str
+                        court['date_label'] = "current page"
+                    
+                    all_courts[date_str] = courts
+                    self.logger.info(f"Found {len(courts)} courts on current page (fallback mode)")
+                else:
+                    self.logger.info("No courts found on current page (fallback mode)")
+            except Exception as e:
+                self.logger.error(f"Error in fallback court detection: {e}")
         
         return all_courts
     

@@ -133,3 +133,17 @@
 2025-10-25 22:07:25,666 - INFO - WebDriver closed
 2025-10-25 22:07:25,666 - INFO - No available courts found
 2025-10-25 22:07:25,666 - INFO - Waiting 5 minutes before next scan...
+2025-10-25 22:10:00,978 - INFO - Received signal 15, shutting down gracefully...
+2025-10-25 22:10:01,231 - INFO - Background monitoring completed
+2025-10-25 22:10:01,233 - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x10264f290>: Failed to establish a new connection: [Errno 61] Connection refused')': /session/e0e6448eda91f169c13e352c2c91f3dc
+2025-10-25 22:10:01,233 - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x10264fe00>: Failed to establish a new connection: [Errno 61] Connection refused')': /session/e0e6448eda91f169c13e352c2c91f3dc
+2025-10-25 22:10:01,234 - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1026800b0>: Failed to establish a new connection: [Errno 61] Connection refused')': /session/e0e6448eda91f169c13e352c2c91f3dc
+2025-10-25 22:10:01,235 - INFO - WebDriver closed
+🎾 BTC Tennis Bot - Background Monitoring Mode (Environment Variables)
+================================================================================
+This will run the bot in background using environment variables
+Make sure you have set the required environment variables:
+   BTC_USERNAME, BTC_PASSWORD, BTC_NOTIFICATION_EMAIL
+   BTC_PHONE_NUMBER, BTC_GMAIL_APP_EMAIL, BTC_GMAIL_APP_PASSWORD
+================================================================================
+✅ Background monitoring completed successfully
