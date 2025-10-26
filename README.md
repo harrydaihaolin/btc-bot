@@ -81,6 +81,47 @@ export BTC_BOOKING_DATE="1"
 python3 btc_tennis_bot.py
 ```
 
+### Background Monitoring Mode
+
+#### Environment Variable Mode (Production)
+```bash
+# Set up environment variables
+export BTC_USERNAME="your_email@example.com"
+export BTC_PASSWORD="your_password"
+export BTC_NOTIFICATION_EMAIL="your_email@example.com"
+export BTC_PHONE_NUMBER="1234567890"
+export BTC_GMAIL_APP_EMAIL="your_gmail@gmail.com"
+export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
+
+# Start background monitoring
+nohup python3 run_background_env.py > btc_background.log 2>&1 &
+```
+
+#### Interactive Startup Script
+```bash
+# Make executable and run
+chmod +x start_background_monitoring.sh
+./start_background_monitoring.sh
+```
+
+#### Daemon Mode (System Service)
+```bash
+# Run as daemon process
+python3 daemon_monitoring.py
+```
+
+#### Process Management
+```bash
+# Check if running
+ps aux | grep run_background_env
+
+# View logs
+tail -f btc_background.log
+
+# Stop process
+pkill -f run_background_env
+```
+
 ## 📱 Notification Features
 
 ### Email Notifications
@@ -185,14 +226,32 @@ Monitoring options:
 3. Exit
 ```
 
+## 📁 Background Monitoring Files
+
+### Core Scripts
+- **`run_background_env.py`** - Environment variable mode for production
+- **`start_background_monitoring.sh`** - Interactive startup script
+- **`daemon_monitoring.py`** - Daemon mode for system services
+- **`run_interactive_background.py`** - Interactive background mode
+
+### Documentation
+- **`BACKGROUND_MONITORING_GUIDE.md`** - Comprehensive background monitoring guide
+- **`RELEASE_NOTES.md`** - Detailed changelog and feature descriptions
+
+### Configuration
+- **`setup_credentials.sh`** - Interactive credential setup
+- **`requirements.txt`** - Python dependencies
+
 ## 📋 Version History
 
 ### v1.1.0 - Interactive Background Monitoring Mode
 - **Multi-Date Scanning**: Automatically checks today, tomorrow, and day after tomorrow
 - **Interactive Background Monitoring**: Works in both interactive and automated environments
+- **Background Process Support**: Multiple deployment options (env vars, daemon, interactive)
 - **Enhanced Notifications**: Date-organized email and SMS notifications
 - **Production Ready**: Perfect for cron jobs and automated deployments
 - **Robust Error Handling**: Graceful handling of EOF errors and network issues
+- **Process Management**: PID files, graceful shutdown, and monitoring tools
 
 ### v1.0.0 - Initial Release
 - Basic court monitoring and notification system

@@ -9,6 +9,8 @@
 - **Enhanced User Experience**: The bot now gracefully handles both interactive and non-interactive environments
 - **Production-Ready**: Perfect for cron jobs and automated deployments while maintaining interactive capabilities
 - **Smart Mode Detection**: Automatically detects environment and adjusts behavior accordingly
+- **Background Process Support**: Run as detached processes with multiple deployment options
+- **Daemon Mode**: Complete system service integration with PID management
 
 #### Multi-Date Scanning System
 - **Comprehensive Coverage**: Automatically scans today, tomorrow, and day after tomorrow in a single run
@@ -34,15 +36,19 @@
 
 ### 🚀 New Capabilities
 
-#### Monitoring Options
-1. **Continuous Monitoring**: Every 5 minutes (configurable)
-2. **Timeslot Monitoring**: Every 30 seconds for rapid changes
-3. **Single Scan Mode**: One-time comprehensive check
+#### Background Monitoring Options
+1. **Environment Variable Mode**: `run_background_env.py` - Production-ready with env vars
+2. **Interactive Startup**: `start_background_monitoring.sh` - User-friendly setup script
+3. **Daemon Mode**: `daemon_monitoring.py` - Complete system service integration
+4. **Continuous Monitoring**: Every 5 minutes (configurable)
+5. **Timeslot Monitoring**: Every 30 seconds for rapid changes
+6. **Single Scan Mode**: One-time comprehensive check
 
 #### Enhanced User Interface
 - **Interactive Setup**: Easy credential configuration with fallback to environment variables
 - **Progress Indicators**: Clear feedback during scanning and monitoring
 - **Debug Information**: Comprehensive logging and debug file generation
+- **Process Management**: PID files, graceful shutdown, and monitoring tools
 
 ### 🛡️ Reliability Improvements
 
@@ -50,6 +56,8 @@
 - **Cron Job Compatible**: Works perfectly in automated environments
 - **Environment Variable Support**: Secure credential management
 - **Error Recovery**: Robust error handling with automatic retries
+- **Background Process Management**: PID files, graceful shutdown, and monitoring
+- **Daemon Integration**: Complete system service support
 
 #### Performance Optimizations
 - **Memory Efficiency**: Automatic cleanup of old notification data
@@ -79,6 +87,26 @@
 - **Automatic Cleanup**: Old debug files are managed efficiently
 - **Structured Data**: JSON output with proper date organization
 - **Notification Tracking**: Prevents duplicate notifications
+
+### 🖥️ Background Process Management
+
+#### Process Control
+- **PID Management**: Automatic PID file creation and management
+- **Graceful Shutdown**: SIGTERM and SIGINT signal handling
+- **Process Monitoring**: Built-in health checks and status reporting
+- **Resource Management**: Memory cleanup and CPU optimization
+
+#### Deployment Options
+- **Environment Variable Mode**: `run_background_env.py` for production
+- **Interactive Startup**: `start_background_monitoring.sh` for manual setup
+- **Daemon Mode**: `daemon_monitoring.py` for system services
+- **Cron Integration**: Perfect for scheduled monitoring
+
+#### Logging and Monitoring
+- **Multi-Level Logging**: Separate logs for different components
+- **Real-time Monitoring**: `tail -f` support for live log viewing
+- **Error Tracking**: Comprehensive error reporting and recovery
+- **Performance Metrics**: Resource usage and timing information
 
 ### 🎾 User Experience
 
