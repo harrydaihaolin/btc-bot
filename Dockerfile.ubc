@@ -27,7 +27,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY ubc/ ./ubc/
 COPY common/ ./common/
 COPY run_daemon.sh .
-COPY tennis_bot.py .
+COPY ubc_bot.py .
 
 # Create logs directory
 RUN mkdir -p /app/logs
@@ -48,4 +48,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python3 -c "import sys; sys.exit(0)"
 
 # Default command - run UBC daemon
-CMD ["python3", "tennis_bot.py"]
+CMD ["python3", "ubc_bot.py"]
