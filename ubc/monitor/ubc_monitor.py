@@ -109,13 +109,72 @@ class UBCMonitor(BaseMonitor):
             if not login_button:
                 raise NoSuchElementException("Could not find login button")
             
-            # Wait for login button to be clickable and scroll to it
-            wait.until(EC.element_to_be_clickable(login_button))
+            # Scroll to login button and try to make it clickable
             self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", login_button)
             time.sleep(1)
             
-            # Try clicking with JavaScript
-            self.driver.execute_script("arguments[0].click();", login_button)
+            # Try to make button clickable if it's not already
+            try:
+                wait.until(EC.element_to_be_clickable(login_button))
+            except TimeoutException:
+                self.logger.warning("Button not clickable, proceeding with form submission attempts")
+            
+            # Try multiple approaches to submit the form
+            form_submitted = False
+            
+            # Approach 1: Try regular click first
+            try:
+                login_button.click()
+                form_submitted = True
+                self.logger.info("Form submitted using regular click")
+            except Exception as e:
+                self.logger.warning(f"Regular click failed: {e}")
+            
+            # Approach 2: Try JavaScript click
+            if not form_submitted:
+                try:
+                    self.driver.execute_script("arguments[0].click();", login_button)
+                    form_submitted = True
+                    self.logger.info("Form submitted using JavaScript click")
+                except Exception as e:
+                    self.logger.warning(f"JavaScript click failed: {e}")
+            
+            # Approach 3: Try form.submit()
+            if not form_submitted:
+                try:
+                    form = login_button.find_element(By.XPATH, "./ancestor::form")
+                    self.driver.execute_script("arguments[0].submit();", form)
+                    form_submitted = True
+                    self.logger.info("Form submitted using form.submit()")
+                except Exception as e:
+                    self.logger.warning(f"Form.submit() failed: {e}")
+            
+            # Approach 4: Try dispatching submit event
+            if not form_submitted:
+                try:
+                    form = login_button.find_element(By.XPATH, "./ancestor::form")
+                    self.driver.execute_script("""
+                        var form = arguments[0];
+                        var event = new Event('submit', {bubbles: true, cancelable: true});
+                        form.dispatchEvent(event);
+                    """, form)
+                    form_submitted = True
+                    self.logger.info("Form submitted using dispatch submit event")
+                except Exception as e:
+                    self.logger.warning(f"Dispatch submit event failed: {e}")
+            
+            # Approach 5: Try Enter key on password field
+            if not form_submitted:
+                try:
+                    password_field.send_keys("\n")  # Send Enter key
+                    form_submitted = True
+                    self.logger.info("Form submitted using Enter key on password field")
+                except Exception as e:
+                    self.logger.warning(f"Enter key submission failed: {e}")
+            
+            if not form_submitted:
+                self.logger.error("All form submission methods failed")
+                return False
             
             # Wait for login to complete
             time.sleep(3)
@@ -245,50 +304,57 @@ class UBCMonitor(BaseMonitor):
             return False
     
     def scan_available_courts(self) -> Dict[str, List[Dict]]:
-        """Scan for available UBC tennis courts"""
+        """Scan for available UBC tennis courts with idempotency"""
         try:
             self.logger.info("Scanning for available UBC tennis courts...")
-            
-            # Set items per page first
-            self._set_items_per_page()
-            
-            # Look for court elements
-            court_elements = self.driver.find_elements(By.CSS_SELECTOR, 
-                ".court-item, .booking-item, [data-testid='court'], .tennis-court")
             
             available_courts = {}
             current_date = datetime.now().strftime("%Y-%m-%d")
             
+            # Look for court facility elements (UBC uses facility list)
+            court_elements = self.driver.find_elements(By.CSS_SELECTOR, ".facility-details")
+            
             if not court_elements:
-                # Try alternative selectors
-                court_elements = self.driver.find_elements(By.CSS_SELECTOR,
-                    "tr[data-court], .court-row, .booking-row")
+                # Try alternative selectors for court containers
+                court_elements = self.driver.find_elements(By.CSS_SELECTOR, 
+                    "[data-facilityid], .facility-item, .court-container")
             
             if court_elements:
-                self.logger.info(f"Found {len(court_elements)} court elements")
+                self.logger.info(f"Found {len(court_elements)} court facility elements")
                 
                 for i, court_element in enumerate(court_elements):
                     try:
-                        court_info = self._extract_court_info(court_element, i)
+                        court_info = self._extract_ubc_court_info(court_element, i)
                         if court_info:
-                            if current_date not in available_courts:
-                                available_courts[current_date] = []
-                            available_courts[current_date].append(court_info)
+                            # Generate unique identifier for idempotency
+                            court_id = self._get_court_unique_identifier(court_info)
+                            
+                            # Only add if we haven't seen this court before
+                            if court_id not in self.previous_courts:
+                                if current_date not in available_courts:
+                                    available_courts[current_date] = []
+                                available_courts[current_date].append(court_info)
+                                self.previous_courts.add(court_id)
+                                self.logger.info(f"New UBC court detected: {court_info['court_name']} - {court_info['status']}")
+                            else:
+                                self.logger.debug(f"UBC court already seen: {court_info['court_name']} - {court_info['status']}")
                             
                     except Exception as e:
                         self.logger.warning(f"Error extracting court info from element {i}: {e}")
                         continue
             else:
-                self.logger.warning("No court elements found on page")
+                self.logger.warning("No court facility elements found on page")
             
             # Log results
             total_courts = sum(len(courts) for courts in available_courts.values())
-            self.logger.info(f"Found {total_courts} available UBC courts")
-            
-            for date, courts in available_courts.items():
-                self.logger.info(f"  {date}: {len(courts)} courts")
-                for court in courts:
-                    self.logger.info(f"    - {court.get('court_name', 'Unknown')} at {court.get('time', 'Unknown')}")
+            if total_courts > 0:
+                self.logger.info(f"Found {total_courts} NEW available UBC courts")
+                for date, courts in available_courts.items():
+                    self.logger.info(f"  {date}: {len(courts)} courts")
+                    for court in courts:
+                        self.logger.info(f"    - {court.get('court_name', 'Unknown')} - {court.get('status', 'Available')}")
+            else:
+                self.logger.info("No NEW UBC courts detected (all previously seen)")
             
             return available_courts
             
@@ -416,3 +482,76 @@ class UBCMonitor(BaseMonitor):
         except Exception as e:
             self.logger.warning(f"Error extracting court info: {e}")
             return None
+    
+    def _extract_ubc_court_info(self, court_element, index: int) -> Optional[Dict]:
+        """Extract UBC court information from a facility element"""
+        try:
+            court_info = {
+                'court_name': f"Court {index + 1:02d}",  # UBC uses Court 01, Court 02 format
+                'time': 'Available',
+                'date': datetime.now().strftime("%Y-%m-%d"),
+                'price': 'Unknown',
+                'duration': '1 hour',
+                'available': True,
+                'status': 'Available',
+                'element': court_element
+            }
+            
+            # Try to extract court name from h2 element
+            try:
+                name_element = court_element.find_element(By.TAG_NAME, "h2")
+                court_name = name_element.text.strip()
+                if court_name:
+                    court_info['court_name'] = court_name
+            except NoSuchElementException:
+                pass
+            
+            # Try to extract facility ID
+            try:
+                facility_id = court_element.get_attribute('data-facilityid')
+                if facility_id:
+                    court_info['facility_id'] = facility_id
+            except Exception:
+                pass
+            
+            # Look for Choose button to determine availability
+            try:
+                choose_button = court_element.find_element(By.CSS_SELECTOR, "a[onclick*='onChooseClick']")
+                if choose_button and choose_button.is_displayed():
+                    court_info['available'] = True
+                    court_info['status'] = 'Available for booking'
+                    court_info['element'] = choose_button
+                else:
+                    court_info['available'] = False
+                    court_info['status'] = 'Not available'
+            except NoSuchElementException:
+                court_info['available'] = False
+                court_info['status'] = 'No booking option found'
+            
+            # Try to extract location information
+            try:
+                location_element = court_element.find_element(By.CSS_SELECTOR, ".facility-location")
+                location_text = location_element.text.strip()
+                if location_text:
+                    court_info['location'] = location_text
+            except NoSuchElementException:
+                pass
+            
+            self.logger.info(f"Extracted UBC court info: {court_info['court_name']} - {court_info['status']}")
+            return court_info
+            
+        except Exception as e:
+            self.logger.warning(f"Error extracting UBC court info: {e}")
+            return None
+    
+    def _get_court_unique_identifier(self, court_info: Dict[str, Any]) -> str:
+        """Generate unique identifier for UBC court to prevent duplicate notifications"""
+        court_strings = [
+            court_info.get('date', ''),
+            court_info.get('court_name', ''),
+            court_info.get('status', ''),
+            court_info.get('facility_id', '')
+        ]
+        # Filter out empty strings and join
+        court_strings = [s for s in court_strings if s]
+        return "_".join(sorted(court_strings))
