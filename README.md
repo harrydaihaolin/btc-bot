@@ -12,10 +12,94 @@ Monitors UBC Recreation's tennis court booking system for court availability.
 
 ## 🚀 Quick Start
 
+### Docker Mode (Recommended for Production)
+```bash
+# One-command Docker experience
+./docker-manage.sh start
+
+# Check status
+./docker-manage.sh status
+
+# View logs
+./docker-manage.sh logs
+
+# Stop containers
+./docker-manage.sh stop
+```
+
+### Daemon Mode (Local Development)
+```bash
+# One-command daemon experience
+./run_daemon.sh
+
+# Check status
+./run_daemon.sh status
+
+# Stop daemon
+./run_daemon.sh stop
+```
+
 ### 1. Install Dependencies
 ```bash
 pip3 install -r requirements.txt
 ```
+
+## 🐳 Docker Setup (Production Ready)
+
+### Prerequisites
+- Docker and Docker Compose installed
+- Credentials configured in `.env` file
+
+### 1. Configure Environment
+```bash
+# Copy environment template
+cp env.example .env
+
+# Edit .env with your credentials
+nano .env
+```
+
+### 2. Start Both Bots
+```bash
+# Start BTC and UBC bots
+./docker-manage.sh start
+
+# Check status
+./docker-manage.sh status
+
+# View logs
+./docker-manage.sh logs
+```
+
+### 3. Docker Management Commands
+```bash
+# Start bots
+./docker-manage.sh start
+
+# Stop bots
+./docker-manage.sh stop
+
+# Restart bots
+./docker-manage.sh restart
+
+# View logs
+./docker-manage.sh logs          # Both bots
+./docker-manage.sh logs btc      # BTC bot only
+./docker-manage.sh logs ubc      # UBC bot only
+
+# Check status
+./docker-manage.sh status
+
+# Rebuild containers
+./docker-manage.sh build
+```
+
+### 4. Docker Features
+- **Automatic Restart**: Containers restart automatically on failure
+- **Health Checks**: Built-in health monitoring
+- **Log Management**: Centralized logging with volume mounting
+- **Security**: Non-root user execution
+- **Resource Optimization**: Shared memory for Chrome performance
 
 ## 🎾 Burnaby Tennis Club (BTC) Setup
 

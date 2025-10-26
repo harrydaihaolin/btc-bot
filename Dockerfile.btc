@@ -1,0 +1,51 @@
+# Dockerfile for BTC Tennis Bot
+FROM python:3.12-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg \
+    unzip \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Chrome
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome-keyring.gpg \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy BTC-specific files
+COPY btc/ ./btc/
+COPY common/ ./common/
+COPY run_daemon.sh .
+COPY tennis_bot.py .
+
+# Create logs directory
+RUN mkdir -p /app/logs
+
+# Set environment variables for BTC
+ENV BTC_FACILITY=BTC
+ENV BTC_HEADLESS=True
+ENV BTC_MONITORING_INTERVAL=60
+ENV BTC_LOG_FILE=/app/logs/btc_daemon.log
+ENV BTC_LOG_LEVEL=INFO
+
+# Create non-root user for security
+RUN useradd -m -u 1000 tennisbot && chown -R tennisbot:tennisbot /app
+USER tennisbot
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python3 -c "import sys; sys.exit(0)"
+
+# Default command - run BTC daemon
+CMD ["python3", "tennis_bot.py"]
