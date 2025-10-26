@@ -39,7 +39,7 @@ class UBCMonitor(BaseMonitor):
             time.sleep(2)
             
             # Wait for login form
-            wait = WebDriverWait(self.driver, 10)
+            wait = WebDriverWait(self.driver, 5)
             
             # Find username field - try multiple selectors for UBC portal
             username_selectors = [
@@ -67,20 +67,26 @@ class UBCMonitor(BaseMonitor):
             # Find password field
             password_field = self.driver.find_element(By.CSS_SELECTOR, "input[name='CredentialForm[password_curr]'], input[id='inputPassword'], input[type='password']")
             
+            # Wait for elements to be interactable
+            wait.until(EC.element_to_be_clickable(username_field))
+            wait.until(EC.element_to_be_clickable(password_field))
+            
             # Scroll to make sure elements are visible
-            self.driver.execute_script("arguments[0].scrollIntoView(true);", username_field)
+            self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", username_field)
             time.sleep(1)
             
-            # Fill credentials
-            username_field.clear()
-            username_field.send_keys(credentials['username'])
+            # Fill credentials with JavaScript to avoid interaction issues
+            self.driver.execute_script("arguments[0].value = '';", username_field)
+            self.driver.execute_script("arguments[0].value = arguments[1];", username_field, credentials['username'])
+            self.driver.execute_script("arguments[0].dispatchEvent(new Event('input', {bubbles: true}));", username_field)
             
             # Scroll to password field
-            self.driver.execute_script("arguments[0].scrollIntoView(true);", password_field)
+            self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", password_field)
             time.sleep(1)
             
-            password_field.clear()
-            password_field.send_keys(credentials['password'])
+            self.driver.execute_script("arguments[0].value = '';", password_field)
+            self.driver.execute_script("arguments[0].value = arguments[1];", password_field, credentials['password'])
+            self.driver.execute_script("arguments[0].dispatchEvent(new Event('input', {bubbles: true}));", password_field)
             
             # Find and click login button - try multiple selectors
             login_selectors = [
@@ -103,15 +109,13 @@ class UBCMonitor(BaseMonitor):
             if not login_button:
                 raise NoSuchElementException("Could not find login button")
             
-            # Scroll to login button and click
-            self.driver.execute_script("arguments[0].scrollIntoView(true);", login_button)
+            # Wait for login button to be clickable and scroll to it
+            wait.until(EC.element_to_be_clickable(login_button))
+            self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", login_button)
             time.sleep(1)
             
-            # Try clicking with JavaScript if regular click fails
-            try:
-                login_button.click()
-            except Exception:
-                self.driver.execute_script("arguments[0].click();", login_button)
+            # Try clicking with JavaScript
+            self.driver.execute_script("arguments[0].click();", login_button)
             
             # Wait for login to complete
             time.sleep(3)
@@ -124,9 +128,15 @@ class UBCMonitor(BaseMonitor):
                 self.logger.error("Login failed - invalid credentials or captcha required")
                 return False
                 
-        except TimeoutException:
-            self.logger.error("Login timeout - page elements not found")
-            return False
+        except TimeoutException as e:
+            self.logger.warning(f"Login timeout - checking if login actually succeeded: {e}")
+            # Even if there's a timeout, check if login was successful
+            if self._check_login_success():
+                self.logger.info("Login successful despite timeout!")
+                return True
+            else:
+                self.logger.error("Login failed - timeout and no success indicators")
+                return False
         except Exception as e:
             self.logger.error(f"Login error: {e}")
             return False
@@ -134,27 +144,53 @@ class UBCMonitor(BaseMonitor):
     def _check_login_success(self) -> bool:
         """Check if login was successful"""
         try:
+            # Wait a bit for the page to load after login
+            time.sleep(2)
+            
             current_url = self.driver.current_url
+            self.logger.info(f"Current URL after login attempt: {current_url}")
             
-            # If we're redirected away from login page, likely successful
-            if 'login' not in current_url.lower():
+            # If we're still on the login page, login likely failed
+            if 'login' in current_url.lower() or 'index.php?r=public/index' in current_url:
+                self.logger.warning("Still on login page, login likely failed")
+                return False
+            
+            # UBC-specific: If we're redirected to UBC search or main site, login was successful
+            if 'ubc.ca' in current_url and 'search' in current_url:
+                self.logger.info("Redirected to UBC search page, login successful")
                 return True
             
-            # Check for user menu or profile elements
-            user_elements = self.driver.find_elements(By.CSS_SELECTOR, ".user-menu, .profile, .account, [data-testid='user-menu']")
-            if user_elements:
+            # Look for elements that indicate successful login
+            success_indicators = [
+                "//a[contains(text(), 'Logout')]",
+                "//a[contains(text(), 'Sign Out')]",
+                "//button[contains(text(), 'Logout')]",
+                "//*[contains(@class, 'user-menu')]",
+                "//*[contains(@class, 'profile')]",
+                "//*[contains(text(), 'Welcome')]",
+                "//*[contains(text(), 'Dashboard')]"
+            ]
+            
+            for indicator in success_indicators:
+                try:
+                    element = self.driver.find_element(By.XPATH, indicator)
+                    if element.is_displayed():
+                        self.logger.info(f"Found login success indicator: {indicator}")
+                        return True
+                except NoSuchElementException:
+                    continue
+            
+            # If we're on a different page and no explicit logout found, 
+            # but we're not on login page, consider it successful
+            if current_url != self.config.login_url:
+                self.logger.info("Redirected away from login page, considering login successful")
                 return True
             
-            # Check for error messages
-            error_elements = self.driver.find_elements(By.CSS_SELECTOR, ".error, .alert-danger, .login-error")
-            if error_elements:
-                error_text = error_elements[0].text.lower()
-                if 'invalid' in error_text or 'incorrect' in error_text:
-                    return False
-            
+            self.logger.warning("No clear login success indicators found")
             return False
             
-        except Exception:
+        except Exception as e:
+            self.logger.error(f"Error checking login success: {e}")
             return False
     
     def navigate_to_booking_page(self) -> bool:
