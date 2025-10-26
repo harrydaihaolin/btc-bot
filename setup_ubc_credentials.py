@@ -17,20 +17,43 @@ def setup_ubc_credentials():
     print("This script will help you set up your UBC Recreation login credentials.")
     print("You'll need your UBC CWL (Campus Wide Login) username and password.")
     print()
+    print("Note: If you already have BTC credentials set up, you can use those")
+    print("for testing UBC monitoring. UBC-specific credentials will take priority.")
+    print()
     
-    # Get UBC username
-    while True:
-        username = input("Enter your UBC CWL username (e.g., student@ubc.ca): ").strip()
-        if username:
-            break
-        print("❌ Username cannot be empty. Please try again.")
+    # Check if BTC credentials are already available
+    btc_username = os.getenv('BTC_USERNAME')
+    btc_password = os.getenv('BTC_PASSWORD')
     
-    # Get UBC password
-    while True:
-        password = getpass.getpass("Enter your UBC CWL password: ").strip()
-        if password:
-            break
-        print("❌ Password cannot be empty. Please try again.")
+    if btc_username and btc_password:
+        print(f"✅ Found existing BTC credentials: {btc_username}")
+        use_btc = input("Use BTC credentials for UBC testing? (y/n, default: y): ").strip().lower()
+        if use_btc in ['', 'y', 'yes']:
+            username = btc_username
+            password = btc_password
+            print("✅ Using BTC credentials for UBC testing")
+        else:
+            username = None
+            password = None
+    else:
+        username = None
+        password = None
+    
+    # Get UBC username if not using BTC credentials
+    if not username:
+        while True:
+            username = input("Enter your UBC CWL username (e.g., student@ubc.ca): ").strip()
+            if username:
+                break
+            print("❌ Username cannot be empty. Please try again.")
+    
+    # Get UBC password if not using BTC credentials
+    if not password:
+        while True:
+            password = getpass.getpass("Enter your UBC CWL password: ").strip()
+            if password:
+                break
+            print("❌ Password cannot be empty. Please try again.")
     
     # Get notification email
     print()
@@ -75,8 +98,13 @@ def setup_ubc_credentials():
     print("📋 Add these lines to your ~/.zshrc file:")
     print()
     print("# UBC Tennis Court Monitor Credentials")
-    print(f"export UBC_USERNAME='{username}'")
-    print(f"export UBC_PASSWORD='{password}'")
+    
+    # Only show UBC credentials if they're different from BTC
+    if username != btc_username or password != btc_password:
+        print(f"export UBC_USERNAME='{username}'")
+        print(f"export UBC_PASSWORD='{password}'")
+    else:
+        print("# Using BTC credentials for UBC testing (no additional setup needed)")
     
     if email:
         print(f"export UBC_NOTIFICATION_EMAIL='{email}'")

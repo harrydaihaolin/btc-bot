@@ -19,12 +19,20 @@ class UBCConfig:
         
     def get_credentials(self) -> Dict[str, str]:
         """Get UBC login credentials from environment variables"""
+        # Try UBC-specific credentials first
         username = os.getenv('UBC_USERNAME')
         password = os.getenv('UBC_PASSWORD')
         
+        # Fall back to BTC credentials for testing if UBC credentials not set
+        if not username:
+            username = os.getenv('BTC_USERNAME')
+        if not password:
+            password = os.getenv('BTC_PASSWORD')
+        
         if not username or not password:
             raise ValueError(
-                "UBC credentials not found. Please set UBC_USERNAME and UBC_PASSWORD environment variables."
+                "UBC credentials not found. Please set UBC_USERNAME and UBC_PASSWORD environment variables, "
+                "or use BTC_USERNAME and BTC_PASSWORD for testing."
             )
         
         return {
@@ -35,9 +43,15 @@ class UBCConfig:
     def get_notification_config(self) -> Dict[str, str]:
         """Get notification configuration for UBC bookings"""
         return {
-            'email': os.getenv('UBC_NOTIFICATION_EMAIL', os.getenv('GMAIL_APP_EMAIL')),
-            'gmail_app_password': os.getenv('GMAIL_APP_PASSWORD'),
-            'sms_phone': os.getenv('UBC_SMS_PHONE', os.getenv('SMS_PHONE')),
+            'email': os.getenv('UBC_NOTIFICATION_EMAIL', 
+                              os.getenv('GMAIL_APP_EMAIL', 
+                                       os.getenv('BTC_NOTIFICATION_EMAIL'))),
+            'gmail_app_password': os.getenv('UBC_GMAIL_APP_PASSWORD', 
+                                           os.getenv('GMAIL_APP_PASSWORD', 
+                                                    os.getenv('BTC_GMAIL_APP_PASSWORD'))),
+            'sms_phone': os.getenv('UBC_SMS_PHONE', 
+                                  os.getenv('SMS_PHONE', 
+                                           os.getenv('BTC_PHONE_NUMBER'))),
             'twilio_sid': os.getenv('TWILIO_SID'),
             'twilio_token': os.getenv('TWILIO_TOKEN'),
             'twilio_phone': os.getenv('TWILIO_PHONE')
@@ -79,9 +93,11 @@ class UBCConfig:
             if notif_config['email'] and not notif_config['gmail_app_password']:
                 return False
             
-            # If SMS is configured, check Twilio credentials
+            # If SMS is configured, check Twilio credentials (optional)
+            # SMS notifications will be skipped if Twilio credentials are missing
             if notif_config['sms_phone'] and not (notif_config['twilio_sid'] and notif_config['twilio_token'] and notif_config['twilio_phone']):
-                return False
+                # SMS phone is set but Twilio credentials are missing - this is OK, SMS will be skipped
+                pass
             
             return True
             

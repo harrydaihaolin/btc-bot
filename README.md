@@ -61,12 +61,15 @@ kill $(cat btc_daemon.pid)
 # Interactive setup for UBC credentials
 python3 setup_ubc_credentials.py
 
-# Manual environment variables
+# Manual environment variables (UBC-specific)
 export UBC_USERNAME="your_ubc_cwl@ubc.ca"
 export UBC_PASSWORD="your_ubc_password"
 export UBC_NOTIFICATION_EMAIL="your_email@gmail.com"
 export UBC_GMAIL_APP_PASSWORD="your_gmail_app_password"
 export UBC_SMS_PHONE="1234567890"  # optional
+
+# OR use BTC credentials for testing (fallback)
+# If UBC credentials are not set, UBC monitoring will use BTC credentials
 ```
 
 ### 3. Start UBC Daemon Monitoring
@@ -124,6 +127,7 @@ kill $(cat ubc_daemon.pid)
 - **UBC-Specific Notifications**: Tailored email/SMS formatting for UBC courts
 - **Facility-Specific Configuration**: Separate configs for BTC and UBC monitoring
 - **Multi-Facility Support**: Monitor both BTC and UBC simultaneously
+- **Credential Fallback**: Uses BTC credentials for UBC testing if UBC credentials not set
 
 ## 📱 Usage Modes
 
