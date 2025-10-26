@@ -303,6 +303,13 @@ Monitoring options:
 
 ## 📋 Version History
 
+### v1.2.1 - Critical Court Detection Fix
+- **Bug Fix**: Fixed court detection in background monitoring mode
+- **Fallback Mechanism**: Added fallback to current page scan when date navigation fails
+- **E2E Verified**: Confirmed working with real credentials and notifications
+- **Reliability**: Ensures courts are detected regardless of website interface changes
+- **Production Ready**: Background monitoring now fully operational
+
 ### v1.2.0 - Modular Architecture & Enhanced Integration
 - **Modular Design**: Completely refactored into reusable core modules
 - **Core Components**: Separate modules for configuration, monitoring, and notifications
