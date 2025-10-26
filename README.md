@@ -25,8 +25,11 @@ export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
 
 ### 3. Start Daemon Monitoring (RECOMMENDED)
 ```bash
-# Daemon mode - 24/7 background monitoring with instant notifications
-python3 daemon_monitoring.py
+# One-command daemon startup (default: 60 minutes)
+./run_daemon.sh
+
+# Custom interval (e.g., 30 minutes)
+./run_daemon.sh 30
 ```
 
 ### 4. Alternative Modes
@@ -34,8 +37,11 @@ python3 daemon_monitoring.py
 # Interactive mode (for testing)
 python3 btc_tennis_bot.py
 
-# Simple background monitoring
-nohup python3 run_background_env.py > btc_background.log 2>&1 &
+# Monitor logs in real-time
+tail -f btc_daemon.log
+
+# Stop daemon when needed
+kill $(cat btc_daemon.pid)
 ```
 
 ## 🎯 Key Features
@@ -70,22 +76,26 @@ nohup python3 run_background_env.py > btc_background.log 2>&1 &
 ### 🚀 **Daemon Mode (RECOMMENDED)**
 Perfect for continuous monitoring and instant notifications:
 ```bash
-# Easy startup with process management
-./start_daemon.sh
+# One-command daemon startup (default: 60 minutes)
+./run_daemon.sh
+
+# Custom interval (e.g., 30 minutes)
+./run_daemon.sh 30
 
 # Monitor logs in real-time
-tail -f btc_background_monitoring.log
+tail -f btc_daemon.log
 
 # Stop daemon when needed
-./stop_daemon.sh
+kill $(cat btc_daemon.pid)
 ```
 **Features:**
+- ✅ **One-Command Setup**: Simple `./run_daemon.sh` to start
+- ✅ **Configurable Intervals**: Set custom monitoring intervals
 - ✅ **Instant Notifications**: Immediate email/SMS when new courts appear
 - ✅ **24/7 Monitoring**: Runs completely detached from terminal
 - ✅ **New Booking Detection**: Monitors for court releases and cancellations
 - ✅ **Process Management**: PID files and graceful shutdown
 - ✅ **Comprehensive Logging**: Detailed logs for debugging
-- ✅ **Easy Control**: Simple start/stop scripts with status monitoring
 
 ### 🖥️ **Background Mode**
 Simple background monitoring for basic use:
@@ -309,6 +319,13 @@ Monitoring options:
 ```
 
 ## 📋 Version History
+
+### v1.2.3 - One-Command Daemon Experience
+- **Simplified Startup**: Single command `./run_daemon.sh` to start daemon monitoring
+- **Configurable Intervals**: Easy custom monitoring intervals (e.g., `./run_daemon.sh 30`)
+- **User-Friendly**: Streamlined experience with clear status messages
+- **Better Documentation**: Updated README with simple one-command instructions
+- **Production Ready**: Perfect for users who want immediate daemon functionality
 
 ### v1.2.2 - Daemon Monitoring & Process Management
 - **Process Management**: Added start_daemon.sh and stop_daemon.sh scripts
