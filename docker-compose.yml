@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   btc-tennis-bot:
@@ -14,24 +14,24 @@ services:
       - BTC_NOTIFICATION_EMAIL=${BTC_NOTIFICATION_EMAIL}
       - BTC_GMAIL_APP_PASSWORD=${BTC_GMAIL_APP_PASSWORD}
       - BTC_SMS_PHONE=${BTC_SMS_PHONE}
-      
+
       # Twilio (optional, for SMS)
       - TWILIO_SID=${TWILIO_SID}
       - TWILIO_TOKEN=${TWILIO_TOKEN}
       - TWILIO_PHONE=${TWILIO_PHONE}
-      
+
       # BTC-specific settings
       - BTC_MONITORING_INTERVAL=60
       - BTC_HEADLESS=True
       - BTC_LOG_LEVEL=INFO
-      
+
     volumes:
       - ./logs:/app/logs
-      - /dev/shm:/dev/shm  # For Chrome performance
-    
+      - /dev/shm:/dev/shm # For Chrome performance
+
     networks:
       - tennis-bot-network
-    
+
     healthcheck:
       test: ["CMD", "python3", "-c", "import sys; sys.exit(0)"]
       interval: 30s
@@ -52,31 +52,31 @@ services:
       - UBC_NOTIFICATION_EMAIL=${UBC_NOTIFICATION_EMAIL}
       - UBC_GMAIL_APP_PASSWORD=${UBC_GMAIL_APP_PASSWORD}
       - UBC_SMS_PHONE=${UBC_SMS_PHONE}
-      
+
       # Fallback to BTC credentials if UBC not set
       - BTC_USERNAME=${BTC_USERNAME}
       - BTC_PASSWORD=${BTC_PASSWORD}
       - BTC_NOTIFICATION_EMAIL=${BTC_NOTIFICATION_EMAIL}
       - BTC_GMAIL_APP_PASSWORD=${BTC_GMAIL_APP_PASSWORD}
       - BTC_SMS_PHONE=${BTC_SMS_PHONE}
-      
+
       # Twilio (optional, for SMS)
       - TWILIO_SID=${TWILIO_SID}
       - TWILIO_TOKEN=${TWILIO_TOKEN}
       - TWILIO_PHONE=${TWILIO_PHONE}
-      
+
       # UBC-specific settings
       - UBC_MONITORING_INTERVAL=60
       - UBC_HEADLESS=True
       - UBC_LOG_LEVEL=INFO
-      
+
     volumes:
       - ./logs:/app/logs
-      - /dev/shm:/dev/shm  # For Chrome performance
-    
+      - /dev/shm:/dev/shm # For Chrome performance
+
     networks:
       - tennis-bot-network
-    
+
     healthcheck:
       test: ["CMD", "python3", "-c", "import sys; sys.exit(0)"]
       interval: 30s

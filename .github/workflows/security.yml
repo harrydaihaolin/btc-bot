@@ -1,0 +1,152 @@
+name: Security and Code Quality
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * 1' # Weekly on Monday at 2 AM
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+    
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+    
+    - name: Run Bandit security linter
+      run: |
+        pip install bandit
+        bandit -r . -f json -o bandit-report.json || true
+        bandit -r . -f txt || true
+    
+    - name: Upload Bandit results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: bandit-security-report
+        path: bandit-report.json
+
+  dependency-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Install dependencies
+      run: |
+        pip install safety pip-audit
+    
+    - name: Run safety check
+      run: |
+        safety check --json --output safety-report.json || true
+        safety check || true
+    
+    - name: Run pip-audit
+      run: |
+        pip-audit --format=json --output=pip-audit-report.json || true
+        pip-audit || true
+    
+    - name: Upload dependency reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: dependency-security-reports
+        path: |
+          safety-report.json
+          pip-audit-report.json
+
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Install quality tools
+      run: |
+        pip install pylint radon xenon
+    
+    - name: Run pylint
+      run: |
+        pylint --output-format=json --output=pylint-report.json . || true
+        pylint . || true
+    
+    - name: Run radon complexity check
+      run: |
+        radon cc . --json --output radon-complexity.json || true
+        radon cc . || true
+    
+    - name: Run xenon complexity check
+      run: |
+        xenon . --max-absolute B --max-modules A --max-average A || true
+    
+    - name: Upload quality reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: code-quality-reports
+        path: |
+          pylint-report.json
+          radon-complexity.json
+
+  docker-security:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build Docker images
+      run: |
+        docker build -f Dockerfile.btc -t btc-tennis-bot:security-test .
+        docker build -f Dockerfile.ubc -t ubc-tennis-bot:security-test .
+    
+    - name: Run Trivy Docker scan
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'btc-tennis-bot:security-test'
+        format: 'sarif'
+        output: 'trivy-docker-btc.sarif'
+    
+    - name: Run Trivy Docker scan for UBC
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'ubc-tennis-bot:security-test'
+        format: 'sarif'
+        output: 'trivy-docker-ubc.sarif'
+    
+    - name: Upload Docker security results
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-docker-btc.sarif'
+    
+    - name: Upload UBC Docker security results
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-docker-ubc.sarif'

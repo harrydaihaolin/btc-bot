@@ -1,0 +1,98 @@
+name: Docker Build and Push
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Docker image tag'
+        required: true
+        default: 'latest'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: |
+          tennis-bot-btc
+          tennis-bot-ubc
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=raw,value=${{ github.event.inputs.tag }}
+    
+    - name: Build and push BTC image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile.btc
+        push: true
+        tags: tennis-bot-btc:${{ github.event.inputs.tag || github.ref_name }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Build and push UBC image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile.ubc
+        push: true
+        tags: tennis-bot-ubc:${{ github.event.inputs.tag || github.ref_name }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Create GitHub Release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          ## Docker Images
+          
+          ### BTC Tennis Bot
+          ```bash
+          docker pull tennis-bot-btc:${{ github.ref_name }}
+          docker run -d --name btc-bot tennis-bot-btc:${{ github.ref_name }}
+          ```
+          
+          ### UBC Tennis Bot
+          ```bash
+          docker pull tennis-bot-ubc:${{ github.ref_name }}
+          docker run -d --name ubc-bot tennis-bot-ubc:${{ github.ref_name }}
+          ```
+          
+          ### Docker Compose
+          ```bash
+          git clone https://github.com/${{ github.repository }}
+          cd btc-bot
+          cp env.example .env
+          # Edit .env with your credentials
+          docker-compose up -d
+          ```
+        draft: false
+        prerelease: false

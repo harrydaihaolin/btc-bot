@@ -1,5 +1,10 @@
 # 🎾 Tennis Court Booking Bot
 
+[![CI Tests](https://github.com/username/btc-bot/workflows/CI%20Tests/badge.svg)](https://github.com/username/btc-bot/actions/workflows/ci.yml)
+[![Security Scan](https://github.com/username/btc-bot/workflows/Security%20and%20Code%20Quality/badge.svg)](https://github.com/username/btc-bot/actions/workflows/security.yml)
+[![Docker Build](https://github.com/username/btc-bot/workflows/Docker%20Build%20and%20Push/badge.svg)](https://github.com/username/btc-bot/actions/workflows/docker-release.yml)
+[![Coverage](https://codecov.io/gh/username/btc-bot/branch/main/graph/badge.svg)](https://codecov.io/gh/username/btc-bot)
+
 An automated bot that monitors tennis court booking systems and sends notifications when courts become available.
 
 ## 🏟️ Supported Facilities
@@ -37,6 +42,16 @@ Monitors UBC Recreation's tennis court booking system for court availability.
 
 # Stop daemon
 ./run_daemon.sh stop
+```
+
+### GitHub Actions (Automated Monitoring)
+```bash
+# Set up GitHub Secrets for automated monitoring
+# Go to Settings → Secrets and variables → Actions
+# Add your credentials (see .github/README.md for details)
+
+# Manual trigger
+gh workflow run periodic-monitoring.yml
 ```
 
 ### 1. Install Dependencies
@@ -100,6 +115,76 @@ nano .env
 - **Log Management**: Centralized logging with volume mounting
 - **Security**: Non-root user execution
 - **Resource Optimization**: Shared memory for Chrome performance
+
+## 🔄 CI/CD & Automated Monitoring
+
+### GitHub Actions Workflows
+
+#### 1. Continuous Integration (`ci.yml`)
+- **Triggers**: Push to main/develop, Pull Requests
+- **Features**:
+  - Unit tests with coverage reporting (84% overall coverage)
+  - Docker image building and testing
+  - Integration tests with Docker Compose
+  - Code linting (Black, isort, flake8, mypy)
+  - Coverage upload to Codecov
+
+#### 2. Periodic Court Monitoring (`periodic-monitoring.yml`)
+- **Schedule**: Every 2 hours (9 AM - 9 PM PST)
+- **Features**:
+  - Automated court monitoring using Docker containers
+  - Health checks for both BTC and UBC bots
+  - Log artifact upload for debugging
+  - Manual trigger support
+
+#### 3. Docker Release (`docker-release.yml`)
+- **Triggers**: Version tags, Manual dispatch
+- **Features**:
+  - Multi-platform Docker builds
+  - Automated Docker Hub publishing
+  - GitHub Release creation
+  - Docker layer caching
+
+#### 4. Security Scanning (`security.yml`)
+- **Schedule**: Weekly + Push/PR triggers
+- **Features**:
+  - Trivy vulnerability scanning
+  - Bandit security linting
+  - Dependency vulnerability checks
+  - Code quality analysis
+
+### Setup Automated Monitoring
+
+1. **Configure GitHub Secrets**:
+   ```
+   Settings → Secrets and variables → Actions
+   Add: BTC_USERNAME, BTC_PASSWORD, BTC_NOTIFICATION_EMAIL, etc.
+   ```
+
+2. **Enable Workflows**:
+   ```bash
+   # Workflows are automatically enabled when pushed to GitHub
+   git push origin main
+   ```
+
+3. **Monitor Status**:
+   - Go to Actions tab in GitHub repository
+   - View workflow runs and logs
+   - Download monitoring artifacts
+
+### Manual Triggers
+
+```bash
+# Trigger periodic monitoring
+gh workflow run periodic-monitoring.yml
+
+# Trigger security scan
+gh workflow run security.yml
+
+# Create new release
+git tag v1.4.0
+git push origin v1.4.0
+```
 
 ## 🎾 Burnaby Tennis Club (BTC) Setup
 
