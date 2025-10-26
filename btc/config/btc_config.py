@@ -49,3 +49,9 @@ class BTCConfig(BaseConfig):
             'twilio_token': os.getenv('TWILIO_TOKEN'),
             'twilio_phone': os.getenv('TWILIO_PHONE')
         }
+    
+    def get_monitoring_config(self) -> Dict[str, int]:
+        """Get monitoring configuration for BTC, with a default of 60 minutes"""
+        config = super().get_monitoring_config()
+        config['monitoring_interval'] = int(os.getenv('BTC_MONITORING_INTERVAL', '60'))  # Default to 60 minutes for BTC
+        return config
