@@ -12,8 +12,8 @@ class UBCConfig:
     """Configuration manager for UBC tennis court booking"""
     
     def __init__(self):
-        self.base_url = "https://recreation.ubc.ca"
-        self.login_url = "https://recreation.ubc.ca/login"
+        self.base_url = "https://portal.recreation.ubc.ca"
+        self.login_url = "https://portal.recreation.ubc.ca/index.php?r=public/index"
         self.booking_url = "https://recreation.ubc.ca/tennis/court-booking/"
         self.booking_system_url = None  # Will be determined dynamically
         
