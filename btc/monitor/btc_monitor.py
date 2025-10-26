@@ -212,21 +212,31 @@ class BTCMonitor(BaseMonitor):
     def _navigate_to_specific_date(self, target_date: datetime) -> bool:
         """Navigate to a specific date on the BTC booking page"""
         try:
-            # Look for date navigation elements
+            # Look for date navigation elements - try different approaches
             date_selectors = [
-                f"button:contains('{target_date.strftime('%B %d, %Y')}')",
-                f"button:contains('{target_date.strftime('%b %d')}')",
                 f"[data-date='{target_date.strftime('%Y-%m-%d')}']",
                 ".date-picker button",
-                ".calendar button"
+                ".calendar button",
+                "button[data-testid*='date']",
+                ".MuiButtonBase-root"
             ]
             
             for selector in date_selectors:
                 try:
-                    date_button = self.driver.find_element(By.CSS_SELECTOR, selector)
-                    date_button.click()
-                    time.sleep(2)
-                    return True
+                    date_elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                    for element in date_elements:
+                        try:
+                            element_text = element.text.strip()
+                            # Check if this element contains our target date
+                            if (target_date.strftime('%B %d, %Y') in element_text or 
+                                target_date.strftime('%b %d') in element_text or
+                                target_date.strftime('%d') in element_text):
+                                self.logger.info(f"Found date toggle: {element_text}")
+                                element.click()
+                                time.sleep(2)
+                                return True
+                        except Exception:
+                            continue
                 except NoSuchElementException:
                     continue
             
@@ -242,30 +252,89 @@ class BTCMonitor(BaseMonitor):
         try:
             self.logger.info("Scanning for available courts...")
             
-            # Look for "Book" buttons
-            book_buttons = self.driver.find_elements(By.CSS_SELECTOR, "button:contains('Book'), a:contains('Book')")
+            # First, find all court labels
+            court_elements = self.driver.find_elements(By.XPATH, "//p[contains(text(), 'Court')]")
+            court_labels = []
+            for elem in court_elements:
+                text = elem.text.strip()
+                if text.startswith('Court') and text[5:].strip().isdigit():
+                    court_labels.append((elem, text))
             
+            self.logger.info(f"Found {len(court_labels)} court labels: {[court[1] for court in court_labels]}")
+            
+            # Find all book buttons
+            all_buttons = self.driver.find_elements(By.TAG_NAME, "button")
+            book_buttons = []
+            
+            for button in all_buttons:
+                try:
+                    button_text = button.text.strip()
+                    if 'Book' in button_text and button.is_enabled() and 'Booking Grid' not in button_text:
+                        book_buttons.append(button)
+                except Exception:
+                    continue
+            
+            self.logger.info(f"Found {len(book_buttons)} valid book buttons")
+            
+            # Map each button to its closest court
             courts = []
             for i, button in enumerate(book_buttons):
                 try:
                     button_text = button.text.strip()
-                    if 'Book' in button_text and button.is_enabled():
+                    
+                    # Find the closest court to this button
+                    button_location = button.location
+                    closest_court = None
+                    min_distance = float('inf')
+                    
+                    for court_elem, court_text in court_labels:
+                        court_location = court_elem.location
+                        # Calculate approximate distance (simple Manhattan distance)
+                        distance = abs(button_location['x'] - court_location['x']) + abs(button_location['y'] - court_location['y'])
+                        
+                        if distance < min_distance:
+                            min_distance = distance
+                            closest_court = court_text
+                    
+                    if closest_court:
                         court_info = {
-                            'court_name': f"Court {i + 1}",
+                            'court_name': closest_court,
                             'time': 'Unknown',
                             'date': datetime.now().strftime("%Y-%m-%d"),
                             'price': 'Unknown',
                             'duration': '1 hour',
                             'available': True,
-                            'element': button
+                            'element': button,
+                            'button_text': button_text
                         }
                         
                         # Try to extract time from button text
+                        # Format: "Book 11:00 pm\nas 20hr"
                         if ':' in button_text:
-                            time_part = button_text.split(':')[0].split()[-1]
-                            court_info['time'] = time_part
+                            # Split by newline and get the first part
+                            first_line = button_text.split('\n')[0]
+                            # Extract time part
+                            time_parts = first_line.split()
+                            for j, part in enumerate(time_parts):
+                                if ':' in part:
+                                    # Found time, get the next part for AM/PM
+                                    time_str = part
+                                    if j + 1 < len(time_parts):
+                                        time_str += f" {time_parts[j + 1]}"
+                                    court_info['time'] = time_str
+                                    break
+                        
+                        # Try to extract duration
+                        if 'as' in button_text and 'hr' in button_text:
+                            try:
+                                duration_part = button_text.split('as')[1].strip()
+                                duration = duration_part.split()[0]
+                                court_info['duration'] = f"{duration} hours"
+                            except Exception:
+                                pass
                         
                         courts.append(court_info)
+                        self.logger.info(f"Added {closest_court} at {court_info['time']}: {button_text}")
                         
                 except Exception as e:
                     self.logger.warning(f"Error processing court button {i}: {e}")
