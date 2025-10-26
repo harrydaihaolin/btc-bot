@@ -2,90 +2,61 @@
 
 An automated bot that monitors Burnaby Tennis Club's booking system and sends notifications when courts become available.
 
-## 🚀 Features
+## 🚀 Quick Start
 
-- **Automatic Login**: Logs into the BTC website using your credentials
+### 1. Install Dependencies
+```bash
+pip3 install -r requirements.txt
+```
+
+### 2. Set Up Credentials
+```bash
+# Option A: Interactive setup
+./setup_credentials.sh
+
+# Option B: Manual environment variables
+export BTC_USERNAME="your_email@example.com"
+export BTC_PASSWORD="your_password"
+export BTC_NOTIFICATION_EMAIL="your_email@example.com"
+export BTC_PHONE_NUMBER="1234567890"
+export BTC_GMAIL_APP_EMAIL="your_gmail@gmail.com"
+export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
+```
+
+### 3. Run the Bot
+```bash
+# Interactive mode
+python3 btc_tennis_bot.py
+
+# Background monitoring (production)
+nohup python3 run_background_env.py > btc_background.log 2>&1 &
+```
+
+## 🎯 Features
+
 - **Multi-Date Scanning**: Automatically checks today, tomorrow, and day after tomorrow
 - **Smart Detection**: Finds "Book" buttons and filters out false positives
-- **Interactive Background Monitoring**: Works in both interactive and automated environments
+- **Background Monitoring**: Run as detached processes for 24/7 monitoring
 - **Multi-channel Notifications**: 
   - Email notifications via Gmail SMTP
   - SMS notifications via email-to-SMS gateways
-- **Continuous Monitoring**: Options for 5-minute or 30-second monitoring
-- **Environment Variable Support**: Secure credential management
-- **Interactive Setup**: Easy credential configuration
 - **Production Ready**: Perfect for cron jobs and automated deployments
 
-## 📋 Prerequisites
+## 📱 Usage Modes
 
-1. **Python 3.7+** with pip
-2. **Chrome browser** (for Selenium WebDriver)
-3. **Gmail account** with App Password enabled
-4. **BTC account** with login credentials
-
-## 🛠️ Installation
-
-1. **Clone or download** the bot files
-2. **Install dependencies**:
-   ```bash
-   pip3 install -r requirements.txt
-   ```
-
-## 🔧 Setup
-
-### Option 1: Interactive Setup (Recommended)
-
-Run the setup script:
-```bash
-chmod +x setup_credentials.sh
-./setup_credentials.sh
-```
-
-### Option 2: Manual Environment Variables
-
-Set these environment variables:
-```bash
-export BTC_USERNAME="your_email@example.com"
-export BTC_PASSWORD="your_password"
-export BTC_NOTIFICATION_EMAIL="your_email@example.com"
-export BTC_PHONE_NUMBER="1234567890"
-export BTC_GMAIL_APP_EMAIL="your_gmail@gmail.com"
-export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
-export BTC_BOOKING_DATE="1"  # days ahead: "1" (tomorrow), "2" (day after), or specific date like "2025-10-27"
-```
-
-### Gmail App Password Setup
-
-1. Go to [Google Account Security](https://myaccount.google.com/security)
-2. Enable **2-Step Verification** if not already enabled
-3. Go to **App passwords**
-4. Generate a new app password for **"Mail"**
-5. Copy the 16-character password (e.g., `abcd efgh ijkl mnop`)
-
-## 🎯 Usage
-
-### Basic Usage
+### Interactive Mode
+Perfect for manual use and testing:
 ```bash
 python3 btc_tennis_bot.py
 ```
+- Prompts for credentials if not set
+- Shows real-time progress
+- Offers monitoring options after initial scan
 
-### With Environment Variables
+### Background Mode
+Perfect for production and automation:
 ```bash
-export BTC_USERNAME="your_email@example.com"
-export BTC_PASSWORD="your_password"
-export BTC_NOTIFICATION_EMAIL="your_email@example.com"
-export BTC_PHONE_NUMBER="1234567890"
-export BTC_GMAIL_APP_EMAIL="your_gmail@gmail.com"
-export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
-export BTC_BOOKING_DATE="1"
-python3 btc_tennis_bot.py
-```
-
-### Background Monitoring Mode
-
-#### Environment Variable Mode (Production)
-```bash
-# Set up environment variables
+# Set environment variables first
 export BTC_USERNAME="your_email@example.com"
 export BTC_PASSWORD="your_password"
 export BTC_NOTIFICATION_EMAIL="your_email@example.com"
@@ -97,20 +68,7 @@ export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
 nohup python3 run_background_env.py > btc_background.log 2>&1 &
 ```
 
-#### Interactive Startup Script
-```bash
-# Make executable and run
-chmod +x start_background_monitoring.sh
-./start_background_monitoring.sh
-```
-
-#### Daemon Mode (System Service)
-```bash
-# Run as daemon process
-python3 daemon_monitoring.py
-```
-
-#### Process Management
+### Process Management
 ```bash
 # Check if running
 ps aux | grep run_background_env
@@ -122,19 +80,26 @@ tail -f btc_background.log
 pkill -f run_background_env
 ```
 
-## 📱 Notification Features
+## 🔧 Setup Guide
 
-### Email Notifications
-- Sent via Gmail SMTP
-- Includes court details and booking URL
-- Professional formatting with emojis
+### Gmail App Password Setup
+1. Go to [Google Account Security](https://myaccount.google.com/security)
+2. Enable **2-Step Verification** if not already enabled
+3. Go to **App passwords**
+4. Generate a new app password for **"Mail"**
+5. Copy the 16-character password (e.g., `abcd efgh ijkl mnop`)
 
-### SMS Notifications
-- Supports Canadian carriers (Rogers, Bell, Telus, etc.)
-- Uses email-to-SMS gateways
-- Fallback to console output if SMS fails
+### Environment Variables
+```bash
+BTC_USERNAME="your_email@example.com"           # BTC login email
+BTC_PASSWORD="your_password"                     # BTC login password
+BTC_NOTIFICATION_EMAIL="your_email@example.com" # Email for notifications
+BTC_PHONE_NUMBER="1234567890"                   # Phone for SMS (10 digits)
+BTC_GMAIL_APP_EMAIL="your_gmail@gmail.com"      # Gmail for SMTP
+BTC_GMAIL_APP_PASSWORD="your_gmail_app_password" # Gmail app password
+```
 
-## 🔍 How It Works
+## 📊 How It Works
 
 1. **Login**: Automatically logs into BTC website
 2. **Multi-Date Scan**: Checks today, tomorrow, and day after tomorrow
@@ -144,25 +109,46 @@ pkill -f run_background_env
 6. **Notify**: Sends email and SMS when courts are found
 7. **Monitor**: Optional continuous monitoring with configurable intervals
 
-## 📊 Monitoring Options
+## 📱 Notifications
 
-After the initial scan, you can choose:
+### Email Notifications
+- Sent via Gmail SMTP
+- Includes court details and booking URL
+- Professional formatting with emojis
+- Date-organized court listings
 
-1. **Continuous Monitoring** (every 5 minutes) - Perfect for background monitoring
-2. **Timeslot Monitoring** (every 30 seconds) - For rapid availability changes
-3. **Exit** - Single scan mode
+### SMS Notifications
+- Supports Canadian carriers (Rogers, Bell, Telus, etc.)
+- Uses email-to-SMS gateways
+- Concise format optimized for SMS
+- Fallback to console output if SMS fails
 
-### Interactive vs Non-Interactive Mode
-- **Interactive Mode**: Full user prompts and monitoring options
-- **Non-Interactive Mode**: Perfect for cron jobs and automated deployments
-- **Automatic Detection**: Bot automatically adapts to your environment
+## 🖥️ Background Monitoring
 
-## 🛡️ Security
+### Available Scripts
+- **`run_background_env.py`** - Production mode with environment variables
+- **`start_background_monitoring.sh`** - Interactive startup script
 
-- Credentials are stored in environment variables
-- Passwords are hidden during input
-- Gmail App Passwords provide secure SMTP access
-- No hardcoded credentials in the code
+### Configuration
+- **Monitoring Interval**: 5 minutes (configurable)
+- **Max Attempts**: 10 cycles (50 minutes total)
+- **Headless Mode**: Always enabled for background operation
+- **Logging**: Comprehensive logs for debugging
+
+### Monitoring Commands
+```bash
+# Start background monitoring
+nohup python3 run_background_env.py > btc_background.log 2>&1 &
+
+# Check process status
+ps aux | grep run_background_env
+
+# View real-time logs
+tail -f btc_background.log
+
+# Stop monitoring
+pkill -f run_background_env
+```
 
 ## 🐛 Troubleshooting
 
@@ -170,7 +156,7 @@ After the initial scan, you can choose:
 
 1. **"Interactive input not available"**
    - Set environment variables instead
-   - Use the setup script: `./setup_credentials.sh`
+   - Use: `export BTC_USERNAME="your_email"` etc.
 
 2. **"Login failed"**
    - Check your BTC credentials
@@ -185,11 +171,9 @@ After the initial scan, you can choose:
    - The bot will notify you when courts become available
 
 ### Debug Files
-
 The bot creates several debug files:
 - `btc_booking_page_*.png` - Screenshots
 - `btc_booking_page_*.html` - Page source
-- `btc_mon27_page_source_*.html` - Tomorrow's page source
 - `btc_notification_*.txt` - Notification logs
 - `available_courts_*.json` - Court data
 
@@ -199,9 +183,6 @@ The bot creates several debug files:
 🎾 Burnaby Tennis Club Court Booking Bot
 ==================================================
 ✅ All credentials found in environment variables!
-   Username: your_email@example.com
-   Notification Email: your_email@example.com
-   Phone: 1234567890
 
 Running court availability scan...
 
@@ -226,31 +207,13 @@ Monitoring options:
 3. Exit
 ```
 
-## 📁 Background Monitoring Files
-
-### Core Scripts
-- **`run_background_env.py`** - Environment variable mode for production
-- **`start_background_monitoring.sh`** - Interactive startup script
-- **`daemon_monitoring.py`** - Daemon mode for system services
-- **`run_interactive_background.py`** - Interactive background mode
-
-### Documentation
-- **`BACKGROUND_MONITORING_GUIDE.md`** - Comprehensive background monitoring guide
-- **`RELEASE_NOTES.md`** - Detailed changelog and feature descriptions
-
-### Configuration
-- **`setup_credentials.sh`** - Interactive credential setup
-- **`requirements.txt`** - Python dependencies
-
 ## 📋 Version History
 
 ### v1.1.0 - Interactive Background Monitoring Mode
 - **Multi-Date Scanning**: Automatically checks today, tomorrow, and day after tomorrow
-- **Interactive Background Monitoring**: Works in both interactive and automated environments
-- **Background Process Support**: Multiple deployment options (env vars, daemon, interactive)
+- **Background Monitoring**: Run as detached processes for 24/7 monitoring
 - **Enhanced Notifications**: Date-organized email and SMS notifications
 - **Production Ready**: Perfect for cron jobs and automated deployments
-- **Robust Error Handling**: Graceful handling of EOF errors and network issues
 - **Process Management**: PID files, graceful shutdown, and monitoring tools
 
 ### v1.0.0 - Initial Release

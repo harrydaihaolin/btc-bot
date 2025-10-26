@@ -1,0 +1,190 @@
+2025-10-25 21:59:55,037 - INFO - All required environment variables are set
+2025-10-25 21:59:55,037 - INFO - Initializing BTC Tennis Bot for background monitoring...
+2025-10-25 21:59:55,037 - INFO - Bot initialized successfully for background monitoring
+2025-10-25 21:59:55,038 - INFO - Monitoring interval: 5 minutes
+2025-10-25 21:59:55,038 - INFO - Max attempts: 10
+2025-10-25 21:59:55,038 - INFO - Running initial court availability scan...
+2025-10-25 21:59:55,038 - INFO - Starting BTC court booking scan...
+2025-10-25 21:59:55,038 - INFO - ====== WebDriver manager ======
+2025-10-25 21:59:55,576 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 21:59:55,770 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 21:59:55,902 - INFO - Driver [/Users/haolin.dai/.wdm/drivers/chromedriver/mac64/141.0.7390.122/chromedriver-mac-arm64/chromedriver] found in cache
+2025-10-25 21:59:56,943 - INFO - Chrome WebDriver initialized successfully
+2025-10-25 21:59:56,943 - INFO - Attempting to login...
+2025-10-25 21:59:56,943 - INFO - Trying login URL: https://www.burnabytennis.ca/login
+2025-10-25 21:59:59,588 - INFO - Login form found, attempting to fill credentials
+2025-10-25 22:00:03,909 - INFO - Login successful!
+2025-10-25 22:00:03,910 - INFO - Navigating to https://www.burnabytennis.ca/app/bookings/grid
+2025-10-25 22:00:04,035 - INFO - Successfully navigated to BTC booking page
+2025-10-25 22:00:07,098 - INFO - Screenshot saved: btc_booking_page_20251025_220007.png
+2025-10-25 22:00:07,100 - INFO - Page source saved: btc_booking_page_20251025_220007.html
+2025-10-25 22:00:07,100 - INFO - Checking today (offset: 0 days)
+2025-10-25 22:00:07,100 - INFO - Navigating to date: Saturday, October 25, 2025
+2025-10-25 22:00:07,100 - INFO - Looking for target date: October 25, 2025
+2025-10-25 22:00:07,100 - INFO - Looking for date toggle: Sat 25
+2025-10-25 22:00:07,100 - INFO - Looking for date toggle: Sat 25
+2025-10-25 22:00:07,211 - INFO - Searching for all clickable elements...
+2025-10-25 22:00:07,229 - WARNING - Could not find tomorrow's date toggle
+2025-10-25 22:00:07,229 - WARNING - Failed to navigate to today
+2025-10-25 22:00:07,229 - INFO - Checking tomorrow (offset: 1 days)
+2025-10-25 22:00:07,229 - INFO - Navigating to date: Sunday, October 26, 2025
+2025-10-25 22:00:07,229 - INFO - Looking for target date: October 26, 2025
+2025-10-25 22:00:07,229 - INFO - Looking for date toggle: Sun 26
+2025-10-25 22:00:07,229 - INFO - Looking for date toggle: Sun 26
+2025-10-25 22:00:07,310 - INFO - Searching for all clickable elements...
+2025-10-25 22:00:07,323 - WARNING - Could not find tomorrow's date toggle
+2025-10-25 22:00:07,323 - WARNING - Failed to navigate to tomorrow
+2025-10-25 22:00:07,323 - INFO - Checking day after tomorrow (offset: 2 days)
+2025-10-25 22:00:07,323 - INFO - Navigating to date: Monday, October 27, 2025
+2025-10-25 22:00:07,323 - INFO - Looking for target date: October 27, 2025
+2025-10-25 22:00:07,323 - INFO - Looking for date toggle: Mon 27
+2025-10-25 22:00:07,323 - INFO - Looking for date toggle: Mon 27
+2025-10-25 22:00:07,402 - INFO - Searching for all clickable elements...
+2025-10-25 22:00:07,415 - WARNING - Could not find tomorrow's date toggle
+2025-10-25 22:00:07,415 - WARNING - Failed to navigate to day after tomorrow
+2025-10-25 22:00:07,415 - INFO - No available courts found across all dates
+2025-10-25 22:00:07,538 - INFO - WebDriver closed
+2025-10-25 22:00:07,538 - INFO - No available courts found in initial scan
+2025-10-25 22:00:07,539 - INFO - Starting continuous background monitoring (every 5 minutes)
+2025-10-25 22:00:07,539 - INFO - Press Ctrl+C to stop monitoring
+2025-10-25 22:00:07,539 - INFO - Background monitoring attempt 1/10
+2025-10-25 22:00:07,539 - INFO - Starting BTC court booking scan...
+2025-10-25 22:00:07,539 - INFO - ====== WebDriver manager ======
+2025-10-25 22:00:07,977 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:00:08,365 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:00:08,721 - INFO - Driver [/Users/haolin.dai/.wdm/drivers/chromedriver/mac64/141.0.7390.122/chromedriver-mac-arm64/chromedriver] found in cache
+2025-10-25 22:00:09,499 - INFO - Chrome WebDriver initialized successfully
+2025-10-25 22:00:09,500 - INFO - Attempting to login...
+2025-10-25 22:00:09,500 - INFO - Trying login URL: https://www.burnabytennis.ca/login
+2025-10-25 22:00:12,912 - INFO - Login form found, attempting to fill credentials
+2025-10-25 22:00:17,232 - INFO - Login successful!
+2025-10-25 22:00:17,232 - INFO - Navigating to https://www.burnabytennis.ca/app/bookings/grid
+2025-10-25 22:00:17,352 - INFO - Successfully navigated to BTC booking page
+2025-10-25 22:00:20,414 - INFO - Screenshot saved: btc_booking_page_20251025_220020.png
+2025-10-25 22:00:20,416 - INFO - Page source saved: btc_booking_page_20251025_220020.html
+2025-10-25 22:00:20,416 - INFO - Checking today (offset: 0 days)
+2025-10-25 22:00:20,416 - INFO - Navigating to date: Saturday, October 25, 2025
+2025-10-25 22:00:20,416 - INFO - Looking for target date: October 25, 2025
+2025-10-25 22:00:20,416 - INFO - Looking for date toggle: Sat 25
+2025-10-25 22:00:20,416 - INFO - Looking for date toggle: Sat 25
+2025-10-25 22:00:20,535 - INFO - Searching for all clickable elements...
+2025-10-25 22:00:20,553 - WARNING - Could not find tomorrow's date toggle
+2025-10-25 22:00:20,554 - WARNING - Failed to navigate to today
+2025-10-25 22:00:20,554 - INFO - Checking tomorrow (offset: 1 days)
+2025-10-25 22:00:20,554 - INFO - Navigating to date: Sunday, October 26, 2025
+2025-10-25 22:00:20,554 - INFO - Looking for target date: October 26, 2025
+2025-10-25 22:00:20,554 - INFO - Looking for date toggle: Sun 26
+2025-10-25 22:00:20,554 - INFO - Looking for date toggle: Sun 26
+2025-10-25 22:00:20,642 - INFO - Searching for all clickable elements...
+2025-10-25 22:00:20,656 - WARNING - Could not find tomorrow's date toggle
+2025-10-25 22:00:20,656 - WARNING - Failed to navigate to tomorrow
+2025-10-25 22:00:20,656 - INFO - Checking day after tomorrow (offset: 2 days)
+2025-10-25 22:00:20,657 - INFO - Navigating to date: Monday, October 27, 2025
+2025-10-25 22:00:20,657 - INFO - Looking for target date: October 27, 2025
+2025-10-25 22:00:20,657 - INFO - Looking for date toggle: Mon 27
+2025-10-25 22:00:20,657 - INFO - Looking for date toggle: Mon 27
+2025-10-25 22:00:20,742 - INFO - Searching for all clickable elements...
+2025-10-25 22:00:20,754 - WARNING - Could not find tomorrow's date toggle
+2025-10-25 22:00:20,755 - WARNING - Failed to navigate to day after tomorrow
+2025-10-25 22:00:20,755 - INFO - No available courts found across all dates
+2025-10-25 22:00:20,878 - INFO - WebDriver closed
+2025-10-25 22:00:20,879 - INFO - No available courts found
+2025-10-25 22:00:20,879 - INFO - Waiting 5 minutes before next scan...
+2025-10-25 22:00:56,654 - INFO - Received signal 15, shutting down gracefully...
+2025-10-25 22:00:57,012 - INFO - Background monitoring completed
+2025-10-25 22:00:57,013 - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x106eaf4d0>: Failed to establish a new connection: [Errno 61] Connection refused')': /session/a7d025b8ff411f94aec47b9323a112ac
+2025-10-25 22:00:57,014 - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x106eaf440>: Failed to establish a new connection: [Errno 61] Connection refused')': /session/a7d025b8ff411f94aec47b9323a112ac
+2025-10-25 22:00:57,014 - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x106eafe60>: Failed to establish a new connection: [Errno 61] Connection refused')': /session/a7d025b8ff411f94aec47b9323a112ac
+2025-10-25 22:00:57,015 - INFO - WebDriver closed
+2025-10-25 22:01:47,938 - INFO - All required environment variables are set
+2025-10-25 22:01:47,939 - INFO - Initializing BTC Tennis Bot for background monitoring...
+2025-10-25 22:01:47,939 - INFO - Bot initialized successfully for background monitoring
+2025-10-25 22:01:47,939 - INFO - Monitoring interval: 5 minutes
+2025-10-25 22:01:47,939 - INFO - Max attempts: 10
+2025-10-25 22:01:47,939 - INFO - Running initial court availability scan...
+2025-10-25 22:01:47,939 - INFO - Starting BTC court booking scan...
+2025-10-25 22:01:47,939 - INFO - ====== WebDriver manager ======
+2025-10-25 22:01:48,577 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:01:48,806 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:01:48,929 - INFO - Driver [/Users/haolin.dai/.wdm/drivers/chromedriver/mac64/141.0.7390.122/chromedriver-mac-arm64/chromedriver] found in cache
+2025-10-25 22:01:49,672 - INFO - Chrome WebDriver initialized successfully
+2025-10-25 22:01:49,672 - INFO - Attempting to login...
+2025-10-25 22:01:49,673 - INFO - Trying login URL: https://www.burnabytennis.ca/login
+2025-10-25 22:01:52,219 - INFO - Login form found, attempting to fill credentials
+2025-10-25 22:01:56,552 - INFO - Login successful!
+2025-10-25 22:01:56,552 - INFO - Navigating to https://www.burnabytennis.ca/app/bookings/grid
+2025-10-25 22:01:56,667 - INFO - Successfully navigated to BTC booking page
+2025-10-25 22:01:59,726 - INFO - Screenshot saved: btc_booking_page_20251025_220159.png
+2025-10-25 22:01:59,728 - INFO - Page source saved: btc_booking_page_20251025_220159.html
+2025-10-25 22:01:59,728 - INFO - Checking today (offset: 0 days)
+2025-10-25 22:01:59,728 - INFO - Navigating to date: Saturday, October 25, 2025
+2025-10-25 22:01:59,728 - INFO - Looking for target date: October 25, 2025
+2025-10-25 22:01:59,728 - INFO - Looking for date toggle: Sat 25
+2025-10-25 22:01:59,728 - INFO - Looking for date toggle: Sat 25
+2025-10-25 22:01:59,842 - INFO - Searching for all clickable elements...
+2025-10-25 22:01:59,861 - WARNING - Could not find tomorrow's date toggle
+2025-10-25 22:01:59,861 - WARNING - Failed to navigate to today
+2025-10-25 22:01:59,861 - INFO - Checking tomorrow (offset: 1 days)
+2025-10-25 22:01:59,862 - INFO - Navigating to date: Sunday, October 26, 2025
+2025-10-25 22:01:59,862 - INFO - Looking for target date: October 26, 2025
+2025-10-25 22:01:59,862 - INFO - Looking for date toggle: Sun 26
+2025-10-25 22:01:59,862 - INFO - Looking for date toggle: Sun 26
+2025-10-25 22:01:59,945 - INFO - Searching for all clickable elements...
+2025-10-25 22:01:59,959 - WARNING - Could not find tomorrow's date toggle
+2025-10-25 22:01:59,960 - WARNING - Failed to navigate to tomorrow
+2025-10-25 22:01:59,960 - INFO - Checking day after tomorrow (offset: 2 days)
+2025-10-25 22:01:59,960 - INFO - Navigating to date: Monday, October 27, 2025
+2025-10-25 22:01:59,960 - INFO - Looking for target date: October 27, 2025
+2025-10-25 22:01:59,960 - INFO - Looking for date toggle: Mon 27
+2025-10-25 22:01:59,960 - INFO - Looking for date toggle: Mon 27
+2025-10-25 22:02:00,053 - INFO - Searching for all clickable elements...
+2025-10-25 22:02:00,067 - WARNING - Could not find tomorrow's date toggle
+2025-10-25 22:02:00,067 - WARNING - Failed to navigate to day after tomorrow
+2025-10-25 22:02:00,067 - INFO - No available courts found across all dates
+2025-10-25 22:02:00,232 - INFO - WebDriver closed
+2025-10-25 22:02:00,232 - INFO - No available courts found in initial scan
+2025-10-25 22:02:00,232 - INFO - Starting continuous background monitoring (every 5 minutes)
+2025-10-25 22:02:00,232 - INFO - Press Ctrl+C to stop monitoring
+2025-10-25 22:02:00,232 - INFO - Background monitoring attempt 1/10
+2025-10-25 22:02:00,232 - INFO - Starting BTC court booking scan...
+2025-10-25 22:02:00,233 - INFO - ====== WebDriver manager ======
+2025-10-25 22:02:00,705 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:02:00,829 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-25 22:02:00,978 - INFO - Driver [/Users/haolin.dai/.wdm/drivers/chromedriver/mac64/141.0.7390.122/chromedriver-mac-arm64/chromedriver] found in cache
+2025-10-25 22:02:01,633 - INFO - Chrome WebDriver initialized successfully
+2025-10-25 22:02:01,637 - INFO - Attempting to login...
+2025-10-25 22:02:01,637 - INFO - Trying login URL: https://www.burnabytennis.ca/login
+2025-10-25 22:02:04,169 - INFO - Login form found, attempting to fill credentials
+2025-10-25 22:02:08,470 - INFO - Login successful!
+2025-10-25 22:02:08,470 - INFO - Navigating to https://www.burnabytennis.ca/app/bookings/grid
+2025-10-25 22:02:08,599 - INFO - Successfully navigated to BTC booking page
+2025-10-25 22:02:11,667 - INFO - Screenshot saved: btc_booking_page_20251025_220211.png
+2025-10-25 22:02:11,669 - INFO - Page source saved: btc_booking_page_20251025_220211.html
+2025-10-25 22:02:11,669 - INFO - Checking today (offset: 0 days)
+2025-10-25 22:02:11,669 - INFO - Navigating to date: Saturday, October 25, 2025
+2025-10-25 22:02:11,669 - INFO - Looking for target date: October 25, 2025
+2025-10-25 22:02:11,669 - INFO - Looking for date toggle: Sat 25
+2025-10-25 22:02:11,669 - INFO - Looking for date toggle: Sat 25
+2025-10-25 22:02:11,772 - INFO - Searching for all clickable elements...
+2025-10-25 22:02:11,787 - WARNING - Could not find tomorrow's date toggle
+2025-10-25 22:02:11,787 - WARNING - Failed to navigate to today
+2025-10-25 22:02:11,787 - INFO - Checking tomorrow (offset: 1 days)
+2025-10-25 22:02:11,787 - INFO - Navigating to date: Sunday, October 26, 2025
+2025-10-25 22:02:11,787 - INFO - Looking for target date: October 26, 2025
+2025-10-25 22:02:11,787 - INFO - Looking for date toggle: Sun 26
+2025-10-25 22:02:11,787 - INFO - Looking for date toggle: Sun 26
+2025-10-25 22:02:11,859 - INFO - Searching for all clickable elements...
+2025-10-25 22:02:11,870 - WARNING - Could not find tomorrow's date toggle
+2025-10-25 22:02:11,870 - WARNING - Failed to navigate to tomorrow
+2025-10-25 22:02:11,870 - INFO - Checking day after tomorrow (offset: 2 days)
+2025-10-25 22:02:11,870 - INFO - Navigating to date: Monday, October 27, 2025
+2025-10-25 22:02:11,870 - INFO - Looking for target date: October 27, 2025
+2025-10-25 22:02:11,870 - INFO - Looking for date toggle: Mon 27
+2025-10-25 22:02:11,870 - INFO - Looking for date toggle: Mon 27
+2025-10-25 22:02:11,945 - INFO - Searching for all clickable elements...
+2025-10-25 22:02:11,956 - WARNING - Could not find tomorrow's date toggle
+2025-10-25 22:02:11,956 - WARNING - Failed to navigate to day after tomorrow
+2025-10-25 22:02:11,956 - INFO - No available courts found across all dates
+2025-10-25 22:02:12,073 - INFO - WebDriver closed
+2025-10-25 22:02:12,073 - INFO - No available courts found
+2025-10-25 22:02:12,073 - INFO - Waiting 5 minutes before next scan...
