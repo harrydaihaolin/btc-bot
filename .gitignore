@@ -80,6 +80,10 @@ btc_notification_*.txt
 available_courts_*.json
 btc_daemon_stdout.log
 btc_daemon_stderr.log
+debug_*.log
+debug_*.html
+debug_*.png
+debug_*.py
 
 # Chrome driver
 chromedriver
@@ -99,3 +103,48 @@ secrets.json
 
 # Logs directory
 logs/
+
+# Debug and test artifacts
+btc_*_test.log
+btc_*_debug.*
+btc_*_output.log
+btc_*_monitoring.log
+btc_*_background.log
+btc_*_env.log
+btc_*_hourly.log
+btc_*_interactive.log
+btc_*_fixed.log
+btc_*_e2e.log
+
+# Screenshots and page sources
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.html
+*.htm
+
+# JSON data files
+*.json
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
