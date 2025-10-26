@@ -55,13 +55,13 @@ jobs:
           # Stop services
           docker compose --env-file .env.monitoring down
 
-       - name: Upload monitoring logs
-         uses: actions/upload-artifact@v4
-         if: always()
-         with:
-           name: monitoring-logs-${{ github.run_number }}
-           path: logs/
-           retention-days: 7
+      - name: Upload monitoring logs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monitoring-logs-${{ github.run_number }}
+          path: logs/
+          retention-days: 7
 
   health-check:
     runs-on: ubuntu-latest
@@ -69,24 +69,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-       - name: Test bot health
-         run: |
-           # Test BTC bot health
-           docker build -f Dockerfile.btc -t btc-test .
-           docker run --rm btc-test python3 -c "
-           from btc.config.btc_config import BTCConfig
-           from btc.monitor.btc_monitor import BTCMonitor
-           config = BTCConfig()
-           monitor = BTCMonitor()
-           print('BTC bot health check: OK')
-           "
+      - name: Test bot health
+        run: |
+          # Test BTC bot health
+          docker build -f Dockerfile.btc -t btc-test .
+          docker run --rm btc-test python3 -c "
+          from btc.config.btc_config import BTCConfig
+          from btc.monitor.btc_monitor import BTCMonitor
+          config = BTCConfig()
+          monitor = BTCMonitor()
+          print('BTC bot health check: OK')
+          "
 
-           # Test UBC bot health
-           docker build -f Dockerfile.ubc -t ubc-test .
-           docker run --rm ubc-test python3 -c "
-           from ubc.config.ubc_config import UBCConfig
-           from ubc.monitor.ubc_monitor import UBCMonitor
-           config = UBCConfig()
-           monitor = UBCMonitor()
-           print('UBC bot health check: OK')
-           "
+          # Test UBC bot health
+          docker build -f Dockerfile.ubc -t ubc-test .
+          docker run --rm ubc-test python3 -c "
+          from ubc.config.ubc_config import UBCConfig
+          from ubc.monitor.ubc_monitor import UBCMonitor
+          config = UBCConfig()
+          monitor = UBCMonitor()
+          print('UBC bot health check: OK')
+          "
