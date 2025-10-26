@@ -1460,24 +1460,29 @@ def main():
         else:
             print("No courts to notify about.")
         
-        # Ask user if they want to run monitoring
-        print("\nMonitoring options:")
-        print("1. Run continuous monitoring (every 5 minutes)")
-        print("2. Run timeslot monitoring (every 30 seconds)")
-        print("3. Exit")
-        
-        choice = input("Enter your choice (1/2/3): ").strip()
-        
-        if choice == '1':
-            interval = int(input("Enter monitoring interval in minutes (default 5): ") or "5")
-            max_attempts = int(input("Enter maximum number of scans (default 10): ") or "10")
-            bot.run_continuous_monitoring(interval_minutes=interval, max_attempts=max_attempts)
-        elif choice == '2':
-            interval = int(input("Enter monitoring interval in seconds (default 30): ") or "30")
-            max_attempts = int(input("Enter maximum number of checks (default 120): ") or "120")
-            bot.monitor_timeslots(interval_seconds=interval, max_attempts=max_attempts)
-        else:
-            print("Exiting...")
+        # Ask user if they want to run monitoring (only in interactive mode)
+        try:
+            print("\nMonitoring options:")
+            print("1. Run continuous monitoring (every 5 minutes)")
+            print("2. Run timeslot monitoring (every 30 seconds)")
+            print("3. Exit")
+            
+            choice = input("Enter your choice (1/2/3): ").strip()
+            
+            if choice == '1':
+                interval = int(input("Enter monitoring interval in minutes (default 5): ") or "5")
+                max_attempts = int(input("Enter maximum number of scans (default 10): ") or "10")
+                bot.run_continuous_monitoring(interval_minutes=interval, max_attempts=max_attempts)
+            elif choice == '2':
+                interval = int(input("Enter monitoring interval in seconds (default 30): ") or "30")
+                max_attempts = int(input("Enter maximum number of checks (default 120): ") or "120")
+                bot.monitor_timeslots(interval_seconds=interval, max_attempts=max_attempts)
+            else:
+                print("Exiting...")
+        except EOFError:
+            print("\n✅ Single scan completed successfully!")
+            print("💡 To run continuous monitoring, use the bot in interactive mode.")
+            print("   (Run without environment variables to enable interactive mode)")
     
     except KeyboardInterrupt:
         print("\nBot stopped by user")
