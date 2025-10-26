@@ -70,8 +70,14 @@ nohup python3 run_background_env.py > btc_background.log 2>&1 &
 ### 🚀 **Daemon Mode (RECOMMENDED)**
 Perfect for continuous monitoring and instant notifications:
 ```bash
-# Start daemon monitoring
-python3 daemon_monitoring.py
+# Easy startup with process management
+./start_daemon.sh
+
+# Monitor logs in real-time
+tail -f btc_background_monitoring.log
+
+# Stop daemon when needed
+./stop_daemon.sh
 ```
 **Features:**
 - ✅ **Instant Notifications**: Immediate email/SMS when new courts appear
@@ -79,6 +85,7 @@ python3 daemon_monitoring.py
 - ✅ **New Booking Detection**: Monitors for court releases and cancellations
 - ✅ **Process Management**: PID files and graceful shutdown
 - ✅ **Comprehensive Logging**: Detailed logs for debugging
+- ✅ **Easy Control**: Simple start/stop scripts with status monitoring
 
 ### 🖥️ **Background Mode**
 Simple background monitoring for basic use:
@@ -302,6 +309,13 @@ Monitoring options:
 ```
 
 ## 📋 Version History
+
+### v1.2.2 - Daemon Monitoring & Process Management
+- **Process Management**: Added start_daemon.sh and stop_daemon.sh scripts
+- **Easy Startup**: One-command daemon startup with proper input handling
+- **PID Tracking**: Process management with PID file tracking
+- **Production Ready**: 24/7 background monitoring with 5-minute intervals
+- **User Experience**: Simple commands for monitoring and process control
 
 ### v1.2.1 - Critical Court Detection Fix
 - **Bug Fix**: Fixed court detection in background monitoring mode
