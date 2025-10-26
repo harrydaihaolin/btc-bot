@@ -1,6 +1,14 @@
-# 🎾 Burnaby Tennis Club Court Booking Bot
+# 🎾 Tennis Court Booking Bot
 
-An automated bot that monitors Burnaby Tennis Club's booking system and sends notifications when courts become available.
+An automated bot that monitors tennis court booking systems and sends notifications when courts become available.
+
+## 🏟️ Supported Facilities
+
+### 🎾 Burnaby Tennis Club (BTC)
+Monitors Burnaby Tennis Club's booking system for court availability.
+
+### 🎓 UBC Tennis Centre
+Monitors UBC Recreation's tennis court booking system for court availability.
 
 ## 🚀 Quick Start
 
@@ -9,7 +17,9 @@ An automated bot that monitors Burnaby Tennis Club's booking system and sends no
 pip3 install -r requirements.txt
 ```
 
-### 2. Set Up Credentials
+## 🎾 Burnaby Tennis Club (BTC) Setup
+
+### 2. Set Up BTC Credentials
 ```bash
 # Option A: Interactive setup
 ./setup_credentials.sh
@@ -23,7 +33,7 @@ export BTC_GMAIL_APP_EMAIL="your_gmail@gmail.com"
 export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
 ```
 
-### 3. Start Daemon Monitoring (RECOMMENDED)
+### 3. Start BTC Daemon Monitoring (RECOMMENDED)
 ```bash
 # One-command daemon startup (default: 60 minutes)
 ./run_daemon.sh
@@ -32,7 +42,7 @@ export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
 ./run_daemon.sh 30
 ```
 
-### 4. Alternative Modes
+### 4. BTC Alternative Modes
 ```bash
 # Interactive mode (for testing)
 python3 btc_tennis_bot.py
@@ -42,6 +52,42 @@ tail -f btc_daemon.log
 
 # Stop daemon when needed
 kill $(cat btc_daemon.pid)
+```
+
+## 🎓 UBC Tennis Centre Setup
+
+### 2. Set Up UBC Credentials
+```bash
+# Interactive setup for UBC credentials
+python3 setup_ubc_credentials.py
+
+# Manual environment variables
+export UBC_USERNAME="your_ubc_cwl@ubc.ca"
+export UBC_PASSWORD="your_ubc_password"
+export UBC_NOTIFICATION_EMAIL="your_email@gmail.com"
+export UBC_GMAIL_APP_PASSWORD="your_gmail_app_password"
+export UBC_SMS_PHONE="1234567890"  # optional
+```
+
+### 3. Start UBC Daemon Monitoring
+```bash
+# One-command UBC daemon startup (default: 5 minutes)
+./run_ubc_daemon.sh
+
+# Custom interval (e.g., 10 minutes)
+./run_ubc_daemon.sh 10
+```
+
+### 4. UBC Alternative Modes
+```bash
+# Test UBC configuration
+python3 test_ubc_monitor.py
+
+# Monitor UBC logs in real-time
+tail -f ubc_daemon.log
+
+# Stop UBC daemon when needed
+kill $(cat ubc_daemon.pid)
 ```
 
 ## 🎯 Key Features
@@ -70,6 +116,14 @@ kill $(cat btc_daemon.pid)
 - **Easy Extension**: Add new features by extending core modules
 - **Better Testing**: Individual components can be tested independently
 - **Maintainable Code**: Clear separation of concerns and responsibilities
+
+### 🎓 **UBC Tennis Centre Support (v1.3)**
+- **UBC-Specific Monitoring**: Dedicated UBC court booking system integration
+- **CWL Login Support**: Compatible with UBC Campus Wide Login system
+- **24-Hour Advance Booking**: Monitors UBC's 24-hour advance booking window
+- **UBC-Specific Notifications**: Tailored email/SMS formatting for UBC courts
+- **Facility-Specific Configuration**: Separate configs for BTC and UBC monitoring
+- **Multi-Facility Support**: Monitor both BTC and UBC simultaneously
 
 ## 📱 Usage Modes
 
@@ -319,6 +373,16 @@ Monitoring options:
 ```
 
 ## 📋 Version History
+
+### v1.3.0 - UBC Tennis Centre Support
+- **Multi-Facility Support**: Added UBC Tennis Centre monitoring alongside BTC
+- **UBC-Specific Modules**: Created dedicated UBC config, monitor, and notification modules
+- **CWL Login Integration**: Compatible with UBC Campus Wide Login system
+- **24-Hour Advance Booking**: Monitors UBC's unique booking window system
+- **Facility-Specific Configuration**: Separate environment variables for BTC and UBC
+- **UBC Daemon Monitoring**: Dedicated daemon script for UBC court monitoring
+- **Interactive UBC Setup**: Easy credential setup script for UBC users
+- **Comprehensive UBC Testing**: Test suite for UBC monitoring functionality
 
 ### v1.2.4 - Comprehensive Test Suite
 - **84% Code Coverage**: Excellent production-level test coverage
