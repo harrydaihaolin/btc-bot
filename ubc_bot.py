@@ -67,7 +67,7 @@ class UBCTennisBot:
         
         try:
             credentials = self.setup_credentials()
-            available_courts = self.monitor.scan_available_courts(credentials)
+            available_courts = self.monitor.scan_available_courts()
             
             if available_courts:
                 self.logger.info(f"🎾 Found {len(available_courts)} available courts!")
@@ -98,7 +98,7 @@ class UBCTennisBot:
             
             while True:
                 try:
-                    available_courts = self.monitor.scan_available_courts(credentials)
+                    available_courts = self.monitor.scan_available_courts()
                     
                     if available_courts:
                         self.logger.info(f"🎾 Found {len(available_courts)} available courts!")
@@ -154,7 +154,7 @@ class UBCTennisBot:
             
             while True:
                 try:
-                    available_courts = self.monitor.scan_available_courts(credentials)
+                    available_courts = self.monitor.scan_available_courts()
                     
                     # Filter courts by preferred timeslots
                     preferred_courts = []

@@ -7,9 +7,9 @@ on:
   workflow_dispatch: # Allow manual triggering
 
 jobs:
-  monitor-courts:
+  monitor-btc-courts:
     runs-on: ubuntu-latest
-
+    
     steps:
       - uses: actions/checkout@v4
 
@@ -26,6 +26,46 @@ jobs:
           echo "BTC_GMAIL_APP_PASSWORD=${{ secrets.BTC_GMAIL_APP_PASSWORD }}" >> .env.monitoring
           echo "BTC_SMS_PHONE=${{ secrets.BTC_SMS_PHONE }}" >> .env.monitoring
 
+      - name: Configure Twilio credentials
+        run: |
+          echo "TWILIO_SID=${{ secrets.TWILIO_SID }}" >> .env.monitoring
+          echo "TWILIO_TOKEN=${{ secrets.TWILIO_TOKEN }}" >> .env.monitoring
+          echo "TWILIO_PHONE=${{ secrets.TWILIO_PHONE }}" >> .env.monitoring
+
+      - name: Run BTC court monitoring
+        run: |
+          # Build and start BTC monitoring
+          docker compose --env-file .env.monitoring build btc-tennis-bot
+          docker compose --env-file .env.monitoring up -d btc-tennis-bot
+
+          # Wait for initial scan
+          sleep 60
+
+          # Check logs for any court findings
+          docker compose --env-file .env.monitoring logs --tail=50 btc-tennis-bot
+
+          # Stop BTC service
+          docker compose --env-file .env.monitoring down btc-tennis-bot
+
+      - name: Upload BTC monitoring logs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: btc-monitoring-logs-${{ github.run_number }}
+          path: logs/
+          retention-days: 7
+
+  monitor-ubc-courts:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        run: |
+          # Create environment file with secrets
+          cp env.example .env.monitoring
+
       - name: Configure UBC credentials
         run: |
           echo "UBC_USERNAME=${{ secrets.UBC_USERNAME }}" >> .env.monitoring
@@ -40,26 +80,26 @@ jobs:
           echo "TWILIO_TOKEN=${{ secrets.TWILIO_TOKEN }}" >> .env.monitoring
           echo "TWILIO_PHONE=${{ secrets.TWILIO_PHONE }}" >> .env.monitoring
 
-      - name: Run court monitoring
+      - name: Run UBC court monitoring
         run: |
-          # Build and start monitoring
-          docker compose --env-file .env.monitoring build
-          docker compose --env-file .env.monitoring up -d
+          # Build and start UBC monitoring
+          docker compose --env-file .env.monitoring build ubc-tennis-bot
+          docker compose --env-file .env.monitoring up -d ubc-tennis-bot
 
           # Wait for initial scan
           sleep 60
 
           # Check logs for any court findings
-          docker compose --env-file .env.monitoring logs --tail=50
+          docker compose --env-file .env.monitoring logs --tail=50 ubc-tennis-bot
 
-          # Stop services
-          docker compose --env-file .env.monitoring down
+          # Stop UBC service
+          docker compose --env-file .env.monitoring down ubc-tennis-bot
 
-      - name: Upload monitoring logs
+      - name: Upload UBC monitoring logs
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: monitoring-logs-${{ github.run_number }}
+          name: ubc-monitoring-logs-${{ github.run_number }}
           path: logs/
           retention-days: 7
 
