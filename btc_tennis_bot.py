@@ -6,12 +6,13 @@ This bot automates the process of checking for available tennis courts
 and notifying users when courts become available for booking.
 """
 
+import getpass
+import logging
 import os
 import sys
 import time
-import logging
-import getpass
 from datetime import datetime
+
 from core.config import BTCConfig
 from core.monitor import CourtMonitor
 from core.notifications import NotificationManager

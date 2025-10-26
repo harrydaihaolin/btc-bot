@@ -7,8 +7,8 @@ Test UBC Tennis Centre specific modules
 import os
 import sys
 import unittest
-from unittest.mock import patch, MagicMock, Mock
 from datetime import datetime
+from unittest.mock import MagicMock, Mock, patch
 
 # Add project root to path
 sys.path.insert(

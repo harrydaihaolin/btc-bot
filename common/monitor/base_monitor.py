@@ -4,21 +4,19 @@ Common Monitor Base Class
 Shared monitoring functionality for all tennis court monitors
 """
 
-import time
 import logging
-from datetime import datetime, timedelta
-from typing import List, Dict, Any, Optional, Set
+import time
 from abc import ABC, abstractmethod
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional, Set
+
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import (NoSuchElementException,
+                                        TimeoutException, WebDriverException)
 from selenium.webdriver.chrome.service import Service
-from selenium.common.exceptions import (
-    TimeoutException,
-    NoSuchElementException,
-    WebDriverException,
-)
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
 from common.config.base_config import BaseConfig

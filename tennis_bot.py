@@ -10,13 +10,13 @@ This bot automates the process of checking for available tennis courts
 and notifying users when courts become available for booking.
 """
 
+import getpass
+import logging
 import os
 import sys
 import time
-import logging
-import getpass
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +25,6 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from btc.config.btc_config import BTCConfig
 from btc.monitor.btc_monitor import BTCMonitor
 from btc.notifications.btc_notifications import BTCNotificationManager
-
 from ubc.config.ubc_config import UBCConfig
 from ubc.monitor.ubc_monitor import UBCMonitor
 from ubc.notifications.ubc_notifications import UBCNotificationManager

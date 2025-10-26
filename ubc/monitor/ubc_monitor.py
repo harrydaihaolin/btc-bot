@@ -4,15 +4,16 @@ UBC Tennis Centre Monitor
 UBC Recreation specific monitoring logic
 """
 
-import time
 import os
 import sys
+import time
 from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional
+
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
 
 # Add project root to path
 sys.path.insert(

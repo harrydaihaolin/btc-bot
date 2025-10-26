@@ -13,8 +13,8 @@ sys.path.insert(
     0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
 
-from common.notifications.base_notifications import BaseNotificationManager
 from btc.config.btc_config import BTCConfig
+from common.notifications.base_notifications import BaseNotificationManager
 
 
 class BTCNotificationManager(BaseNotificationManager):

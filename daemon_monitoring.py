@@ -4,14 +4,16 @@ Daemon Monitoring Script for BTC Tennis Bot
 Default background monitoring mode with continuous court availability tracking
 """
 
+import logging
 import os
+import signal
 import sys
 import time
-import signal
-import logging
+from datetime import datetime
+
 import daemon
 import daemon.pidfile
-from datetime import datetime
+
 from core.config import BTCConfig
 from core.monitor import CourtMonitor
 from core.notifications import NotificationManager

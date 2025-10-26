@@ -4,9 +4,9 @@ Modular Tennis Court Monitor - Test Script
 Test the new modular structure with debug logging
 """
 
+import logging
 import os
 import sys
-import logging
 from datetime import datetime
 
 # Add the project root to Python path
@@ -16,7 +16,6 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from btc.config.btc_config import BTCConfig
 from btc.monitor.btc_monitor import BTCMonitor
 from btc.notifications.btc_notifications import BTCNotificationManager
-
 from ubc.config.ubc_config import UBCConfig
 from ubc.monitor.ubc_monitor import UBCMonitor
 from ubc.notifications.ubc_notifications import UBCNotificationManager

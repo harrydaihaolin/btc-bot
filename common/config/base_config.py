@@ -4,10 +4,10 @@ Common Configuration Base Class
 Shared configuration functionality for all tennis court monitors
 """
 
-import os
 import logging
-from typing import Dict, Any, Optional
+import os
 from abc import ABC, abstractmethod
+from typing import Any, Dict, Optional
 
 
 class BaseConfig(ABC):

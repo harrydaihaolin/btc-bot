@@ -4,12 +4,13 @@ Background Monitoring Script for BTC Tennis Bot (Environment Variables)
 Runs the bot in background using environment variables for credentials
 """
 
+import logging
 import os
+import signal
 import sys
 import time
-import signal
-import logging
 from datetime import datetime
+
 from core.config import BTCConfig
 from core.monitor import CourtMonitor
 from core.notifications import NotificationManager

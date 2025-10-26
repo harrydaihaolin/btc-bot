@@ -3,10 +3,10 @@
 Unit tests for daemon_monitoring.py
 """
 
-import unittest
-from unittest.mock import patch, MagicMock, Mock
-import sys
 import os
+import sys
+import unittest
+from unittest.mock import MagicMock, Mock, patch
 
 # Add the parent directory to the path so we can import the modules
 sys.path.insert(

@@ -4,23 +4,24 @@ BTC Tennis Club Monitor
 Burnaby Tennis Club specific monitoring logic
 """
 
-import time
 import os
 import sys
+import time
 from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional
+
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
 
 # Add project root to path
 sys.path.insert(
     0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
 
-from common.monitor.base_monitor import BaseMonitor
 from btc.config.btc_config import BTCConfig
+from common.monitor.base_monitor import BaseMonitor
 
 
 class BTCMonitor(BaseMonitor):

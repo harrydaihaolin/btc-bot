@@ -4,11 +4,12 @@ UBC Tennis Court Notification Manager
 Handles notifications for UBC tennis court availability
 """
 
-import smtplib
 import logging
-from email.mime.text import MIMEText
+import smtplib
 from email.mime.multipart import MIMEMultipart
-from typing import Dict, List, Any, Optional
+from email.mime.text import MIMEText
+from typing import Any, Dict, List, Optional
+
 from twilio.rest import Client
 
 from .ubc_config import UBCConfig

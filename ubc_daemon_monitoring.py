@@ -4,13 +4,13 @@ UBC Tennis Court Daemon Monitor
 Continuous background monitoring for UBC tennis court availability
 """
 
+import logging
 import os
+import signal
 import sys
 import time
-import signal
-import logging
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Any, Dict, List
 
 # Add the project root to Python path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

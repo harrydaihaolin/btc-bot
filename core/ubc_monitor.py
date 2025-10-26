@@ -4,20 +4,18 @@ UBC Tennis Court Monitor Module
 Handles UBC-specific court monitoring and booking detection
 """
 
-import time
 import logging
+import time
 from datetime import datetime, timedelta
-from typing import List, Dict, Any, Optional, Set
+from typing import Any, Dict, List, Optional, Set
+
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import (NoSuchElementException,
+                                        TimeoutException, WebDriverException)
 from selenium.webdriver.chrome.service import Service
-from selenium.common.exceptions import (
-    TimeoutException,
-    NoSuchElementException,
-    WebDriverException,
-)
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
 from .ubc_config import UBCConfig

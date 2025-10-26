@@ -2,9 +2,11 @@
 Unit tests for run_background_env.py
 """
 
-import pytest
-from unittest.mock import patch, MagicMock
 import signal
+from unittest.mock import MagicMock, patch
+
+import pytest
+
 from run_background_env import BackgroundMonitor
 
 

@@ -2,9 +2,11 @@
 Unit tests for core/notifications.py
 """
 
-import pytest
-from unittest.mock import patch, MagicMock, call
 import smtplib
+from unittest.mock import MagicMock, call, patch
+
+import pytest
+
 from core.notifications import NotificationManager
 
 

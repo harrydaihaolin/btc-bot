@@ -4,12 +4,13 @@ Common Notification Manager Base Class
 Shared notification functionality for all tennis court monitors
 """
 
-import smtplib
 import logging
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from typing import Dict, List, Any, Optional
+import smtplib
 from abc import ABC, abstractmethod
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from typing import Any, Dict, List, Optional
+
 from twilio.rest import Client
 
 from common.config.base_config import BaseConfig

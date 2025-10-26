@@ -3,9 +3,9 @@
 Test runner for BTC Tennis Bot
 Runs all unit tests with coverage reporting
 """
+import os
 import subprocess
 import sys
-import os
 
 
 def run_tests():

@@ -2,22 +2,21 @@
 Core monitoring functionality for BTC Tennis Bot
 """
 
-import time
 import logging
+import time
 from datetime import datetime, timedelta
-from typing import Dict, List, Set, Optional
+from typing import Dict, List, Optional, Set
+
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import (ElementClickInterceptedException,
+                                        NoSuchElementException,
+                                        TimeoutException)
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import (
-    TimeoutException,
-    NoSuchElementException,
-    ElementClickInterceptedException,
-)
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
 

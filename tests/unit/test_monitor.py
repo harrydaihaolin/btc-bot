@@ -2,13 +2,15 @@
 Unit tests for core/monitor.py
 """
 
-import pytest
-from unittest.mock import patch, MagicMock, call
 from datetime import datetime, timedelta
+from unittest.mock import MagicMock, call, patch
+
+import pytest
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
+
 from core.monitor import CourtMonitor
 
 

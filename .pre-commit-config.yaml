@@ -1,0 +1,53 @@
+# Pre-commit hooks configuration
+# Matches GitHub Actions CI workflow exactly
+# See https://pre-commit.com for more information
+repos:
+  # Basic file checks (matches GitHub Actions basic checks)
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+
+  # Black formatter (matches GitHub Actions: black --check --diff .)
+  - repo: https://github.com/psf/black
+    rev: 25.9.0
+    hooks:
+      - id: black
+        args: [--check, --diff]
+
+  # isort import sorting (matches GitHub Actions: isort --check-only --diff .)
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: ["--check-only", "--diff"]
+
+  # flake8 linter (matches GitHub Actions: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics)
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+        args: [--count, --select=E9, F63, F7, F82, --show-source, --statistics]
+
+  # mypy type checker (matches GitHub Actions: mypy . --ignore-missing-imports || true)
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.13.0
+    hooks:
+      - id: mypy
+        args: [--ignore-missing-imports]
+        # Note: GitHub Actions uses || true, so we'll let this fail gracefully
+
+  # Unit tests (matches GitHub Actions: pytest tests/ -v --cov=. --cov-report=xml --cov-report=term-missing)
+  - repo: local
+    hooks:
+      - id: pytest-check
+        name: pytest-check
+        entry: python -m pytest tests/ -v --cov=. --cov-report=term-missing
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]

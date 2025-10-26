@@ -2,16 +2,14 @@
 Unit tests for btc_tennis_bot.py
 """
 
-import pytest
-from unittest.mock import patch, MagicMock
 import sys
 from io import StringIO
-from btc_tennis_bot import (
-    setup_credentials,
-    run_single_scan,
-    run_continuous_monitoring,
-    main,
-)
+from unittest.mock import MagicMock, patch
+
+import pytest
+
+from btc_tennis_bot import (main, run_continuous_monitoring, run_single_scan,
+                            setup_credentials)
 
 
 class TestBTCTennisBot:

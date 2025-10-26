@@ -5,7 +5,7 @@ Handles UBC-specific configuration and settings
 """
 
 import os
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 
 class UBCConfig:
