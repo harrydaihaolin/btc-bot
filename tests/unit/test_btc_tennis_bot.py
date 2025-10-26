@@ -8,8 +8,12 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from btc_tennis_bot import (main, run_continuous_monitoring, run_single_scan,
-                            setup_credentials)
+from btc_tennis_bot import (
+    main,
+    run_continuous_monitoring,
+    run_single_scan,
+    setup_credentials,
+)
 
 
 class TestBTCTennisBot:

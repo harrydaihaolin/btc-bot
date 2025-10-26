@@ -24,7 +24,7 @@ repos:
     rev: 5.13.2
     hooks:
       - id: isort
-        args: ["--check-only", "--diff"]
+        args: ["--check-only", "--diff", "--profile", "black"]
 
   # flake8 linter (matches GitHub Actions: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics)
   - repo: https://github.com/pycqa/flake8
