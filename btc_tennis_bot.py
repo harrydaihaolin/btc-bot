@@ -13,7 +13,7 @@ and notifying users when courts become available for booking.
    export BTC_PHONE_NUMBER="1234567890"
    export BTC_GMAIL_APP_EMAIL="your_gmail@gmail.com"
    export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
-   export BTC_BOOKING_DATE="1"  # days ahead: "1" (tomorrow), "2" (day after), or specific date like "2025-10-27"
+   # Note: Bot automatically checks today, tomorrow, and day after tomorrow
 
 2. For Gmail App Password:
    - Go to Google Account > Security > 2-Step Verification > App passwords
@@ -72,7 +72,7 @@ logger = logging.getLogger(__name__)
 class BTCCourtBookingBot:
     """Automation bot for Burnaby Tennis Club court bookings"""
     
-    def __init__(self, headless: bool = False, wait_timeout: int = 10, username: str = None, password: str = None, notification_email: str = None, phone_number: str = None, gmail_app_email: str = None, booking_date: str = None):
+    def __init__(self, headless: bool = False, wait_timeout: int = 10, username: str = None, password: str = None, notification_email: str = None, phone_number: str = None, gmail_app_email: str = None):
         """
         Initialize the BTC booking bot
         
@@ -84,7 +84,6 @@ class BTCCourtBookingBot:
             notification_email: Email address for notifications
             phone_number: Phone number for SMS notifications (format: 6479370971)
             gmail_app_email: Gmail address for SMTP authentication
-            booking_date: Date to check for bookings ("tomorrow" or specific date like "2025-10-27")
         """
         self.wait_timeout = wait_timeout
         self.driver = None
@@ -97,11 +96,10 @@ class BTCCourtBookingBot:
         self.notification_email = notification_email or "harry442930583@gmail.com"
         self.phone_number = phone_number
         self.gmail_app_email = gmail_app_email
-        self.booking_date = booking_date or "tomorrow"
         self.sent_notifications = set()  # Track sent notifications for idempotency
     
-    def create_notification_id(self, courts):
-        """Create a unique notification ID based on court details"""
+    def create_notification_id(self, courts, date_str):
+        """Create a unique notification ID based on court details and date"""
         if not courts:
             return None
         
@@ -113,7 +111,7 @@ class BTCCourtBookingBot:
         
         # Sort to ensure consistent ordering
         court_signatures.sort()
-        notification_id = f"{self.booking_date}_{'_'.join(court_signatures)}"
+        notification_id = f"{date_str}_{'_'.join(court_signatures)}"
         return notification_id
     
     def clear_old_notifications(self):
@@ -353,35 +351,51 @@ class BTCCourtBookingBot:
             logger.error(f"Error navigating to booking page: {e}")
             return False
 
-    def send_email_notification(self, available_courts: List[Dict]) -> bool:
+    def send_email_notification(self, all_courts: Dict[str, List[Dict]]) -> bool:
         """
         Send email notification when courts become available
         
         Args:
-            available_courts: List of available courts
+            all_courts: Dictionary with date as key and available courts as value
             
         Returns:
             bool: True if notification sent successfully
         """
         try:
+            # Flatten all courts for idempotency check
+            all_courts_flat = []
+            for date, courts in all_courts.items():
+                all_courts_flat.extend(courts)
+            
+            if not all_courts_flat:
+                return True
+            
             # Check for idempotency
-            notification_id = self.create_notification_id(available_courts)
+            notification_id = self.create_notification_id(all_courts_flat, "multi_date")
             if notification_id in self.sent_notifications:
                 logger.info(f"Email notification already sent for this court combination: {notification_id}")
                 return True
             
-            logger.info(f"Sending notification for {len(available_courts)} available courts")
+            total_courts = sum(len(courts) for courts in all_courts.values())
+            logger.info(f"Sending notification for {total_courts} available courts across all dates")
             
             # Create notification message
             message = f"""
 🎾 BURNABY TENNIS CLUB - COURTS AVAILABLE! 🎾
 
-Great news! {len(available_courts)} tennis court slots have become available for tomorrow:
+Great news! {total_courts} tennis court slots have become available across multiple dates:
 
 """
             
-            for i, court in enumerate(available_courts, 1):
-                message += f"{i}. {court.get('text', 'N/A')} - {court.get('time', 'N/A')}\n"
+            court_counter = 1
+            for date, courts in all_courts.items():
+                if courts:
+                    date_obj = datetime.strptime(date, "%Y-%m-%d")
+                    date_label = date_obj.strftime("%A, %B %d, %Y")
+                    message += f"\n📅 {date_label}:\n"
+                    for court in courts:
+                        message += f"   {court_counter}. {court.get('text', 'N/A')} - {court.get('time', 'N/A')}\n"
+                        court_counter += 1
             
             message += f"""
 ⏰ Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
@@ -409,7 +423,7 @@ BTC Booking Bot 🤖
                 msg = MIMEMultipart()
                 msg['From'] = sender_email
                 msg['To'] = self.notification_email
-                msg['Subject'] = f"🎾 BTC Tennis Courts Available - {len(available_courts)} slots found!"
+                msg['Subject'] = f"🎾 BTC Tennis Courts Available - {total_courts} slots found!"
                 
                 msg.attach(MIMEText(message, 'plain'))
                 
@@ -444,7 +458,7 @@ BTC Booking Bot 🤖
             # Method 3: Send SMS notification
             if self.phone_number:
                 try:
-                    sms_success = self.send_sms_notification(available_courts)
+                    sms_success = self.send_sms_notification(all_courts)
                     if sms_success:
                         logger.info("SMS notification sent successfully!")
                         success = True
@@ -471,12 +485,12 @@ BTC Booking Bot 🤖
             logger.error(f"Failed to send notification: {e}")
             return False
 
-    def send_sms_notification(self, available_courts: List[Dict]) -> bool:
+    def send_sms_notification(self, all_courts: Dict[str, List[Dict]]) -> bool:
         """
         Send SMS notification when courts become available using email-to-SMS gateway
         
         Args:
-            available_courts: List of available courts
+            all_courts: Dictionary with date as key and available courts as value
             
         Returns:
             bool: True if SMS sent successfully
@@ -485,21 +499,37 @@ BTC Booking Bot 🤖
             logger.warning("No phone number provided for SMS notifications")
             return False
         
+        # Flatten all courts for idempotency check
+        all_courts_flat = []
+        for date, courts in all_courts.items():
+            all_courts_flat.extend(courts)
+        
+        if not all_courts_flat:
+            return True
+        
         # Check for idempotency
-        notification_id = self.create_notification_id(available_courts)
+        notification_id = self.create_notification_id(all_courts_flat, "multi_date")
         if notification_id in self.sent_notifications:
             logger.info(f"SMS notification already sent for this court combination: {notification_id}")
             return True
             
         try:
-            logger.info(f"Sending SMS notification for {len(available_courts)} available courts")
+            total_courts = sum(len(courts) for courts in all_courts.values())
+            logger.info(f"Sending SMS notification for {total_courts} available courts across all dates")
             
             # Create SMS message (shorter for SMS)
-            sms_message = f"🎾 BTC: {len(available_courts)} courts available! "
-            for i, court in enumerate(available_courts[:2], 1):  # Limit to first 2 courts for SMS
-                sms_message += f"{court.get('time', 'N/A')} "
-            if len(available_courts) > 2:
-                sms_message += f"+{len(available_courts)-2} more"
+            sms_message = f"🎾 BTC: {total_courts} courts available! "
+            
+            # Add first few courts from all dates
+            court_count = 0
+            for date, courts in all_courts.items():
+                if courts and court_count < 3:  # Limit to first 3 courts for SMS
+                    for court in courts[:2]:  # Max 2 courts per date
+                        if court_count < 3:
+                            sms_message += f"{court.get('time', 'N/A')} "
+                            court_count += 1
+            if total_courts > 3:
+                sms_message += f"+{total_courts-3} more"
             sms_message += f"Book: {self.base_url}"
             
             # Email-to-SMS gateways for Canadian carriers
@@ -595,34 +625,67 @@ BTC Booking Bot 🤖
             logger.error(f"Failed to send SMS notification: {e}")
             return False
 
-    def navigate_to_tomorrow(self) -> bool:
+    def check_all_available_dates(self) -> Dict[str, List[Dict]]:
+        """
+        Check all three dates (today, tomorrow, day after tomorrow) for available courts
+        
+        Returns:
+            Dict[str, List[Dict]]: Dictionary with date as key and available courts as value
+        """
+        all_courts = {}
+        
+        # Check today, tomorrow, and day after tomorrow
+        dates_to_check = [
+            (0, "today"),
+            (1, "tomorrow"), 
+            (2, "day after tomorrow")
+        ]
+        
+        for days_offset, date_label in dates_to_check:
+            try:
+                logger.info(f"Checking {date_label} (offset: {days_offset} days)")
+                
+                # Calculate target date
+                target_date = datetime.now() + timedelta(days=days_offset)
+                date_str = target_date.strftime("%Y-%m-%d")
+                
+                # Navigate to specific date
+                if self.navigate_to_specific_date(target_date):
+                    # Detect available courts for this date
+                    courts = self.detect_available_courts()
+                    if courts:
+                        # Add date information to each court
+                        for court in courts:
+                            court['date'] = target_date.strftime("%Y-%m-%d")
+                            court['date_label'] = date_label
+                        
+                        all_courts[date_str] = courts
+                        logger.info(f"Found {len(courts)} courts for {date_label}")
+                    else:
+                        logger.info(f"No courts available for {date_label}")
+                        all_courts[date_str] = []
+                else:
+                    logger.warning(f"Failed to navigate to {date_label}")
+                    all_courts[date_str] = []
+                    
+            except Exception as e:
+                logger.error(f"Error checking {date_label}: {e}")
+                all_courts[date_str] = []
+        
+        return all_courts
+    
+    def navigate_to_specific_date(self, target_date: datetime) -> bool:
         """
         Navigate to the specified booking date on the booking calendar
         
+        Args:
+            target_date: The target date to navigate to
+            
         Returns:
             bool: True if navigation successful
         """
         try:
-            logger.info(f"Navigating to booking date: {self.booking_date}")
-            
-            # Calculate target date
-            if self.booking_date.lower() == "tomorrow":
-                target_date = datetime.now() + timedelta(days=1)
-            elif self.booking_date.isdigit():
-                # Parse day offset (1 or 2)
-                days_ahead = int(self.booking_date)
-                if days_ahead < 1 or days_ahead > 2:
-                    logger.error(f"Invalid day offset: {days_ahead}. Use '1' (tomorrow), '2' (day after), or specific date 'YYYY-MM-DD'")
-                    return False
-                target_date = datetime.now() + timedelta(days=days_ahead)
-                logger.info(f"Booking for {days_ahead} day(s) ahead: {target_date.strftime('%A, %B %d, %Y')}")
-            else:
-                try:
-                    # Parse specific date format (YYYY-MM-DD)
-                    target_date = datetime.strptime(self.booking_date, "%Y-%m-%d")
-                except ValueError:
-                    logger.error(f"Invalid date format: {self.booking_date}. Use '1' (tomorrow), '2' (day after), or 'YYYY-MM-DD'")
-                    return False
+            logger.info(f"Navigating to date: {target_date.strftime('%A, %B %d, %Y')}")
             
             # Format date strings for searching
             date_display = target_date.strftime("%B %d, %Y")
@@ -767,9 +830,6 @@ BTC Booking Bot 🤖
         
         try:
             logger.info("Scanning for available courts...")
-            
-            # First try to navigate to tomorrow's date
-            self.navigate_to_tomorrow()
             
             logger.info("Waiting for booking grid to load...")
             time.sleep(3)  # Give more time for the grid to load
@@ -1053,12 +1113,12 @@ BTC Booking Bot 🤖
             logger.debug(f"Error checking for booking form: {e}")
             return False
     
-    def save_available_courts(self, courts: List[Dict], filename: str = None):
+    def save_available_courts(self, all_courts: Dict[str, List[Dict]], filename: str = None):
         """
         Save available courts to a file
         
         Args:
-            courts: List of available courts
+            all_courts: Dictionary with date as key and available courts as value
             filename: Output filename (optional)
         """
         if not filename:
@@ -1067,10 +1127,12 @@ BTC Booking Bot 🤖
         
         try:
             # Prepare data for JSON serialization
-            courts_data = []
-            for court in courts:
-                court_data = {k: v for k, v in court.items() if k != 'element'}
-                courts_data.append(court_data)
+            courts_data = {}
+            for date, courts in all_courts.items():
+                courts_data[date] = []
+                for court in courts:
+                    court_data = {k: v for k, v in court.items() if k != 'element'}
+                    courts_data[date].append(court_data)
             
             with open(filename, 'w') as f:
                 json.dump(courts_data, f, indent=2)
@@ -1080,15 +1142,15 @@ BTC Booking Bot 🤖
         except Exception as e:
             logger.error(f"Error saving courts data: {e}")
     
-    def run_booking_scan(self, save_results: bool = True) -> List[Dict]:
+    def run_booking_scan(self, save_results: bool = True) -> Dict[str, List[Dict]]:
         """
-        Run a complete booking scan
+        Run a complete booking scan for all three dates (today, tomorrow, day after)
         
         Args:
             save_results: Whether to save results to file
             
         Returns:
-            List[Dict]: Available courts found
+            Dict[str, List[Dict]]: Dictionary with date as key and available courts as value
         """
         try:
             logger.info("Starting BTC court booking scan...")
@@ -1129,23 +1191,33 @@ BTC Booking Bot 🤖
             except Exception as e:
                 logger.debug(f"Could not save page source: {e}")
             
-            # Detect available courts
-            available_courts = self.detect_available_courts()
+            # Check all available dates
+            all_courts = self.check_all_available_dates()
             
-            if available_courts:
-                logger.info(f"Found {len(available_courts)} available courts:")
-                for i, court in enumerate(available_courts, 1):
-                    logger.info(f"  {i}. {court.get('text', 'N/A')} - {court.get('time', 'N/A')}")
+            # Count total courts across all dates
+            total_courts = sum(len(courts) for courts in all_courts.values())
+            
+            if total_courts > 0:
+                logger.info(f"Found {total_courts} available courts across all dates:")
+                for date, courts in all_courts.items():
+                    if courts:
+                        date_obj = datetime.strptime(date, "%Y-%m-%d")
+                        date_label = date_obj.strftime("%A, %B %d, %Y")
+                        logger.info(f"   {date_label}: {len(courts)} courts")
+                        for i, court in enumerate(courts, 1):
+                            logger.info(f"      {i}. {court.get('text', 'N/A')} - {court.get('time', 'N/A')}")
                 
-                # Send email notification for available courts
-                self.send_email_notification(available_courts)
+                # Send notifications
+                self.send_email_notification(all_courts)
+                self.send_sms_notification(all_courts)
                 
+                # Save court data
                 if save_results:
-                    self.save_available_courts(available_courts)
+                    self.save_available_courts(all_courts)
             else:
-                logger.info("No available courts found")
+                logger.info("No available courts found across all dates")
             
-            return available_courts
+            return all_courts
             
         except Exception as e:
             logger.error(f"Error during booking scan: {e}")
@@ -1272,17 +1344,14 @@ def setup_credentials():
     phone_number = os.getenv('BTC_PHONE_NUMBER')
     gmail_app_email = os.getenv('BTC_GMAIL_APP_EMAIL')
     gmail_app_password = os.getenv('BTC_GMAIL_APP_PASSWORD')
-    booking_date = os.getenv('BTC_BOOKING_DATE', '1')
-    
     if username and password and notification_email and phone_number and gmail_app_password:
         print("✅ All credentials found in environment variables!")
         print(f"   Username: {username}")
         print(f"   Notification Email: {notification_email}")
         print(f"   Gmail App Email: {gmail_app_email or 'Not set'}")
         print(f"   Phone: {phone_number}")
-        print(f"   Booking Date: {booking_date}")
         print()
-        return username, password, notification_email, phone_number, gmail_app_email, gmail_app_password, booking_date
+        return username, password, notification_email, phone_number, gmail_app_email, gmail_app_password
     
     print("🔧 Interactive Credential Setup")
     print("=" * 30)
@@ -1316,11 +1385,6 @@ def setup_credentials():
             print()
             gmail_app_password = getpass.getpass("Enter your Gmail App Password: ")
         
-        if not booking_date or booking_date == '1':
-            booking_date = input("Enter booking date (default: 1 for tomorrow, 2 for day after, or YYYY-MM-DD format): ").strip()
-            if not booking_date:
-                booking_date = '1'
-        
         print("\n✅ Credentials configured!")
         print("💡 Tip: Set these as environment variables for future runs:")
         print(f"   export BTC_USERNAME='{username}'")
@@ -1329,10 +1393,9 @@ def setup_credentials():
         print(f"   export BTC_PHONE_NUMBER='{phone_number}'")
         print(f"   export BTC_GMAIL_APP_EMAIL='{gmail_app_email}'")
         print(f"   export BTC_GMAIL_APP_PASSWORD='{gmail_app_password}'")
-        print(f"   export BTC_BOOKING_DATE='{booking_date}'")
         print()
         
-        return username, password, notification_email, phone_number, gmail_app_email, gmail_app_password, booking_date
+        return username, password, notification_email, phone_number, gmail_app_email, gmail_app_password
         
     except EOFError:
         print("\n❌ Interactive input not available in this environment.")
@@ -1351,7 +1414,7 @@ def main():
     print("=" * 50)
     
     # Setup credentials interactively
-    username, password, notification_email, phone_number, gmail_app_email, gmail_app_password, booking_date = setup_credentials()
+    username, password, notification_email, phone_number, gmail_app_email, gmail_app_password = setup_credentials()
     
     # Configuration
     headless = False  # Set to True for headless operation
@@ -1365,8 +1428,7 @@ def main():
         password=password,
         notification_email=notification_email,
         phone_number=phone_number,
-        gmail_app_email=gmail_app_email,
-        booking_date=booking_date
+        gmail_app_email=gmail_app_email
     )
     
     try:
@@ -1374,17 +1436,26 @@ def main():
         print("Running court availability scan...")
         available_courts = bot.run_booking_scan()
         
-        if available_courts:
-            print(f"\nFound {len(available_courts)} available courts!")
-            for i, court in enumerate(available_courts, 1):
-                print(f"{i}. {court.get('text', 'N/A')}")
+        # Count total courts across all dates
+        total_courts = sum(len(courts) for courts in available_courts.values())
+        
+        if total_courts > 0:
+            print(f"\nFound {total_courts} available courts across all dates!")
+            for date, courts in available_courts.items():
+                if courts:
+                    date_obj = datetime.strptime(date, "%Y-%m-%d")
+                    date_label = date_obj.strftime("%A, %B %d, %Y")
+                    print(f"\n📅 {date_label}: {len(courts)} courts")
+                    for i, court in enumerate(courts, 1):
+                        print(f"   {i}. {court.get('text', 'N/A')} - {court.get('time', 'N/A')}")
         else:
-            print("No available courts found at this time.")
+            print("No available courts found across all dates.")
         
         # Send notifications for available courts (only if real courts found)
-        if available_courts:
-            print(f"\nSending notifications for {len(available_courts)} available courts...")
+        if total_courts > 0:
+            print(f"\nSending notifications for {total_courts} available courts...")
             bot.send_email_notification(available_courts)
+            bot.send_sms_notification(available_courts)
             print("✅ Notifications sent! Check your email and phone.")
         else:
             print("No courts to notify about.")
