@@ -47,7 +47,9 @@ export BTC_USERNAME="your_email@example.com"
 export BTC_PASSWORD="your_password"
 export BTC_NOTIFICATION_EMAIL="your_email@example.com"
 export BTC_PHONE_NUMBER="1234567890"
+export BTC_GMAIL_APP_EMAIL="your_gmail@gmail.com"
 export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
+export BTC_BOOKING_DATE="tomorrow"  # or specific date like "2025-10-27"
 ```
 
 ### Gmail App Password Setup
@@ -71,7 +73,9 @@ export BTC_USERNAME="your_email@example.com"
 export BTC_PASSWORD="your_password"
 export BTC_NOTIFICATION_EMAIL="your_email@example.com"
 export BTC_PHONE_NUMBER="1234567890"
+export BTC_GMAIL_APP_EMAIL="your_gmail@gmail.com"
 export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
+export BTC_BOOKING_DATE="tomorrow"
 python3 btc_tennis_bot.py
 ```
 
