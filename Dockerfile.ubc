@@ -15,12 +15,12 @@ RUN apt-get update && apt-get install -y \
 # Install Chrome with architecture detection
 RUN ARCH=$(dpkg --print-architecture) && \
     if [ "$ARCH" = "amd64" ]; then \
-        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome-keyring.gpg && \
-        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
-        apt-get update && \
-        apt-get install -y google-chrome-stable; \
+    wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome-keyring.gpg && \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
+    apt-get update && \
+    apt-get install -y google-chrome-stable; \
     else \
-        echo "Chrome not available for architecture $ARCH, skipping installation"; \
+    echo "Chrome not available for architecture $ARCH, skipping installation"; \
     fi && \
     rm -rf /var/lib/apt/lists/*
 
@@ -34,15 +34,8 @@ COPY common/ ./common/
 COPY run_daemon.sh .
 COPY ubc_bot.py .
 
-# Create logs directory
-RUN mkdir -p /app/logs
-
-# Set environment variables for UBC
-ENV UBC_FACILITY=UBC
-ENV UBC_HEADLESS=True
-ENV UBC_MONITORING_INTERVAL=60
-ENV UBC_LOG_FILE=/app/logs/ubc_daemon.log
-ENV UBC_LOG_LEVEL=INFO
+# Create logs directory and set proper permissions
+RUN mkdir -p /app/logs && chmod 755 /app/logs
 
 # Create non-root user for security
 RUN useradd -m -u 1000 tennisbot && chown -R tennisbot:tennisbot /app
