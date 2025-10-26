@@ -226,7 +226,8 @@ class TestDaemonMonitor(unittest.TestCase):
             # Mock other methods
             with patch.object(self.daemon_monitor, 'initialize_components') as mock_initialize_components, \
                  patch.object(self.daemon_monitor, 'run_monitoring_cycle') as mock_run_monitoring_cycle, \
-                 patch('daemon_monitoring.signal.signal'):
+                 patch('daemon_monitoring.signal.signal'), \
+                 patch('daemon_monitoring.time.sleep'):
                 
                 mock_initialize_components.return_value = True
                 mock_run_monitoring_cycle.return_value = True
@@ -249,7 +250,8 @@ class TestDaemonMonitor(unittest.TestCase):
             
             # Mock initialize_components to raise exception
             with patch.object(self.daemon_monitor, 'initialize_components') as mock_initialize_components, \
-                 patch('daemon_monitoring.signal.signal'):
+                 patch('daemon_monitoring.signal.signal'), \
+                 patch('daemon_monitoring.time.sleep'):
                 
                 mock_initialize_components.side_effect = Exception("Initialization error")
                 
@@ -270,7 +272,8 @@ class TestDaemonMonitor(unittest.TestCase):
             # Mock other methods
             with patch.object(self.daemon_monitor, 'initialize_components') as mock_initialize_components, \
                  patch.object(self.daemon_monitor, 'run_monitoring_cycle') as mock_run_monitoring_cycle, \
-                 patch('daemon_monitoring.signal.signal'):
+                 patch('daemon_monitoring.signal.signal'), \
+                 patch('daemon_monitoring.time.sleep'):
                 
                 mock_initialize_components.return_value = True
                 mock_run_monitoring_cycle.return_value = True

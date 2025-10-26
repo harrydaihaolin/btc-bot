@@ -476,7 +476,7 @@ class TestBTCTennisBot:
         }
         
         # Mock input for continuous monitoring choice
-        with patch('btc_tennis_bot.input', side_effect=['y', '5', '10']):
+        with patch('btc_tennis_bot.input', side_effect=['1', '5', '10']):
             with patch('btc_tennis_bot.run_single_scan', return_value=mock_courts):
                 main()
         
