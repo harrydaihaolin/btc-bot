@@ -41,6 +41,9 @@ RUN mkdir -p /app/logs && chmod 755 /app/logs
 RUN useradd -m -u 1000 tennisbot && chown -R tennisbot:tennisbot /app
 USER tennisbot
 
+# Set environment variable for Docker mode
+ENV IS_DOCKER=true
+
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python3 -c "import sys; sys.exit(0)"
