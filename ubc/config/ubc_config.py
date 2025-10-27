@@ -51,14 +51,19 @@ class UBCConfig(BaseConfig):
         return {
             "email": os.getenv(
                 "UBC_NOTIFICATION_EMAIL",
-                os.getenv("GMAIL_APP_EMAIL", os.getenv("BTC_NOTIFICATION_EMAIL")),
+                os.getenv("GMAIL_APP_EMAIL", os.getenv("BTC_NOTIFICATION_EMAIL", "")),
             ),
             "gmail_app_password": os.getenv(
                 "UBC_GMAIL_APP_PASSWORD",
-                os.getenv("GMAIL_APP_PASSWORD", os.getenv("BTC_GMAIL_APP_PASSWORD")),
+                os.getenv(
+                    "GMAIL_APP_PASSWORD", os.getenv("BTC_GMAIL_APP_PASSWORD", "")
+                ),
             ),
             "recipient_emails": os.getenv(
                 "UBC_RECIPIENT_EMAILS",
-                os.getenv("UBC_NOTIFICATION_EMAIL", os.getenv("BTC_RECIPIENT_EMAILS", os.getenv("GMAIL_APP_EMAIL"))),
+                os.getenv(
+                    "UBC_NOTIFICATION_EMAIL",
+                    os.getenv("BTC_RECIPIENT_EMAILS", os.getenv("GMAIL_APP_EMAIL", "")),
+                ),
             ),
         }

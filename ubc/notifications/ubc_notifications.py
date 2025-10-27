@@ -6,7 +6,7 @@ UBC Recreation specific notification formatting
 
 import os
 import sys
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 # Add project root to path
 sys.path.insert(
@@ -20,7 +20,7 @@ from ubc.config.ubc_config import UBCConfig
 class UBCNotificationManager(BaseNotificationManager):
     """Notification manager for UBC Tennis Centre court availability"""
 
-    def __init__(self, config: UBCConfig = None):
+    def __init__(self, config: Optional[UBCConfig] = None):
         if config is None:
             config = UBCConfig()
         super().__init__(config)
@@ -47,7 +47,7 @@ class UBCNotificationManager(BaseNotificationManager):
                 <h1>🎾 UBC Tennis Courts Available!</h1>
                 <p>New tennis court bookings have been detected</p>
             </div>
-            
+
             <div class="content">
         """
 
@@ -61,8 +61,9 @@ class UBCNotificationManager(BaseNotificationManager):
                 html += f"""
                 <div class="court-item">
                     <div class="court-name">🏟️ {court.get('court_name', 'Unknown Court')}</div>
-                    <div class="court-details">⏰ Time: {court.get('time', 'Unknown')}</div>
+                    <div class="court-details">⏰ Time: {court.get('time_slot', 'Unknown')}</div>
                     <div class="court-details">⏱️ Duration: {court.get('duration', '1 hour')}</div>
+                    <div class="court-details">👥 People: {court.get('people', '2')}</div>
                     <div class="court-details price">💰 Price: {court.get('price', 'Unknown')}</div>
                 </div>
                 """
@@ -74,7 +75,7 @@ class UBCNotificationManager(BaseNotificationManager):
                     </a>
                 </div>
             </div>
-            
+
             <div class="footer">
                 <p>This notification was sent by your UBC Tennis Court Monitor</p>
                 <p>UBC Recreation - Tennis Centre</p>

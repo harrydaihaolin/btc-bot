@@ -8,7 +8,7 @@ import os
 import sys
 import time
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
@@ -27,7 +27,7 @@ from ubc.config.ubc_config import UBCConfig
 class UBCMonitor(BaseMonitor):
     """Monitor for UBC Tennis Centre court availability"""
 
-    def __init__(self, config: UBCConfig = None):
+    def __init__(self, config: Optional[UBCConfig] = None):
         if config is None:
             config = UBCConfig()
         super().__init__(config)
@@ -356,14 +356,14 @@ class UBCMonitor(BaseMonitor):
             return False
 
     def scan_available_courts(self) -> Dict[str, List[Dict]]:
-        """Scan for available UBC tennis courts with idempotency"""
+        """Scan for available UBC tennis courts using detailed booking flow"""
         try:
             self.logger.info("Scanning for available UBC tennis courts...")
 
             available_courts = {}
             current_date = datetime.now().strftime("%Y-%m-%d")
 
-            # Look for court facility elements (UBC uses facility list)
+            # Step 1: Look for court facility elements (should be 10 courts)
             court_elements = self.driver.find_elements(
                 By.CSS_SELECTOR, ".facility-details"
             )
@@ -375,50 +375,52 @@ class UBCMonitor(BaseMonitor):
                     "[data-facilityid], .facility-item, .court-container",
                 )
 
-            if court_elements:
-                self.logger.info(f"Found {len(court_elements)} court facility elements")
-
-                for i, court_element in enumerate(court_elements):
-                    try:
-                        court_info = self._extract_ubc_court_info(court_element, i)
-                        if court_info:
-                            # Generate unique identifier for idempotency
-                            court_id = self._get_court_unique_identifier(court_info)
-
-                            # Only add if we haven't seen this court before
-                            if court_id not in self.previous_courts:
-                                if current_date not in available_courts:
-                                    available_courts[current_date] = []
-                                available_courts[current_date].append(court_info)
-                                self.previous_courts.add(court_id)
-                                self.logger.info(
-                                    f"New UBC court detected: {court_info['court_name']} - {court_info['status']}"
-                                )
-                            else:
-                                self.logger.debug(
-                                    f"UBC court already seen: {court_info['court_name']} - {court_info['status']}"
-                                )
-
-                    except Exception as e:
-                        self.logger.warning(
-                            f"Error extracting court info from element {i}: {e}"
-                        )
-                        continue
-            else:
+            if not court_elements:
                 self.logger.warning("No court facility elements found on page")
+                return {}
+
+            self.logger.info(f"Found {len(court_elements)} court facility elements")
+
+            # Process each court through the detailed booking flow
+            for i, court_element in enumerate(court_elements):
+                try:
+                    court_info = self._check_court_availability_detailed(
+                        court_element, i
+                    )
+                    if court_info and court_info.get("available", False):
+                        # Generate unique identifier for idempotency
+                        court_id = self._get_court_unique_identifier(court_info)
+
+                        # Only add if we haven't seen this court before
+                        if court_id not in self.previous_courts:
+                            if current_date not in available_courts:
+                                available_courts[current_date] = []
+                            available_courts[current_date].append(court_info)
+                            self.previous_courts.add(court_id)
+                            self.logger.info(
+                                f"✅ NEW UBC court available: {court_info['court_name']} - {court_info['time_slot']}"
+                            )
+                        else:
+                            self.logger.debug(
+                                f"UBC court already seen: {court_info['court_name']} - {court_info['time_slot']}"
+                            )
+
+                except Exception as e:
+                    self.logger.warning(f"Error checking court {i+1}: {e}")
+                    continue
 
             # Log results
             total_courts = sum(len(courts) for courts in available_courts.values())
             if total_courts > 0:
-                self.logger.info(f"Found {total_courts} NEW available UBC courts")
+                self.logger.info(f"🎾 Found {total_courts} NEW available UBC courts")
                 for date, courts in available_courts.items():
                     self.logger.info(f"  {date}: {len(courts)} courts")
                     for court in courts:
                         self.logger.info(
-                            f"    - {court.get('court_name', 'Unknown')} - {court.get('status', 'Available')}"
+                            f"    - {court.get('court_name', 'Unknown')} at {court.get('time_slot', 'Unknown')}"
                         )
             else:
-                self.logger.info("No NEW UBC courts detected (all previously seen)")
+                self.logger.info("😔 No NEW UBC courts detected (all previously seen)")
 
             return available_courts
 
@@ -637,12 +639,95 @@ class UBCMonitor(BaseMonitor):
             self.logger.warning(f"Error extracting UBC court info: {e}")
             return None
 
+    def _check_court_availability_detailed(
+        self, court_element, index: int
+    ) -> Optional[Dict]:
+        """Check court availability using simplified UBC booking flow"""
+        try:
+            # Step 1: Extract basic court info
+            court_name = f"Court {index + 1}"
+            facility_id = None
+
+            # Try to get actual court name and facility ID
+            try:
+                name_element = court_element.find_element(
+                    By.CSS_SELECTOR, ".facility-name, .court-name"
+                )
+                court_name = name_element.text.strip()
+            except NoSuchElementException:
+                pass
+
+            try:
+                facility_input = court_element.find_element(
+                    By.CSS_SELECTOR, "input[name='FacilityId']"
+                )
+                facility_id = facility_input.get_attribute("value")
+            except NoSuchElementException:
+                pass
+
+            # Step 2: Look for "choose" button using XPath (not CSS)
+            choose_button = None
+            try:
+                # Use XPath for text-based selection
+                choose_button = court_element.find_element(
+                    By.XPATH,
+                    ".//a[contains(text(), 'choose')] | .//button[contains(text(), 'choose')]",
+                )
+            except NoSuchElementException:
+                # Try alternative selectors
+                try:
+                    choose_button = court_element.find_element(
+                        By.CSS_SELECTOR, "a[href*='choose'], .choose-button"
+                    )
+                except NoSuchElementException:
+                    pass
+
+            if not choose_button:
+                self.logger.debug(f"No choose button found for {court_name}")
+                return None
+
+            # Step 3: Check if the choose button is clickable (indicates availability)
+            try:
+                if choose_button.is_enabled() and choose_button.is_displayed():
+                    # For now, just report that this court has a choose button
+                    # We'll implement the full booking flow later if needed
+                    self.logger.info(
+                        f"Found choose button for {court_name} - court appears available"
+                    )
+
+                    return {
+                        "court_name": court_name,
+                        "facility_id": facility_id,
+                        "available": True,
+                        "time_slot": "Check booking system",  # Placeholder
+                        "date": datetime.now().strftime("%Y-%m-%d"),
+                        "duration": "1 hour",
+                        "people": "2",
+                        "price": "Unknown",
+                        "status": "Choose button available",
+                    }
+                else:
+                    self.logger.debug(f"Choose button not clickable for {court_name}")
+                    return None
+
+            except Exception as e:
+                self.logger.warning(
+                    f"Error checking choose button for {court_name}: {e}"
+                )
+                return None
+
+        except Exception as e:
+            self.logger.error(
+                f"Error in court availability check for {court_name}: {e}"
+            )
+            return None
+
     def _get_court_unique_identifier(self, court_info: Dict[str, Any]) -> str:
         """Generate unique identifier for UBC court to prevent duplicate notifications"""
         court_strings = [
             court_info.get("date", ""),
             court_info.get("court_name", ""),
-            court_info.get("status", ""),
+            court_info.get("time_slot", ""),
             court_info.get("facility_id", ""),
         ]
         # Filter out empty strings and join
