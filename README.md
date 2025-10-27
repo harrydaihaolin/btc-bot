@@ -20,28 +20,28 @@ Monitors UBC Recreation's tennis court booking system for court availability.
 ### Docker Mode (Recommended for Production)
 ```bash
 # One-command Docker experience
-./docker-manage.sh start
+./scripts/docker-manage.sh start
 
 # Check status
-./docker-manage.sh status
+./scripts/docker-manage.sh status
 
 # View logs
-./docker-manage.sh logs
+./scripts/docker-manage.sh logs
 
 # Stop containers
-./docker-manage.sh stop
+./scripts/docker-manage.sh stop
 ```
 
 ### Daemon Mode (Local Development)
 ```bash
 # One-command daemon experience
-./run_daemon.sh
+./scripts/run_daemon.sh
 
 # Check status
-./run_daemon.sh status
+./scripts/run_daemon.sh status
 
 # Stop daemon
-./run_daemon.sh stop
+./scripts/run_daemon.sh stop
 ```
 
 ### GitHub Actions (Automated Monitoring)
@@ -77,36 +77,36 @@ nano .env
 ### 2. Start Both Bots
 ```bash
 # Start BTC and UBC bots
-./docker-manage.sh start
+./scripts/docker-manage.sh start
 
 # Check status
-./docker-manage.sh status
+./scripts/docker-manage.sh status
 
 # View logs
-./docker-manage.sh logs
+./scripts/docker-manage.sh logs
 ```
 
 ### 3. Docker Management Commands
 ```bash
 # Start bots
-./docker-manage.sh start
+./scripts/docker-manage.sh start
 
 # Stop bots
-./docker-manage.sh stop
+./scripts/docker-manage.sh stop
 
 # Restart bots
-./docker-manage.sh restart
+./scripts/docker-manage.sh restart
 
 # View logs
-./docker-manage.sh logs          # Both bots
-./docker-manage.sh logs btc      # BTC bot only
-./docker-manage.sh logs ubc      # UBC bot only
+./scripts/docker-manage.sh logs          # Both bots
+./scripts/docker-manage.sh logs btc      # BTC bot only
+./scripts/docker-manage.sh logs ubc      # UBC bot only
 
 # Check status
-./docker-manage.sh status
+./scripts/docker-manage.sh status
 
 # Rebuild containers
-./docker-manage.sh build
+./scripts/docker-manage.sh build
 ```
 
 ### 4. Docker Features
@@ -191,7 +191,7 @@ git push origin v1.4.0
 ### 2. Set Up BTC Credentials
 ```bash
 # Option A: Interactive setup
-./setup_credentials.sh
+./scripts/setup_credentials.sh
 
 # Option B: Manual environment variables
 export BTC_USERNAME="your_email@example.com"
@@ -205,10 +205,10 @@ export BTC_GMAIL_APP_PASSWORD="your_gmail_app_password"
 ### 3. Start BTC Daemon Monitoring (RECOMMENDED)
 ```bash
 # One-command daemon startup (default: 60 minutes)
-./run_daemon.sh
+./scripts/run_daemon.sh
 
 # Custom interval (e.g., 30 minutes)
-./run_daemon.sh 30
+./scripts/run_daemon.sh 30
 ```
 
 ### 4. BTC Alternative Modes
@@ -228,7 +228,7 @@ kill $(cat btc_daemon.pid)
 ### 2. Set Up UBC Credentials
 ```bash
 # Interactive setup for UBC credentials
-python3 setup_ubc_credentials.py
+python3 scripts/setup_ubc_credentials.py
 
 # Manual environment variables (UBC-specific)
 export UBC_USERNAME="your_ubc_cwl@ubc.ca"
@@ -304,10 +304,10 @@ kill $(cat ubc_daemon.pid)
 Perfect for continuous monitoring and instant notifications:
 ```bash
 # One-command daemon startup (default: 60 minutes)
-./run_daemon.sh
+./scripts/run_daemon.sh
 
 # Custom interval (e.g., 30 minutes)
-./run_daemon.sh 30
+./scripts/run_daemon.sh 30
 
 # Monitor logs in real-time
 tail -f btc_daemon.log
@@ -316,7 +316,7 @@ tail -f btc_daemon.log
 kill $(cat btc_daemon.pid)
 ```
 **Features:**
-- ✅ **One-Command Setup**: Simple `./run_daemon.sh` to start
+- ✅ **One-Command Setup**: Simple `./scripts/run_daemon.sh` to start
 - ✅ **Configurable Intervals**: Set custom monitoring intervals
 - ✅ **Instant Notifications**: Immediate email/SMS when new courts appear
 - ✅ **24/7 Monitoring**: Runs completely detached from terminal
@@ -565,8 +565,8 @@ Monitoring options:
 - **Production Ready**: Robust testing ensures reliability
 
 ### v1.2.3 - One-Command Daemon Experience
-- **Simplified Startup**: Single command `./run_daemon.sh` to start daemon monitoring
-- **Configurable Intervals**: Easy custom monitoring intervals (e.g., `./run_daemon.sh 30`)
+- **Simplified Startup**: Single command `./scripts/run_daemon.sh` to start daemon monitoring
+- **Configurable Intervals**: Easy custom monitoring intervals (e.g., `./scripts/run_daemon.sh 30`)
 - **User-Friendly**: Streamlined experience with clear status messages
 - **Better Documentation**: Updated README with simple one-command instructions
 - **Production Ready**: Perfect for users who want immediate daemon functionality
