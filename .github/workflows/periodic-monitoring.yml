@@ -9,14 +9,14 @@ on:
 jobs:
   monitor-btc-courts:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install Chrome
         run: |
@@ -37,6 +37,7 @@ jobs:
           echo "BTC_PASSWORD=${{ secrets.BTC_PASSWORD }}" >> $GITHUB_ENV
           echo "BTC_NOTIFICATION_EMAIL=${{ secrets.BTC_NOTIFICATION_EMAIL }}" >> $GITHUB_ENV
           echo "BTC_GMAIL_APP_PASSWORD=${{ secrets.BTC_GMAIL_APP_PASSWORD }}" >> $GITHUB_ENV
+          echo "BTC_RECIPIENT_EMAILS=${{ secrets.BTC_RECIPIENT_EMAILS }}" >> $GITHUB_ENV
           echo "BTC_MONITORING_INTERVAL=1" >> $GITHUB_ENV
 
       - name: Run BTC court monitoring
@@ -60,14 +61,14 @@ jobs:
 
   monitor-ubc-courts:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install Chrome
         run: |
@@ -88,6 +89,7 @@ jobs:
           echo "UBC_PASSWORD=${{ secrets.UBC_PASSWORD }}" >> $GITHUB_ENV
           echo "UBC_NOTIFICATION_EMAIL=${{ secrets.UBC_NOTIFICATION_EMAIL }}" >> $GITHUB_ENV
           echo "UBC_GMAIL_APP_PASSWORD=${{ secrets.UBC_GMAIL_APP_PASSWORD }}" >> $GITHUB_ENV
+          echo "UBC_RECIPIENT_EMAILS=${{ secrets.UBC_RECIPIENT_EMAILS }}" >> $GITHUB_ENV
           echo "UBC_MONITORING_INTERVAL=1" >> $GITHUB_ENV
 
       - name: Run UBC court monitoring
@@ -114,15 +116,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-          
+          python-version: "3.12"
+
       - name: Install dependencies
         run: pip install -r requirements.txt
-        
+
       - name: Run health check
         run: |
           python3 -c "

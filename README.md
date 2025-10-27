@@ -63,12 +63,14 @@ BTC_USERNAME=your_btc_email@example.com
 BTC_PASSWORD=your_btc_password
 BTC_NOTIFICATION_EMAIL=your_notification_email@gmail.com
 BTC_GMAIL_APP_PASSWORD=your_gmail_app_password
+BTC_RECIPIENT_EMAILS=user1@example.com,user2@example.com,user3@example.com
 
 # UBC Tennis Centre Credentials (optional)
 UBC_USERNAME=your_ubc_email@ubc.ca
 UBC_PASSWORD=your_ubc_password
 UBC_NOTIFICATION_EMAIL=your_notification_email@gmail.com
 UBC_GMAIL_APP_PASSWORD=your_gmail_app_password
+UBC_RECIPIENT_EMAILS=user1@example.com,user2@example.com,user3@example.com
 
 # Monitoring Settings
 BTC_MONITORING_INTERVAL=60  # minutes
@@ -161,12 +163,14 @@ The bot can run automatically in GitHub Actions for continuous monitoring:
 2. Add the following secrets:
    - `BTC_USERNAME` - Your BTC login email
    - `BTC_PASSWORD` - Your BTC password
-   - `BTC_NOTIFICATION_EMAIL` - Email to receive notifications
+   - `BTC_NOTIFICATION_EMAIL` - Email to send notifications from
    - `BTC_GMAIL_APP_PASSWORD` - Gmail App Password
+   - `BTC_RECIPIENT_EMAILS` - Comma-separated list of emails to notify (e.g., "user1@example.com,user2@example.com")
    - `UBC_USERNAME` - Your UBC login email (optional)
    - `UBC_PASSWORD` - Your UBC password (optional)
-   - `UBC_NOTIFICATION_EMAIL` - Email for UBC notifications (optional)
+   - `UBC_NOTIFICATION_EMAIL` - Email to send UBC notifications from (optional)
    - `UBC_GMAIL_APP_PASSWORD` - Gmail App Password for UBC (optional)
+   - `UBC_RECIPIENT_EMAILS` - Comma-separated list of emails for UBC notifications (optional)
 
 ### Manual Trigger
 ```bash

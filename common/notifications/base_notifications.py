@@ -71,14 +71,24 @@ class BaseNotificationManager(ABC):
     def _send_email_notification(self, available_courts: Dict[str, List[Dict]]) -> bool:
         """Send email notification for courts"""
         try:
-            email = self.notification_config.get("email")
+            sender_email = self.notification_config.get("email")
             gmail_password = self.notification_config.get("gmail_app_password")
+            recipient_emails = self.notification_config.get("recipient_emails", sender_email)
 
-            if not email or not gmail_password:
+            if not sender_email or not gmail_password:
                 self.logger.warning(
                     "Email credentials not configured, skipping email notification"
                 )
                 return True
+
+            # Parse recipient emails (comma-separated string or single email)
+            if isinstance(recipient_emails, str):
+                if "," in recipient_emails:
+                    recipients = [email.strip() for email in recipient_emails.split(",") if email.strip()]
+                else:
+                    recipients = [recipient_emails.strip()]
+            else:
+                recipients = [sender_email]  # Fallback to sender
 
             # Create message
             subject = f"🎾 {self.config.facility_name.upper()} Tennis Courts Available!"
@@ -86,8 +96,8 @@ class BaseNotificationManager(ABC):
 
             # Create email
             msg = MIMEMultipart()
-            msg["From"] = email
-            msg["To"] = email
+            msg["From"] = sender_email
+            msg["To"] = ", ".join(recipients)
             msg["Subject"] = subject
 
             msg.attach(MIMEText(body, "html"))
@@ -95,13 +105,13 @@ class BaseNotificationManager(ABC):
             # Send email
             server = smtplib.SMTP("smtp.gmail.com", 587)
             server.starttls()
-            server.login(email, gmail_password)
+            server.login(sender_email, gmail_password)
             text = msg.as_string()
-            server.sendmail(email, email, text)
+            server.sendmail(sender_email, recipients, text)
             server.quit()
 
             self.logger.info(
-                f"{self.config.facility_name} email notification sent successfully!"
+                f"{self.config.facility_name} email notification sent successfully to {len(recipients)} recipient(s): {', '.join(recipients)}"
             )
             return True
 

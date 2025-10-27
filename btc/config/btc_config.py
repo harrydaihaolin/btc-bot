@@ -45,6 +45,7 @@ class BTCConfig(BaseConfig):
             "gmail_app_password": os.getenv(
                 "BTC_GMAIL_APP_PASSWORD", os.getenv("GMAIL_APP_PASSWORD")
             ),
+            "recipient_emails": os.getenv("BTC_RECIPIENT_EMAILS", os.getenv("BTC_NOTIFICATION_EMAIL", os.getenv("GMAIL_APP_EMAIL"))),
         }
 
     def get_monitoring_config(self) -> Dict[str, int]:
