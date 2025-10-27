@@ -25,7 +25,19 @@ python3 scripts/setup_ubc_credentials.py
 
 ### 3. Start Monitoring
 
-#### Option A: Docker (Recommended)
+#### Option A: Local Daemon (Recommended)
+```bash
+# One-command daemon experience
+./scripts/run_daemon.sh
+
+# Check status
+./scripts/run_daemon.sh status
+
+# Stop daemon
+./scripts/run_daemon.sh stop
+```
+
+#### Option B: Docker (Alternative)
 ```bash
 # One-command Docker experience
 ./scripts/docker-manage.sh start
@@ -38,18 +50,6 @@ python3 scripts/setup_ubc_credentials.py
 
 # Stop containers
 ./scripts/docker-manage.sh stop
-```
-
-#### Option B: Local Daemon
-```bash
-# One-command daemon experience
-./scripts/run_daemon.sh
-
-# Check status
-./scripts/run_daemon.sh status
-
-# Stop daemon
-./scripts/run_daemon.sh stop
 ```
 
 ## 🔧 Configuration
@@ -152,6 +152,32 @@ python3 -m pytest --cov=btc --cov=ubc --cov=common
 python3 scripts/test_modular_structure.py
 ```
 
+## 🔄 Automated Monitoring (GitHub Actions)
+
+The bot can run automatically in GitHub Actions for continuous monitoring:
+
+### Setup GitHub Secrets
+1. Go to your repository Settings → Secrets and variables → Actions
+2. Add the following secrets:
+   - `BTC_USERNAME` - Your BTC login email
+   - `BTC_PASSWORD` - Your BTC password
+   - `BTC_NOTIFICATION_EMAIL` - Email to receive notifications
+   - `BTC_GMAIL_APP_PASSWORD` - Gmail App Password
+   - `UBC_USERNAME` - Your UBC login email (optional)
+   - `UBC_PASSWORD` - Your UBC password (optional)
+   - `UBC_NOTIFICATION_EMAIL` - Email for UBC notifications (optional)
+   - `UBC_GMAIL_APP_PASSWORD` - Gmail App Password for UBC (optional)
+
+### Manual Trigger
+```bash
+# Trigger monitoring manually
+gh workflow run periodic-monitoring.yml
+```
+
+### Schedule
+- **Automatic**: Runs every hour from 9 AM to 9 PM PST
+- **Manual**: Can be triggered anytime via GitHub CLI or web interface
+
 ## 📝 Version History
 
 - **v1.3.1** - UBC Tennis Centre Support with credential fallback
@@ -196,10 +222,11 @@ chmod +x scripts/*.sh
 
 **Email Notifications Not Working**: Verify Gmail App Password is correct and 2FA is enabled
 
-**Docker Issues**: Make sure Docker and Docker Compose are installed and running
+**Docker Issues**: Make sure Docker and Docker Compose are installed and running (if using Docker option)
 
 ### Getting Help
 
-- Check the logs: `./scripts/docker-manage.sh logs` or `./scripts/run_daemon.sh status`
+- Check daemon logs: `tail -f btc_daemon.log` or `tail -f ubc_daemon.log`
+- Check daemon status: `ps aux | grep btc_bot.py` or `ps aux | grep ubc_bot.py`
 - Run tests to verify setup: `python3 scripts/test_modular_structure.py`
 - Check environment variables: `env | grep BTC` or `env | grep UBC`

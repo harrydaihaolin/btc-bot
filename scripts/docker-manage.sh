@@ -82,7 +82,11 @@ show_logs() {
 # Function to show status
 show_status() {
     print_status "Tennis Bot Container Status:"
-    docker compose ps
+    echo ""
+    docker compose ps --format table
+    echo ""
+    print_status "Container Health Check:"
+    docker compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
 }
 
 # Function to build containers

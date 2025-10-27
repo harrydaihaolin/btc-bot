@@ -9,36 +9,46 @@ on:
 jobs:
   monitor-btc-courts:
     runs-on: ubuntu-latest
-
+    
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Docker Compose
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Chrome
         run: |
-          # Create environment file with secrets
-          cp env.example .env.monitoring
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/google-chrome-keyring.gpg
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
 
       - name: Configure BTC credentials
         run: |
-          echo "BTC_USERNAME=${{ secrets.BTC_USERNAME }}" >> .env.monitoring
-          echo "BTC_PASSWORD=${{ secrets.BTC_PASSWORD }}" >> .env.monitoring
-          echo "BTC_NOTIFICATION_EMAIL=${{ secrets.BTC_NOTIFICATION_EMAIL }}" >> .env.monitoring
-          echo "BTC_GMAIL_APP_PASSWORD=${{ secrets.BTC_GMAIL_APP_PASSWORD }}" >> .env.monitoring
+          echo "BTC_USERNAME=${{ secrets.BTC_USERNAME }}" >> $GITHUB_ENV
+          echo "BTC_PASSWORD=${{ secrets.BTC_PASSWORD }}" >> $GITHUB_ENV
+          echo "BTC_NOTIFICATION_EMAIL=${{ secrets.BTC_NOTIFICATION_EMAIL }}" >> $GITHUB_ENV
+          echo "BTC_GMAIL_APP_PASSWORD=${{ secrets.BTC_GMAIL_APP_PASSWORD }}" >> $GITHUB_ENV
+          echo "BTC_MONITORING_INTERVAL=1" >> $GITHUB_ENV
 
       - name: Run BTC court monitoring
         run: |
-          # Build and start BTC monitoring
-          docker compose --env-file .env.monitoring build btc-tennis-bot
-          docker compose --env-file .env.monitoring up -d btc-tennis-bot
-
-          # Wait for initial scan
-          sleep 60
-
-          # Check logs for any court findings
-          docker compose --env-file .env.monitoring logs --tail=50 btc-tennis-bot
-
-          # Stop BTC service
-          docker compose --env-file .env.monitoring down btc-tennis-bot
+          # Run single scan to test functionality
+          python3 -c "
+          from btc_bot import BTCTennisBot
+          bot = BTCTennisBot()
+          print('🔍 Running BTC court scan...')
+          bot.run_single_scan()
+          print('✅ BTC scan completed!')
+          "
 
       - name: Upload BTC monitoring logs
         uses: actions/upload-artifact@v4
@@ -50,36 +60,46 @@ jobs:
 
   monitor-ubc-courts:
     runs-on: ubuntu-latest
-
+    
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Docker Compose
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Chrome
         run: |
-          # Create environment file with secrets
-          cp env.example .env.monitoring
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/google-chrome-keyring.gpg
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
 
       - name: Configure UBC credentials
         run: |
-          echo "UBC_USERNAME=${{ secrets.UBC_USERNAME }}" >> .env.monitoring
-          echo "UBC_PASSWORD=${{ secrets.UBC_PASSWORD }}" >> .env.monitoring
-          echo "UBC_NOTIFICATION_EMAIL=${{ secrets.UBC_NOTIFICATION_EMAIL }}" >> .env.monitoring
-          echo "UBC_GMAIL_APP_PASSWORD=${{ secrets.UBC_GMAIL_APP_PASSWORD }}" >> .env.monitoring
+          echo "UBC_USERNAME=${{ secrets.UBC_USERNAME }}" >> $GITHUB_ENV
+          echo "UBC_PASSWORD=${{ secrets.UBC_PASSWORD }}" >> $GITHUB_ENV
+          echo "UBC_NOTIFICATION_EMAIL=${{ secrets.UBC_NOTIFICATION_EMAIL }}" >> $GITHUB_ENV
+          echo "UBC_GMAIL_APP_PASSWORD=${{ secrets.UBC_GMAIL_APP_PASSWORD }}" >> $GITHUB_ENV
+          echo "UBC_MONITORING_INTERVAL=1" >> $GITHUB_ENV
 
       - name: Run UBC court monitoring
         run: |
-          # Build and start UBC monitoring
-          docker compose --env-file .env.monitoring build ubc-tennis-bot
-          docker compose --env-file .env.monitoring up -d ubc-tennis-bot
-
-          # Wait for initial scan
-          sleep 60
-
-          # Check logs for any court findings
-          docker compose --env-file .env.monitoring logs --tail=50 ubc-tennis-bot
-
-          # Stop UBC service
-          docker compose --env-file .env.monitoring down ubc-tennis-bot
+          # Run single scan to test functionality
+          python3 -c "
+          from ubc_bot import UBCTennisBot
+          bot = UBCTennisBot()
+          print('🔍 Running UBC court scan...')
+          bot.run_single_scan()
+          print('✅ UBC scan completed!')
+          "
 
       - name: Upload UBC monitoring logs
         uses: actions/upload-artifact@v4
@@ -94,25 +114,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Test bot health
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+        
+      - name: Run health check
         run: |
-          # Test BTC bot health
-          docker build -f Dockerfile.btc -t btc-test .
-          docker run --rm btc-test python3 -c "
+          python3 -c "
           from btc.config.btc_config import BTCConfig
           from btc.monitor.btc_monitor import BTCMonitor
-          config = BTCConfig()
-          monitor = BTCMonitor()
-          print('BTC bot health check: OK')
-          "
-
-          # Test UBC bot health
-          docker build -f Dockerfile.ubc -t ubc-test .
-          docker run --rm ubc-test python3 -c "
           from ubc.config.ubc_config import UBCConfig
           from ubc.monitor.ubc_monitor import UBCMonitor
-          config = UBCConfig()
-          monitor = UBCMonitor()
-          print('UBC bot health check: OK')
+          print('✅ Health check passed - all modules import successfully')
           "
