@@ -2,8 +2,8 @@ name: Periodic Court Monitoring
 
 on:
   schedule:
-    # Run every hour during business hours (9 AM - 9 PM PST)
-    - cron: "0 9-21 * * *"
+    # Run every 12 hours (9 AM and 9 PM PST)
+    - cron: "0 9,21 * * *"
   workflow_dispatch: # Allow manual triggering
 
 jobs:
