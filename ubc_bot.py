@@ -29,8 +29,8 @@ class UBCTennisBot:
 
     def __init__(self):
         self.config = UBCConfig()
-        self.monitor = UBCMonitor()
-        self.notifications = UBCNotificationManager()
+        self.monitor = UBCMonitor(self.config)
+        self.notifications = UBCNotificationManager(self.config)
         self.setup_logging()
 
     def setup_logging(self):
@@ -67,12 +67,15 @@ class UBCTennisBot:
         
         try:
             credentials = self.setup_credentials()
-            available_courts = self.monitor.scan_available_courts()
+            
+            # Use the base monitor's monitoring cycle which handles login
+            available_courts = self.monitor.run_monitoring_cycle()
             
             if available_courts:
-                self.logger.info(f"🎾 Found {len(available_courts)} available courts!")
-                for court in available_courts:
-                    self.logger.info(f"  - {court}")
+                total_courts = sum(len(courts) for courts in available_courts.values())
+                self.logger.info(f"🎾 Found {total_courts} available courts!")
+                for date, courts in available_courts.items():
+                    self.logger.info(f"  - {date}: {len(courts)} courts")
                 
                 # Send notifications
                 self.notifications.send_notifications(available_courts)
@@ -98,12 +101,14 @@ class UBCTennisBot:
             
             while True:
                 try:
-                    available_courts = self.monitor.scan_available_courts()
+                    # Use the base monitor's monitoring cycle which handles login
+                    available_courts = self.monitor.run_monitoring_cycle()
                     
                     if available_courts:
-                        self.logger.info(f"🎾 Found {len(available_courts)} available courts!")
-                        for court in available_courts:
-                            self.logger.info(f"  - {court}")
+                        total_courts = sum(len(courts) for courts in available_courts.values())
+                        self.logger.info(f"🎾 Found {total_courts} available courts!")
+                        for date, courts in available_courts.items():
+                            self.logger.info(f"  - {date}: {len(courts)} courts")
                         
                         # Send notifications
                         self.notifications.send_notifications(available_courts)

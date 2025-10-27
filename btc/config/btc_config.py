@@ -45,12 +45,6 @@ class BTCConfig(BaseConfig):
             "gmail_app_password": os.getenv(
                 "BTC_GMAIL_APP_PASSWORD", os.getenv("GMAIL_APP_PASSWORD")
             ),
-            "sms_phone": os.getenv(
-                "BTC_SMS_PHONE", os.getenv("SMS_PHONE", os.getenv("BTC_PHONE_NUMBER"))
-            ),
-            "twilio_sid": os.getenv("TWILIO_SID"),
-            "twilio_token": os.getenv("TWILIO_TOKEN"),
-            "twilio_phone": os.getenv("TWILIO_PHONE"),
         }
 
     def get_monitoring_config(self) -> Dict[str, int]:

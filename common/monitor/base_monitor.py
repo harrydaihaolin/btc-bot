@@ -83,7 +83,9 @@ class BaseMonitor(ABC):
             chrome_options.add_argument("--disable-extensions")
 
             # Initialize driver
+            self.logger.info("Installing ChromeDriver...")
             service = Service(ChromeDriverManager().install())
+            self.logger.info("Creating Chrome WebDriver instance...")
             self.driver = webdriver.Chrome(service=service, options=chrome_options)
 
             # Set timeouts
@@ -91,9 +93,14 @@ class BaseMonitor(ABC):
             self.driver.set_page_load_timeout(browser_config["page_load_timeout"])
 
             self.logger.info("Chrome WebDriver initialized successfully")
+            self.logger.info(f"Driver object: {self.driver}")
+            self.logger.info(f"Driver is None: {self.driver is None}")
 
         except Exception as e:
             self.logger.error(f"Failed to initialize WebDriver: {e}")
+            self.logger.error(f"Driver object after error: {self.driver}")
+            import traceback
+            self.logger.error(f"Traceback: {traceback.format_exc()}")
             raise
 
     def cleanup(self) -> None:
@@ -185,4 +192,3 @@ class BaseMonitor(ABC):
         finally:
             # Cleanup driver
             self.cleanup()
-            self.driver = None

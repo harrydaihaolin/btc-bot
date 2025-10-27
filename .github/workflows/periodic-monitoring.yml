@@ -9,7 +9,7 @@ on:
 jobs:
   monitor-btc-courts:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
 
@@ -24,13 +24,6 @@ jobs:
           echo "BTC_PASSWORD=${{ secrets.BTC_PASSWORD }}" >> .env.monitoring
           echo "BTC_NOTIFICATION_EMAIL=${{ secrets.BTC_NOTIFICATION_EMAIL }}" >> .env.monitoring
           echo "BTC_GMAIL_APP_PASSWORD=${{ secrets.BTC_GMAIL_APP_PASSWORD }}" >> .env.monitoring
-          echo "BTC_SMS_PHONE=${{ secrets.BTC_SMS_PHONE }}" >> .env.monitoring
-
-      - name: Configure Twilio credentials
-        run: |
-          echo "TWILIO_SID=${{ secrets.TWILIO_SID }}" >> .env.monitoring
-          echo "TWILIO_TOKEN=${{ secrets.TWILIO_TOKEN }}" >> .env.monitoring
-          echo "TWILIO_PHONE=${{ secrets.TWILIO_PHONE }}" >> .env.monitoring
 
       - name: Run BTC court monitoring
         run: |
@@ -57,7 +50,7 @@ jobs:
 
   monitor-ubc-courts:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
 
@@ -72,13 +65,6 @@ jobs:
           echo "UBC_PASSWORD=${{ secrets.UBC_PASSWORD }}" >> .env.monitoring
           echo "UBC_NOTIFICATION_EMAIL=${{ secrets.UBC_NOTIFICATION_EMAIL }}" >> .env.monitoring
           echo "UBC_GMAIL_APP_PASSWORD=${{ secrets.UBC_GMAIL_APP_PASSWORD }}" >> .env.monitoring
-          echo "UBC_SMS_PHONE=${{ secrets.UBC_SMS_PHONE }}" >> .env.monitoring
-
-      - name: Configure Twilio credentials
-        run: |
-          echo "TWILIO_SID=${{ secrets.TWILIO_SID }}" >> .env.monitoring
-          echo "TWILIO_TOKEN=${{ secrets.TWILIO_TOKEN }}" >> .env.monitoring
-          echo "TWILIO_PHONE=${{ secrets.TWILIO_PHONE }}" >> .env.monitoring
 
       - name: Run UBC court monitoring
         run: |

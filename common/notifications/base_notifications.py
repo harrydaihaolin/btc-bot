@@ -11,8 +11,6 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from typing import Any, Dict, List, Optional
 
-from twilio.rest import Client
-
 from common.config.base_config import BaseConfig
 
 
@@ -51,6 +49,12 @@ class BaseNotificationManager(ABC):
                 return True
 
             total_courts = sum(len(courts) for courts in available_courts.values())
+            
+            # Don't send notifications if there are no courts
+            if total_courts == 0:
+                self.logger.info("No courts available, skipping notifications")
+                return True
+                
             self.logger.info(
                 f"Sending notifications for {total_courts} available {self.config.facility_name} courts"
             )
@@ -58,10 +62,7 @@ class BaseNotificationManager(ABC):
             # Send email notification
             email_sent = self._send_email_notification(available_courts)
 
-            # Send SMS notification
-            sms_sent = self._send_sms_notification(available_courts)
-
-            return email_sent and sms_sent
+            return email_sent
 
         except Exception as e:
             self.logger.error(f"Error sending notifications: {e}")
@@ -110,58 +111,9 @@ class BaseNotificationManager(ABC):
             )
             return False
 
-    def _send_sms_notification(self, available_courts: Dict[str, List[Dict]]) -> bool:
-        """Send SMS notification for courts"""
-        try:
-            phone = self.notification_config.get("sms_phone")
-            twilio_sid = self.notification_config.get("twilio_sid")
-            twilio_token = self.notification_config.get("twilio_token")
-            twilio_phone = self.notification_config.get("twilio_phone")
-
-            if not all([phone, twilio_sid, twilio_token, twilio_phone]):
-                self.logger.warning(
-                    "SMS credentials not configured, skipping SMS notification"
-                )
-                return True
-
-            # Create message
-            message = self._format_sms_message(available_courts)
-
-            # Create unique key for this notification
-            notification_key = self._create_notification_key(available_courts)
-
-            if notification_key in self.sent_notifications:
-                self.logger.info(
-                    "SMS notification already sent for this court combination"
-                )
-                return True
-
-            # Send SMS
-            client = Client(twilio_sid, twilio_token)
-            message_obj = client.messages.create(
-                body=message, from_=twilio_phone, to=phone
-            )
-
-            self.sent_notifications.add(notification_key)
-            self.logger.info(
-                f"{self.config.facility_name} SMS notification sent successfully! SID: {message_obj.sid}"
-            )
-            return True
-
-        except Exception as e:
-            self.logger.error(
-                f"Error sending {self.config.facility_name} SMS notification: {e}"
-            )
-            return False
-
     @abstractmethod
     def _format_email_message(self, available_courts: Dict[str, List[Dict]]) -> str:
         """Format email message for courts"""
-        pass
-
-    @abstractmethod
-    def _format_sms_message(self, available_courts: Dict[str, List[Dict]]) -> str:
-        """Format SMS message for courts"""
         pass
 
     def _create_notification_key(self, available_courts: Dict[str, List[Dict]]) -> str:

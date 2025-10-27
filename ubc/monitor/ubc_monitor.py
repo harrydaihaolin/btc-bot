@@ -27,8 +27,9 @@ from ubc.config.ubc_config import UBCConfig
 class UBCMonitor(BaseMonitor):
     """Monitor for UBC Tennis Centre court availability"""
 
-    def __init__(self):
-        config = UBCConfig()
+    def __init__(self, config: UBCConfig = None):
+        if config is None:
+            config = UBCConfig()
         super().__init__(config)
 
     def login(self) -> bool:

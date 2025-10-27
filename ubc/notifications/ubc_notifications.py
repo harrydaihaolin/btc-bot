@@ -20,8 +20,9 @@ from ubc.config.ubc_config import UBCConfig
 class UBCNotificationManager(BaseNotificationManager):
     """Notification manager for UBC Tennis Centre court availability"""
 
-    def __init__(self):
-        config = UBCConfig()
+    def __init__(self, config: UBCConfig = None):
+        if config is None:
+            config = UBCConfig()
         super().__init__(config)
 
     def _format_email_message(self, available_courts: Dict[str, List[Dict]]) -> str:
@@ -83,21 +84,3 @@ class UBCNotificationManager(BaseNotificationManager):
         """
 
         return html
-
-    def _format_sms_message(self, available_courts: Dict[str, List[Dict]]) -> str:
-        """Format SMS message for UBC courts"""
-        total_courts = sum(len(courts) for courts in available_courts.values())
-
-        message = f"🎾 UBC Tennis: {total_courts} court(s) available!\n"
-
-        for date, courts in available_courts.items():
-            message += f"\n📅 {date}:\n"
-            for court in courts:
-                court_name = court.get("court_name", "Unknown")
-                time_slot = court.get("time", "Unknown")
-                price = court.get("price", "Unknown")
-                message += f"• {court_name} at {time_slot} ({price})\n"
-
-        message += "\nBook now: https://recreation.ubc.ca/tennis/court-booking/"
-
-        return message

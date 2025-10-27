@@ -27,8 +27,9 @@ from common.monitor.base_monitor import BaseMonitor
 class BTCMonitor(BaseMonitor):
     """Monitor for Burnaby Tennis Club court availability"""
 
-    def __init__(self):
-        config = BTCConfig()
+    def __init__(self, config: BTCConfig = None):
+        if config is None:
+            config = BTCConfig()
         super().__init__(config)
 
     def login(self) -> bool:
@@ -149,6 +150,11 @@ class BTCMonitor(BaseMonitor):
         """Scan for available BTC courts"""
         try:
             self.logger.info("Scanning for available BTC courts...")
+            
+            # Check if driver is available
+            if self.driver is None:
+                self.logger.error("WebDriver is None! Cannot scan courts.")
+                return {}
 
             # Check today, tomorrow, and day after tomorrow
             dates_to_check = [(0, "today"), (1, "tomorrow"), (2, "day after tomorrow")]
