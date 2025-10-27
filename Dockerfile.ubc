@@ -31,7 +31,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy UBC-specific files
 COPY ubc/ ./ubc/
 COPY common/ ./common/
-COPY run_daemon.sh .
+COPY scripts/run_daemon.sh .
 COPY ubc_bot.py .
 
 # Create logs directory and set proper permissions

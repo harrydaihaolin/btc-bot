@@ -31,7 +31,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy BTC-specific files
 COPY btc/ ./btc/
 COPY common/ ./common/
-COPY run_daemon.sh .
+COPY scripts/run_daemon.sh .
 COPY btc_bot.py .
 
 # Create logs directory and set proper permissions
