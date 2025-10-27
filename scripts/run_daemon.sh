@@ -14,9 +14,12 @@ echo ""
 # Set monitoring interval environment variable
 export BTC_MONITORING_INTERVAL=$INTERVAL
 
+# Set non-interactive mode for daemon
+export FORCE_INTERACTIVE=false
+
 # Start daemon with proper logging
 echo "🚀 Starting daemon monitoring..."
-nohup python3 run_background_env.py > btc_daemon.log 2>&1 &
+nohup python3 btc_bot.py > btc_daemon.log 2>&1 &
 
 # Get PID
 DAEMON_PID=$!

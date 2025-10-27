@@ -202,12 +202,14 @@ def main():
     
     bot = BTCTennisBot()
     
-    # Check if running in non-interactive mode (e.g., Docker)
+    # Check if running in non-interactive mode (e.g., Docker or daemon)
     is_docker = os.getenv("IS_DOCKER", "false").lower() == "true"
     force_interactive = os.getenv("FORCE_INTERACTIVE", "false").lower() == "true"
+    is_daemon = os.getenv("BTC_MONITORING_INTERVAL") is not None
     
-    if is_docker and not force_interactive:
-        bot.logger.info("🐳 Running in non-interactive mode (Docker)")
+    if (is_docker or is_daemon) and not force_interactive:
+        mode = "Docker" if is_docker else "Daemon"
+        bot.logger.info(f"🐳 Running in non-interactive mode ({mode})")
         bot.run_continuous_monitoring()
         return
     
