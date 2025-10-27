@@ -150,7 +150,7 @@ class BTCMonitor(BaseMonitor):
         """Scan for available BTC courts"""
         try:
             self.logger.info("Scanning for available BTC courts...")
-            
+
             # Check if driver is available
             if self.driver is None:
                 self.logger.error("WebDriver is None! Cannot scan courts.")

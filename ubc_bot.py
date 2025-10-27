@@ -105,7 +105,9 @@ class UBCTennisBot:
                     available_courts = self.monitor.run_monitoring_cycle()
 
                     if available_courts:
-                        total_courts = sum(len(courts) for courts in available_courts.values())
+                        total_courts = sum(
+                            len(courts) for courts in available_courts.values()
+                        )
                         self.logger.info(f"🎾 Found {total_courts} available courts!")
                         for date, courts in available_courts.items():
                             self.logger.info(f"  - {date}: {len(courts)} courts")
@@ -116,7 +118,9 @@ class UBCTennisBot:
                     else:
                         self.logger.info("😔 No available courts found")
 
-                    self.logger.info(f"⏳ Waiting {interval} minutes before next scan...")
+                    self.logger.info(
+                        f"⏳ Waiting {interval} minutes before next scan..."
+                    )
                     time.sleep(interval * 60)
 
                 except Exception as e:
@@ -141,7 +145,9 @@ class UBCTennisBot:
             interval = monitoring_config["monitoring_interval"]
 
             # Get preferred timeslots from user
-            self.logger.info("📅 Enter your preferred timeslots (format: HH:MM, one per line, empty line to finish):")
+            self.logger.info(
+                "📅 Enter your preferred timeslots (format: HH:MM, one per line, empty line to finish):"
+            )
             timeslots = []
             while True:
                 timeslot = input("Timeslot: ").strip()
@@ -150,7 +156,9 @@ class UBCTennisBot:
                 timeslots.append(timeslot)
 
             if not timeslots:
-                self.logger.warning("⚠️  No timeslots specified, monitoring all available courts")
+                self.logger.warning(
+                    "⚠️  No timeslots specified, monitoring all available courts"
+                )
                 self.run_continuous_monitoring()
                 return
 
@@ -170,7 +178,9 @@ class UBCTennisBot:
                                 break
 
                     if preferred_courts:
-                        self.logger.info(f"🎾 Found {len(preferred_courts)} courts in preferred timeslots!")
+                        self.logger.info(
+                            f"🎾 Found {len(preferred_courts)} courts in preferred timeslots!"
+                        )
                         for court in preferred_courts:
                             self.logger.info(f"  - {court}")
 
@@ -180,7 +190,9 @@ class UBCTennisBot:
                     else:
                         self.logger.info("😔 No courts available in preferred timeslots")
 
-                    self.logger.info(f"⏳ Waiting {interval} minutes before next scan...")
+                    self.logger.info(
+                        f"⏳ Waiting {interval} minutes before next scan..."
+                    )
                     time.sleep(interval * 60)
 
                 except Exception as e:

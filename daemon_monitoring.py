@@ -122,9 +122,7 @@ class DaemonMonitor:
                         if courts:
                             date_obj = datetime.strptime(date, "%Y-%m-%d")
                             date_label = date_obj.strftime("%A, %B %d, %Y")
-                            self.logger.info(
-                                f"   📅 {date_label}: {len(courts)} courts"
-                            )
+                            self.logger.info(f"   📅 {date_label}: {len(courts)} courts")
                             for i, court in enumerate(courts, 1):
                                 self.logger.info(
                                     f"      {i}. {court.get('text', 'N/A')} - {court.get('time', 'N/A')}"

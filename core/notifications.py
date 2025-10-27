@@ -192,9 +192,9 @@ BTC Booking Bot 🤖
             msg = MIMEMultipart()
             msg["From"] = sender_email
             msg["To"] = self.credentials.get("notification_email")
-            msg["Subject"] = (
-                f"🎾 BTC Tennis Courts Available - {total_courts} slots found!"
-            )
+            msg[
+                "Subject"
+            ] = f"🎾 BTC Tennis Courts Available - {total_courts} slots found!"
 
             msg.attach(MIMEText(message, "plain"))
 

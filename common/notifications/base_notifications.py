@@ -49,12 +49,12 @@ class BaseNotificationManager(ABC):
                 return True
 
             total_courts = sum(len(courts) for courts in available_courts.values())
-            
+
             # Don't send notifications if there are no courts
             if total_courts == 0:
                 self.logger.info("No courts available, skipping notifications")
                 return True
-                
+
             self.logger.info(
                 f"Sending notifications for {total_courts} available {self.config.facility_name} courts"
             )
@@ -73,7 +73,9 @@ class BaseNotificationManager(ABC):
         try:
             sender_email = self.notification_config.get("email")
             gmail_password = self.notification_config.get("gmail_app_password")
-            recipient_emails = self.notification_config.get("recipient_emails", sender_email)
+            recipient_emails = self.notification_config.get(
+                "recipient_emails", sender_email
+            )
 
             if not sender_email or not gmail_password:
                 self.logger.warning(
@@ -84,7 +86,11 @@ class BaseNotificationManager(ABC):
             # Parse recipient emails (comma-separated string or single email)
             if isinstance(recipient_emails, str):
                 if "," in recipient_emails:
-                    recipients = [email.strip() for email in recipient_emails.split(",") if email.strip()]
+                    recipients = [
+                        email.strip()
+                        for email in recipient_emails.split(",")
+                        if email.strip()
+                    ]
                 else:
                     recipients = [recipient_emails.strip()]
             else:

@@ -11,11 +11,8 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Set
 
 from selenium import webdriver
-from selenium.common.exceptions import (
-    NoSuchElementException,
-    TimeoutException,
-    WebDriverException,
-)
+from selenium.common.exceptions import (NoSuchElementException,
+                                        TimeoutException, WebDriverException)
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -100,6 +97,7 @@ class BaseMonitor(ABC):
             self.logger.error(f"Failed to initialize WebDriver: {e}")
             self.logger.error(f"Driver object after error: {self.driver}")
             import traceback
+
             self.logger.error(f"Traceback: {traceback.format_exc()}")
             raise
 
@@ -107,10 +105,57 @@ class BaseMonitor(ABC):
         """Clean up WebDriver resources"""
         if self.driver:
             try:
-                self.driver.quit()
-                self.logger.info("WebDriver cleaned up successfully")
+                # Try to quit with a timeout to prevent hanging
+                import threading
+                import time
+
+                quit_successful = False
+                quit_error = None
+
+                def quit_driver():
+                    nonlocal quit_successful, quit_error
+                    try:
+                        self.driver.quit()
+                        quit_successful = True
+                    except Exception as e:
+                        quit_error = e
+
+                # Start quit in a separate thread
+                quit_thread = threading.Thread(target=quit_driver)
+                quit_thread.daemon = True
+                quit_thread.start()
+
+                # Wait up to 5 seconds for quit to complete
+                quit_thread.join(timeout=5)
+
+                if quit_thread.is_alive():
+                    self.logger.warning("WebDriver quit timed out, forcing cleanup")
+                elif quit_successful:
+                    self.logger.info("WebDriver cleaned up successfully")
+                elif quit_error:
+                    # Check if it's a connection-related error (expected when ChromeDriver is already terminated)
+                    error_msg = str(quit_error).lower()
+                    if any(
+                        keyword in error_msg
+                        for keyword in [
+                            "connection refused",
+                            "connection broken",
+                            "newconnectionerror",
+                        ]
+                    ):
+                        self.logger.debug(
+                            f"WebDriver cleanup: ChromeDriver already terminated (expected): {quit_error}"
+                        )
+                    else:
+                        self.logger.error(
+                            f"Error during WebDriver cleanup: {quit_error}"
+                        )
+
             except Exception as e:
-                self.logger.error(f"Error during WebDriver cleanup: {e}")
+                self.logger.error(f"Unexpected error during WebDriver cleanup: {e}")
+            finally:
+                # Ensure driver reference is cleared
+                self.driver = None
 
     @abstractmethod
     def login(self) -> bool:

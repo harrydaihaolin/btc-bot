@@ -8,11 +8,9 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Set
 
 from selenium import webdriver
-from selenium.common.exceptions import (
-    ElementClickInterceptedException,
-    NoSuchElementException,
-    TimeoutException,
-)
+from selenium.common.exceptions import (ElementClickInterceptedException,
+                                        NoSuchElementException,
+                                        TimeoutException)
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
@@ -512,5 +510,25 @@ class CourtMonitor:
     def cleanup(self):
         """Clean up resources"""
         if self.driver:
-            self.driver.quit()
-            self.logger.info("WebDriver closed")
+            try:
+                self.driver.quit()
+                self.logger.info("WebDriver closed")
+            except Exception as e:
+                # Check if it's a connection-related error (expected when ChromeDriver is already terminated)
+                error_msg = str(e).lower()
+                if any(
+                    keyword in error_msg
+                    for keyword in [
+                        "connection refused",
+                        "connection broken",
+                        "newconnectionerror",
+                    ]
+                ):
+                    self.logger.debug(
+                        f"WebDriver cleanup: ChromeDriver already terminated (expected): {e}"
+                    )
+                else:
+                    self.logger.error(f"Error during WebDriver cleanup: {e}")
+            finally:
+                # Ensure driver reference is cleared
+                self.driver = None
