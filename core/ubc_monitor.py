@@ -10,8 +10,12 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Set
 
 from selenium import webdriver
-from selenium.common.exceptions import (NoSuchElementException,
-                                        TimeoutException, WebDriverException)
+from selenium.common.exceptions import (
+    InvalidSelectorException,
+    NoSuchElementException,
+    TimeoutException,
+    WebDriverException,
+)
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -267,12 +271,34 @@ class UBCCourtMonitor:
                 return True
 
             except TimeoutException:
-                # Try alternative selectors
+                # Try alternative selectors and XPath
+                # First try XPath-based text search (more reliable)
+                xpath_selectors = [
+                    "//a[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'book')]",
+                    "//button[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'book')]",
+                    "//*[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'book a court')]",
+                ]
+
+                for xpath in xpath_selectors:
+                    try:
+                        book_element = self.driver.find_element(By.XPATH, xpath)
+                        book_element.click()
+                        time.sleep(3)
+                        self.booking_system_url = self.driver.current_url
+                        self.logger.info(
+                            f"Found booking system via XPath: {self.booking_system_url}"
+                        )
+                        return True
+                    except (NoSuchElementException, Exception):
+                        continue
+
+                # Then try CSS selectors
                 book_selectors = [
                     "a[href*='book']",
-                    "button:contains('Book')",
                     ".book-court",
                     "[data-testid='book-court']",
+                    "a.book-court",
+                    "button.book-court",
                 ]
 
                 for selector in book_selectors:
@@ -280,14 +306,20 @@ class UBCCourtMonitor:
                         book_element = self.driver.find_element(
                             By.CSS_SELECTOR, selector
                         )
-                        book_element.click()
-                        time.sleep(3)
-                        self.booking_system_url = self.driver.current_url
-                        self.logger.info(
-                            f"Found booking system via selector '{selector}': {self.booking_system_url}"
-                        )
-                        return True
-                    except NoSuchElementException:
+                        # Check if element contains "Book" text before clicking
+                        if "book" in book_element.text.lower():
+                            book_element.click()
+                            time.sleep(3)
+                            self.booking_system_url = self.driver.current_url
+                            self.logger.info(
+                                f"Found booking system via selector '{selector}': {self.booking_system_url}"
+                            )
+                            return True
+                    except (
+                        NoSuchElementException,
+                        InvalidSelectorException,
+                        Exception,
+                    ) as e:
                         continue
 
                 self.logger.error("Could not find 'Book a Court' button")
